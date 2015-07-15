@@ -1,0 +1,40 @@
+
+tiles.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Trees
+  rotate: false
+  xy: 1, 657
+  size: 2000, 250
+  orig: 2000, 250
+  offset: 0, 0
+  index: -1
+TreesOrange
+  rotate: false
+  xy: 1, 405
+  size: 2000, 250
+  orig: 2000, 250
+  offset: 0, 0
+  index: -1
+Tree
+  rotate: false
+  xy: 1, 153
+  size: 250, 250
+  orig: 250, 250
+  offset: 0, 0
+  index: -1
+Circle
+  rotate: false
+  xy: 1, 1
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+Fox
+  rotate: false
+  xy: 253, 303
+  size: 150, 100
+  orig: 150, 100
+  offset: 0, 0
+  index: -1
