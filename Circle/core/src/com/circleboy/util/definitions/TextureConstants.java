@@ -7,4 +7,5 @@ public class TextureConstants
     public static final String TREES_ORANGE_TEXTURE_KEY = "TreesOrange";
     public static final String CIRCLE_TEXTURE_KEY = "Circle";
     public static final String FOX_TEXTURE_KEY = "Fox";
+    public static final String SQUARE_KEY = "Square";
 }

@@ -39,7 +39,7 @@ public class AddDrawableEvent extends AbstractLayerEvent
     protected void process()
     {
         Moveable moveable = new Moveable(offset, 0, new Sprite(atlas.findRegion(textureKey)),
-                LayerType.BACKGROUND.getMovementSpeed());
+                LayerType.BACKGROUND.getMovementSpeed(), 0);
 
         moveable.addEventList(DrawableEventDefinitions.getDrawableEventList(DrawableEventType.FOX));
 

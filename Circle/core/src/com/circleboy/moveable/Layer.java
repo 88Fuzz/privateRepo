@@ -67,7 +67,7 @@ public class Layer
         for(int i = 0; i < numberOfNodes; i++)
         {
             Moveable tmpMoveable = new Moveable(x, y, new Sprite(atlas.findRegion(layerSpriteKey)),
-                    layerType.getMovementSpeed());
+                    layerType.getMovementSpeed(), 0);
             nodes.add(tmpMoveable);
             x += tmpMoveable.getWidth();
         }
@@ -80,7 +80,7 @@ public class Layer
 
         Moveable first = nodes.getFirst();
         Vector2 position = first.getPosition();
-        float width = first.getWidth();
+        float width = first.getOriginalSpriteWidth();
         if(position.x + width < 0)
         {
             wrapNumber++;

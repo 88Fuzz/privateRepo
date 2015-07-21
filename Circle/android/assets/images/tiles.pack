@@ -5,36 +5,43 @@ filter: Nearest,Nearest
 repeat: none
 Trees
   rotate: false
-  xy: 1, 657
+  xy: 1, 759
   size: 2000, 250
   orig: 2000, 250
   offset: 0, 0
   index: -1
 TreesOrange
   rotate: false
-  xy: 1, 405
+  xy: 1, 507
   size: 2000, 250
   orig: 2000, 250
   offset: 0, 0
   index: -1
 Tree
   rotate: false
-  xy: 1, 153
+  xy: 1, 255
   size: 250, 250
   orig: 250, 250
   offset: 0, 0
   index: -1
 Circle
   rotate: false
-  xy: 1, 1
+  xy: 1, 103
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 Fox
   rotate: false
-  xy: 253, 303
+  xy: 253, 405
   size: 150, 100
   orig: 150, 100
+  offset: 0, 0
+  index: -1
+Square
+  rotate: false
+  xy: 1, 1
+  size: 100, 100
+  orig: 100, 100
   offset: 0, 0
   index: -1
