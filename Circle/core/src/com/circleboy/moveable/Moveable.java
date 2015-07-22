@@ -2,7 +2,6 @@ package com.circleboy.moveable;
 
 import java.util.LinkedList;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,33 +11,27 @@ import com.circleboy.util.ScalingUtil;
 
 public class Moveable
 {
-    private final Vector2 pos;
-    private final Sprite sprite;
+    protected final Vector2 pos;
+    protected final Sprite sprite;
     private float baseScreenMovement;
     private float baseMovement;
     private final LinkedList<AbstractDrawableEvent> events;
-    private final BitmapFont font;
 
     public Moveable(final float x, final float y, final Sprite sprite, final float baseScreenMovement,
             final float baseMovement)
     {
         events = new LinkedList<AbstractDrawableEvent>();
         final Vector2 scale = ScalingUtil.getScale();
-        sprite.setScale(scale.x, scale.y);
+        sprite.setScale(sprite.getScaleX() * scale.x, sprite.getScaleY() * scale.y);
 
         Rectangle rect = sprite.getBoundingRectangle();
 
         pos = new Vector2(-1 * rect.x + x, -1 * rect.y + y);
-//        pos = new Vector2(x, y);
-        System.out.println("Original pos " + x + " " + y);
-        System.out.println("\tSetting position to " + pos);
-        System.out.println("\trectangle shows " + rect);
         sprite.setPosition(pos.x, pos.y);
 
         this.sprite = sprite;
         this.baseScreenMovement = baseScreenMovement;
         this.baseMovement = baseMovement;
-        font = new BitmapFont();
     }
 
     public void update(final Moveable circle, final float dt, final float movementFactor)
@@ -53,7 +46,6 @@ public class Moveable
     public void draw(SpriteBatch batch)
     {
         sprite.draw(batch);
-        font.draw(batch, "butt", pos.x, pos.y + sprite.getHeight());
     }
 
     private void processEvents(final Moveable circle)
@@ -109,9 +101,10 @@ public class Moveable
     {
         return sprite.getBoundingRectangle().width;
     }
-    
+
     /*
-     * Used to get the original size of a sprite's texture. Scaling changes the texture's width found by getWidth().
+     * Used to get the original size of a sprite's texture. Scaling changes the
+     * texture's width found by getWidth().
      */
     public float getOriginalSpriteWidth()
     {
@@ -119,7 +112,8 @@ public class Moveable
     }
 
     /*
-     * Used to get the original size of a sprite's texture. Scaling changes the texture's height found by getHeight().
+     * Used to get the original size of a sprite's texture. Scaling changes the
+     * texture's height found by getHeight().
      */
     public float getOriginalSpriteHeight()
     {

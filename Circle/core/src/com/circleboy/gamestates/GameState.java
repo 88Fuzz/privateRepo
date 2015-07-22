@@ -2,7 +2,6 @@ package com.circleboy.gamestates;
 
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -12,8 +11,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.circleboy.util.ScalingUtil;
 import com.circleboy.util.definitions.DrawableEventDefinitions;
 import com.circleboy.util.definitions.LayerEventDefinitions;
@@ -21,6 +18,7 @@ import com.circleboy.util.definitions.TextureConstants;
 import com.circleboy.moveable.Layer;
 import com.circleboy.moveable.Layer.LayerType;
 import com.circleboy.moveable.Moveable;
+import com.circleboy.moveable.Square;
 
 public class GameState extends ApplicationAdapter implements InputProcessor
 {
@@ -33,7 +31,6 @@ public class GameState extends ApplicationAdapter implements InputProcessor
     private Moveable circle;
     private float timeSinceLastUpdate;
     private float movementFactor;
-    private Random rando;
 
     @Override
     public void create()
@@ -45,7 +42,6 @@ public class GameState extends ApplicationAdapter implements InputProcessor
         assMan = new AssetManager();
         assMan.load(TextureConstants.TILE_TEXTURES, TextureAtlas.class);
         assMan.finishLoading();
-        rando = new Random();
         atlas = assMan.get(TextureConstants.TILE_TEXTURES);
 
         scene = new LinkedHashMap<LayerType, Layer>();
@@ -64,20 +60,9 @@ public class GameState extends ApplicationAdapter implements InputProcessor
         scene.put(LayerType.BACKGROUND, tmpLayer);
 
         tmpLayer = new Layer(atlas, LayerType.CIRCLE, 1);
-        Sprite sprite = new Sprite(atlas.findRegion(TextureConstants.SQUARE_KEY));
-        sprite.setColor(1, 1, 0, 1);
-
-//        System.out.println("before " + sprite.getBoundingRectangle() + " width " + sprite.getWidth());
-//        final Vector2 scale = ScalingUtil.getScale();
-        sprite.setScale(.5f, .5f);
-//        System.out.println("after " + sprite.getBoundingRectangle() + " width " + sprite.getWidth());
-        sprite.setScale(1.6f, 1.6f);
-//        System.out.println("second after: " + sprite.getBoundingRectangle() + " width " + sprite.getWidth());
-        sprite.setScale(ScalingUtil.getScale().x, ScalingUtil.getScale().y);
-//        System.out.println("third after: " + sprite.getBoundingRectangle() + " width " + sprite.getWidth());
-
-        rando.nextInt(200);
-        Moveable moveable = new Moveable(0, 700, sprite, 0, 0);
+        Sprite sprite = Square.generateSprite(atlas, 170, 170, 170, 170);
+        Square moveable = new Square(100, 700, sprite, 0, 0);
+        moveable.setText("Fuck yo couch!");
         tmpLayer.addMoveable(moveable);
         scene.put(LayerType.CIRCLE, tmpLayer);
     }
