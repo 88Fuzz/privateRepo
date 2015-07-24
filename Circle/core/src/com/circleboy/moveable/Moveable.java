@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.circleboy.event.AbstractDrawableEvent;
+import com.circleboy.event.abstracts.AbstractDrawableEvent;
 import com.circleboy.util.ScalingUtil;
 
 public class Moveable
@@ -128,5 +128,10 @@ public class Moveable
     public void addEventList(LinkedList<AbstractDrawableEvent> newEvents)
     {
         events.addAll(newEvents);
+    }
+
+    public void setText(final String text)
+    {
+        //Do nothing
     }
 }

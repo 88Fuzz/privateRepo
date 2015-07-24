@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import com.circleboy.event.AbstractDrawableEvent;
-import com.circleboy.event.CircleDistanceEvent;
+import com.circleboy.event.abstracts.AbstractCircleDistanceEvent;
+import com.circleboy.event.abstracts.AbstractDrawableEvent;
+import com.circleboy.event.implementations.MovementSpeedEvent;
 import com.circleboy.moveable.Layer.LayerType;
 
 public class DrawableEventDefinitions
@@ -20,16 +21,18 @@ public class DrawableEventDefinitions
     public static final void initializeDrawableEventDefinitions()
     {
         LinkedList<AbstractDrawableEvent> tmpList = new LinkedList<AbstractDrawableEvent>();
-        //TODO these values need to be a ratio of the screen resolution!
-        CircleDistanceEvent event = new CircleDistanceEvent(900.0f, 0.0f, 100.0f, CircleDistanceEvent.Operator.LESS_THAN);
+        // TODO these values need to be a ratio of the screen resolution!
+        MovementSpeedEvent event = new MovementSpeedEvent(900.0f, 0.0f, 100.0f, MovementSpeedEvent.Operator.LESS_THAN);
         tmpList.add(event);
-        event = new CircleDistanceEvent(1220.0f, LayerType.BACKGROUND.getMovementSpeed(), 0.0f, CircleDistanceEvent.Operator.GREATER_THAN);
+        event = new MovementSpeedEvent(1220.0f, LayerType.BACKGROUND.getMovementSpeed(), 0.0f,
+                AbstractCircleDistanceEvent.Operator.GREATER_THAN);
         tmpList.add(event);
-        event = new CircleDistanceEvent(600.0f, 0f, 200.0f, CircleDistanceEvent.Operator.LESS_THAN);
+        event = new MovementSpeedEvent(600.0f, 0f, 200.0f, MovementSpeedEvent.Operator.LESS_THAN);
         tmpList.add(event);
-        event = new CircleDistanceEvent(900.0f, 0f, 50.0f, CircleDistanceEvent.Operator.GREATER_THAN);
+        event = new MovementSpeedEvent(900.0f, 0f, 50.0f, MovementSpeedEvent.Operator.GREATER_THAN);
         tmpList.add(event);
-        event = new CircleDistanceEvent(1600.0f, LayerType.BACKGROUND.getMovementSpeed(), 0.0f, CircleDistanceEvent.Operator.GREATER_THAN);
+        event = new MovementSpeedEvent(1600.0f, LayerType.BACKGROUND.getMovementSpeed(), 0.0f,
+                MovementSpeedEvent.Operator.GREATER_THAN);
         tmpList.add(event);
 
         DRAWABLE_EVENTS.put(DrawableEventType.FOX, tmpList);

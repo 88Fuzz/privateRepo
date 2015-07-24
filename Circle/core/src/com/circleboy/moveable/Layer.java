@@ -3,11 +3,12 @@ package com.circleboy.moveable;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.circleboy.event.AbstractLayerEvent;
+import com.circleboy.event.abstracts.AbstractLayerEvent;
 import com.circleboy.util.GraphicsUtils;
 import com.circleboy.util.definitions.LevelWrapDetails;
 
@@ -15,17 +16,19 @@ public class Layer
 {
     public enum LayerType
     {
-        CIRCLE(0, 0, 0), BACKGROUND(-200f, 0, 0);
+        CIRCLE(0, Gdx.graphics.getWidth() / 7.0f, 0, false), PEOPLE(-200f, 0, 0, false), BACKGROUND(-250f, 0, 0, true);
 
         private final float movementSpeed;
         private final float initX;
         private final float initY;
+        private final boolean wrap;
 
-        LayerType(final float movementSpeed, final float initX, final float initY)
+        LayerType(final float movementSpeed, final float initX, final float initY, final boolean wrap)
         {
             this.movementSpeed = movementSpeed;
             this.initX = initX;
             this.initY = initY;
+            this.wrap = wrap;
         }
 
         public float getMovementSpeed()
@@ -41,6 +44,11 @@ public class Layer
         public float getInitY()
         {
             return initY;
+        }
+
+        public boolean getWrap()
+        {
+            return wrap;
         }
     }
 
@@ -78,29 +86,40 @@ public class Layer
         for(Moveable node: nodes)
             node.update(circle, dt, movementFactor);
 
-        Moveable first = nodes.getFirst();
-        Vector2 position = first.getPosition();
-        float width = first.getOriginalSpriteWidth();
-        if(position.x + width < 0)
+        if(nodes.size() > 0)
         {
-            wrapNumber++;
-
-            String newLayerKey = LevelWrapDetails.getLayerStringKey(layerType, wrapNumber);
-
-            if(newLayerKey != null)
+            // Check if the first drawable object in the layer is off to the
+            // left of the screen
+            Moveable first = nodes.getFirst();
+            Vector2 position = first.getPosition();
+            float width = first.getOriginalSpriteWidth();
+            if(position.x + width < -100)
             {
-                layerSpriteKey = newLayerKey;
+                wrapNumber++;
+
+                String newLayerKey = LevelWrapDetails.getLayerStringKey(layerType, wrapNumber);
+
+                if(newLayerKey != null)
+                {
+                    layerSpriteKey = newLayerKey;
+                }
+                Sprite firstSprite = first.getSprite();
+                GraphicsUtils.applyTextureRegion(firstSprite, atlas.findRegion(layerSpriteKey));
+
+                nodes.poll();
+
+                if(layerType.getWrap())
+                {
+                    // Move the node that just left the screen to just past the
+                    // last node in the list
+                    Moveable last = nodes.getLast();
+                    position = last.getPosition();
+                    width = last.getWidth();
+
+                    first.setPosition(position.x + width, position.y);
+                    nodes.offerLast(first);
+                }
             }
-            Sprite firstSprite = first.getSprite();
-            GraphicsUtils.applyTextureRegion(firstSprite, atlas.findRegion(layerSpriteKey));
-
-            nodes.poll();
-            Moveable last = nodes.getLast();
-            position = last.getPosition();
-            width = last.getWidth();
-
-            first.setPosition(position.x + width, position.y);
-            nodes.offerLast(first);
         }
 
         processEvents(dt);

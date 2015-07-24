@@ -8,23 +8,27 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
+import com.circleboy.event.implementations.TextChangeEvent;
 import com.circleboy.util.MathUtils;
 import com.circleboy.util.definitions.TextureConstants;
 
 public class Square extends Moveable
 {
     private static final int MAX_COLOR = 255;
-    private List<Square> children;
+    private final List<Square> children;
     private String text;
     private final BitmapFont font;
+    private TextChangeEvent textEvent;
 
-    public Square(float x, float y, Sprite sprite, float baseScreenMovement, float baseMovement)
+    public Square(final float x, final float y, final Sprite sprite, final float baseScreenMovement,
+            final float baseMovement, final TextChangeEvent textEvent)
     {
         super(x, y, sprite, baseScreenMovement, baseMovement);
         font = new BitmapFont();
         font.setScale(2.0f, 2.0f);
         children = new ArrayList<Square>(5);
-        text = "";
+        this.text = "";
+        this.textEvent = textEvent;
     }
 
     public void draw(SpriteBatch batch)
@@ -34,6 +38,14 @@ public class Square extends Moveable
         font.draw(batch, text, rect.x, rect.y + rect.height + font.getLineHeight());
     }
 
+    public void update(final Moveable circle, final float dt, final float movementFactor)
+    {
+        super.update(circle, dt, movementFactor);
+        if(textEvent != null && textEvent.checkEvent(circle, this))
+            textEvent = null;
+    }
+
+    @Override
     public void setText(String text)
     {
         this.text = text;

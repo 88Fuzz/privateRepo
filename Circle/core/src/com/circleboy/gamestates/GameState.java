@@ -59,11 +59,17 @@ public class GameState extends ApplicationAdapter implements InputProcessor
         Layer tmpLayer = new Layer(atlas, LayerType.BACKGROUND, 3);
         scene.put(LayerType.BACKGROUND, tmpLayer);
 
+        tmpLayer = new Layer(atlas, LayerType.PEOPLE, 0);
+//        Sprite sprite = Square.generateSprite(atlas, 170, 170, 170, 170);
+//        Square moveable = new Square(100, 700, sprite, 0, 0, null);
+//        Square moveable = new Square(movementFactor, movementFactor, sprite, movementFactor, movementFactor, null);
+//        public Square(final float x, final float y, final Sprite sprite, final float baseScreenMovement,
+//            final float baseMovement, final TextChangeEvent textEvent)
+//        moveable.setText("Fuck yo couch!");
+//        tmpLayer.addMoveable(moveable);
+        scene.put(LayerType.PEOPLE, tmpLayer);
+
         tmpLayer = new Layer(atlas, LayerType.CIRCLE, 1);
-        Sprite sprite = Square.generateSprite(atlas, 170, 170, 170, 170);
-        Square moveable = new Square(100, 700, sprite, 0, 0);
-        moveable.setText("Fuck yo couch!");
-        tmpLayer.addMoveable(moveable);
         scene.put(LayerType.CIRCLE, tmpLayer);
     }
 
