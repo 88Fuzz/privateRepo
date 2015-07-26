@@ -49,8 +49,8 @@ public class AddSquareEvent extends AbstractLayerEvent
     protected void process()
     {
         TextChangeEvent txe = new TextChangeEvent(900.0f, AbstractCircleDistanceEvent.Operator.LESS_THAN, "FUCK YOU");
-        Square square = new Square(offset, 0, Square.generateSprite(atlas, (int) minWidth, (int) maxWidth,
-                (int) minHeight, (int) maxHeight), LayerType.PEOPLE.getMovementSpeed(), 0, txe);
+        Square square = new Square(offset, 0, Square.generateSprite(atlas,
+                (int) minWidth, (int) maxWidth, (int) minHeight, (int) maxHeight), LayerType.PEOPLE.getMovementSpeed(), 100.0f, txe, 100.0f);
 
         if(eventType != null)
             square.addEventList(DrawableEventDefinitions.getDrawableEventList(eventType));

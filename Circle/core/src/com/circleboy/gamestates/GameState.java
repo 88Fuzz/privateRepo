@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.circleboy.util.ScalingUtil;
@@ -18,7 +17,6 @@ import com.circleboy.util.definitions.TextureConstants;
 import com.circleboy.moveable.Layer;
 import com.circleboy.moveable.Layer.LayerType;
 import com.circleboy.moveable.Moveable;
-import com.circleboy.moveable.Square;
 
 public class GameState extends ApplicationAdapter implements InputProcessor
 {

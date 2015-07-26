@@ -13,8 +13,8 @@ public class Moveable
 {
     protected final Vector2 pos;
     protected final Sprite sprite;
+    protected float baseMovement;
     private float baseScreenMovement;
-    private float baseMovement;
     private final LinkedList<AbstractDrawableEvent> events;
 
     public Moveable(final float x, final float y, final Sprite sprite, final float baseScreenMovement,

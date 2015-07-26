@@ -1,13 +1,11 @@
 package com.circleboy.moveable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.circleboy.event.implementations.TextChangeEvent;
 import com.circleboy.util.MathUtils;
 import com.circleboy.util.definitions.TextureConstants;
@@ -15,20 +13,22 @@ import com.circleboy.util.definitions.TextureConstants;
 public class Square extends Moveable
 {
     private static final int MAX_COLOR = 255;
-    private final List<Square> children;
     private String text;
     private final BitmapFont font;
     private TextChangeEvent textEvent;
+    private float distanceTraveled;
+    private final float maxDistance;
 
     public Square(final float x, final float y, final Sprite sprite, final float baseScreenMovement,
-            final float baseMovement, final TextChangeEvent textEvent)
+            final float baseMovement, final TextChangeEvent textEvent, final float travelDistance)
     {
         super(x, y, sprite, baseScreenMovement, baseMovement);
         font = new BitmapFont();
         font.setScale(2.0f, 2.0f);
-        children = new ArrayList<Square>(5);
         this.text = "";
         this.textEvent = textEvent;
+        maxDistance = travelDistance;
+        distanceTraveled = travelDistance / 2.0f;
     }
 
     public void draw(SpriteBatch batch)
@@ -40,9 +40,17 @@ public class Square extends Moveable
 
     public void update(final Moveable circle, final float dt, final float movementFactor)
     {
+        Vector2 oldPos = new Vector2(pos.x, pos.y);
         super.update(circle, dt, movementFactor);
         if(textEvent != null && textEvent.checkEvent(circle, this))
             textEvent = null;
+
+        distanceTraveled += Math.abs(MathUtils.getDistance(oldPos, pos));
+        if(distanceTraveled > maxDistance)
+        {
+            distanceTraveled = 0;
+            baseMovement *= -1;
+        }
     }
 
     @Override
