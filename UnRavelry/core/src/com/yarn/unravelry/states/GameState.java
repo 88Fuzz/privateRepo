@@ -14,6 +14,10 @@ import com.yarn.unravelry.utils.constants.TextureConstants;
 
 public class GameState extends ApplicationAdapter
 {
+    private static final float RED = 0;
+    private static final float GREEN = 38 / 255f;
+    private static final float BLUE = 87 / 255f;
+    private static final float ALPHA = 1;
     private static final float TIMEPERFRAME = 1.0f / 60.0f;
     private static final float UNRAVEL_FACTOR = 0.01f;
 
@@ -26,8 +30,9 @@ public class GameState extends ApplicationAdapter
     private Vector2 spritePos;
     private float timeSinceLastUpdate;
     private float percentFilled;
+    private float deltaScale;
     private float xScale;
-    private float yScale;
+    private float baseYScale;
 
     @Override
     public void create()
@@ -41,15 +46,38 @@ public class GameState extends ApplicationAdapter
         atlas = assMan.get(TextureConstants.TILE_TEXTURES);
 
         sprite = new Sprite(atlas.findRegion(TextureConstants.SHIRT_KEY));
+        sprite.setPosition(0, 0);
+        float x = Gdx.graphics.getWidth()/2;
+        x -= sprite.getWidth()/2;
+        float y = Gdx.graphics.getHeight() - sprite.getHeight();
+        sprite.setPosition(x, y);
+        
+        coverSprite = new Sprite(atlas.findRegion(TextureConstants.SQUARE_KEY));
+        coverSprite.setColor(RED, GREEN, BLUE, ALPHA);
+        coverSprite.setPosition(0, 0);
+
+        xScale = Gdx.graphics.getWidth() / coverSprite.getWidth();
+        baseYScale = Gdx.graphics.getHeight() / y;
+        System.out.println("yScale " + baseYScale);
+        coverSprite.setScale(xScale, baseYScale);
         spritePos = new Vector2();
-        xScale = Gdx.graphics.getWidth() / sprite.getWidth();
-        yScale = Gdx.graphics.getHeight() / sprite.getHeight();
-        sprite.setScale(xScale, yScale * percentFilled / 100.0f);
-        Rectangle boundingRectangle = sprite.getBoundingRectangle();
+        Rectangle boundingRectangle = coverSprite.getBoundingRectangle();
         spritePos.x = boundingRectangle.x * -1;
         spritePos.y = boundingRectangle.y * -1;
+        coverSprite.setPosition(spritePos.x, spritePos.y);
+        
+        deltaScale = Gdx.graphics.getHeight()/coverSprite.getHeight();
+        deltaScale = deltaScale - baseYScale;
 
-        sprite.setPosition(spritePos.x, spritePos.y);
+//        spritePos = new Vector2();
+//        xScale = Gdx.graphics.getWidth() / sprite.getWidth();
+//        yScale = Gdx.graphics.getHeight() / sprite.getHeight();
+//        sprite.setScale(xScale, yScale * percentFilled / 100.0f);
+//        Rectangle boundingRectangle = sprite.getBoundingRectangle();
+//        spritePos.x = boundingRectangle.x * -1;
+//        spritePos.y = boundingRectangle.y * -1;
+//
+//        sprite.setPosition(spritePos.x, spritePos.y);
     }
 
     @Override
@@ -68,10 +96,11 @@ public class GameState extends ApplicationAdapter
 
     private void draw()
     {
-        Gdx.gl.glClearColor(0, 38 / 255f, 87 / 255f, 1);
+        Gdx.gl.glClearColor(RED, GREEN, BLUE, ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         sprite.draw(batch);
+        coverSprite.draw(batch);
 
         batch.end();
     }
@@ -106,12 +135,14 @@ public class GameState extends ApplicationAdapter
 
     private void setSpriteScale()
     {
-        sprite.setScale(xScale, yScale * percentFilled / 100.0f);
-        Rectangle boundingRectangle = sprite.getBoundingRectangle();
+        float yScale = deltaScale * (100 - percentFilled) / 100.0f;
+        coverSprite.setScale(xScale, yScale + baseYScale);
+//        sprite.setScale(xScale, yScale * percentFilled / 100.0f);
+        Rectangle boundingRectangle = coverSprite.getBoundingRectangle();
         spritePos.x -= boundingRectangle.x;
         spritePos.y -= boundingRectangle.y;
-
-        sprite.setPosition(spritePos.x, spritePos.y);
+//
+        coverSprite.setPosition(spritePos.x, spritePos.y);
 
         // sprite.setPosition(boundingRectangle.x * -1, boundingRectangle.y *
         // -1);
