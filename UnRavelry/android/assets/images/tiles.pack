@@ -1,0 +1,19 @@
+
+tiles.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Shirt
+  rotate: false
+  xy: 1, 103
+  size: 550, 350
+  orig: 550, 350
+  offset: 0, 0
+  index: -1
+Square
+  rotate: false
+  xy: 1, 1
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
