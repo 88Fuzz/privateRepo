@@ -17,3 +17,10 @@ Square
   orig: 100, 100
   offset: 0, 0
   index: -1
+Stitches
+  rotate: false
+  xy: 553, 432
+  size: 21, 21
+  orig: 21, 21
+  offset: 0, 0
+  index: -1
