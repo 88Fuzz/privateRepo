@@ -1,0 +1,26 @@
+
+tiles.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+StartTile
+  rotate: false
+  xy: 1, 4
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+SinglePixel
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+WhitePixel
+  rotate: false
+  xy: 203, 203
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
