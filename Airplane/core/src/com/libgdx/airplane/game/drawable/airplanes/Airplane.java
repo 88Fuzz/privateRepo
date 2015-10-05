@@ -41,6 +41,9 @@ public class Airplane extends AbstractMoveable implements Hittable
         sprite.setBounds(0, 0, 100, 20);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float kill()
     {
@@ -48,12 +51,18 @@ public class Airplane extends AbstractMoveable implements Hittable
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float hit()
     {
         return kill();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void drawCurrent(SpriteBatch batch)
     {

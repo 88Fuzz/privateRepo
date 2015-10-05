@@ -17,6 +17,7 @@ import com.libgdx.airplane.game.drawable.AbstractDrawable;
 import com.libgdx.airplane.game.drawable.airplanes.Player;
 import com.libgdx.airplane.game.drawable.buildings.Building;
 import com.libgdx.airplane.game.drawable.weapons.Bomb;
+import com.libgdx.airplane.game.drawable.weapons.Missile;
 import com.libgdx.airplane.game.rendering.WorldRenderer;
 import com.libgdx.airplane.game.utils.CollisionDetection;
 import com.libgdx.airplane.game.utils.MapDetails;
@@ -31,7 +32,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
     private TextureAtlas atlas;
     private Player player;
     private List<Bomb> activeBombs;
-    private List<Bomb> activeBullets;
+    private List<Missile> activeBullets;
+    private List<Missile> activeMissiles;
     private List<AbstractDrawable> buildings;
     private float timeSinceLastUpdate;
     private WorldRenderer worldRenderer;
@@ -47,9 +49,11 @@ public class Game extends ApplicationAdapter implements InputProcessor
         assMan.finishLoading();
         atlas = assMan.get(TextureConstants.TILE_TEXTURES);
 
-        player = new Player(atlas, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0, 0, 500, 1);
+        player = new Player(atlas, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0, 0, 5, 5, 1, 2,
+                .25f);
         activeBombs = new LinkedList<Bomb>();
-        activeBullets = new LinkedList<Bomb>();
+        activeBullets = new LinkedList<Missile>();
+        activeMissiles = new LinkedList<Missile>();
 
         constructBuildings();
 
@@ -109,6 +113,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
     /**
      * Checks the collisions between bomb -> buildings and missiles -> airplanes
+     * This should be replaced by a) Box2d physics engine or b) some kind of
+     * tree that will only check for collisions with other objects in the node.
      */
     private void checkCollisions()
     {
@@ -137,6 +143,58 @@ public class Game extends ApplicationAdapter implements InputProcessor
                 }
             }
         }
+
+        // Use iterator to safely remove objects in the list
+        for(Iterator<Missile> it = activeMissiles.iterator(); it.hasNext();)
+        {
+            Missile missile = it.next();
+
+            if(!missile.isAlive())
+            {
+                it.remove();
+                continue;
+            }
+
+            for(AbstractDrawable building: buildings)
+            {
+                if(!building.isAlive())
+                {
+                    continue;
+                }
+
+                if(CollisionDetection.checkCollision(missile, building))
+                {
+                    missile.hit();
+                    building.hit();
+                }
+            }
+        }
+
+        // Use iterator to safely remove objects in the list
+        for(Iterator<Missile> it = activeBullets.iterator(); it.hasNext();)
+        {
+            Missile bullet = it.next();
+
+            if(!bullet.isAlive())
+            {
+                it.remove();
+                continue;
+            }
+
+            for(AbstractDrawable building: buildings)
+            {
+                if(!building.isAlive())
+                {
+                    continue;
+                }
+
+                if(CollisionDetection.checkCollision(bullet, building))
+                {
+                    bullet.hit();
+                    building.hit();
+                }
+            }
+        }
     }
 
     private void update(final float dt)
@@ -152,6 +210,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
     private void getActiveWeapons()
     {
         activeBombs.addAll(player.getNewBombs());
+        activeBullets.addAll(player.getNewBullets());
+        activeMissiles.addAll(player.getNewMissiles());
     }
 
     @Override

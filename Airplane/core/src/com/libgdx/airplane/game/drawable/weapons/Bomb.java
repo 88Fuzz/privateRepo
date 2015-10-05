@@ -16,18 +16,21 @@ public class Bomb extends AbstractMoveable implements Hittable
         super();
     }
 
-    public Bomb(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position, final Vector2 velocity, final float maxAcceleration,
-            final float maxPitchAcceleration, final float pitch, final float singleDimensionVelocity)
-    {
-        this();
-        init(atlas, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch, singleDimensionVelocity);
-    }
-
-    public void init(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position, final Vector2 velocity,
+    public Bomb(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position, final Vector2 velocity,
             final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
             final float singleDimensionVelocity)
     {
-        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch, singleDimensionVelocity);
+        this();
+        init(atlas, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+                singleDimensionVelocity);
+    }
+
+    public void init(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position,
+            final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
+            final float singleDimensionVelocity)
+    {
+        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+                singleDimensionVelocity);
         // super.init(position);
 
         GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.SINGLE_PIXEL));
@@ -35,12 +38,18 @@ public class Bomb extends AbstractMoveable implements Hittable
         sprite.setBounds(0, 0, 20, 20);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(float dt)
     {
         super.update(dt);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float kill()
     {
@@ -48,6 +57,9 @@ public class Bomb extends AbstractMoveable implements Hittable
         return 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float hit()
     {
@@ -57,7 +69,7 @@ public class Bomb extends AbstractMoveable implements Hittable
     @Override
     protected void drawCurrent(SpriteBatch batch)
     {
-        //DO nothing for now, will be used in the future
+        // DO nothing for now, will be used in the future
         // TODO Auto-generated method stub
     }
 }

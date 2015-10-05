@@ -20,8 +20,9 @@ public abstract class AbstractMoveable extends AbstractDrawable
         super();
     }
 
-    public void init(final MapDetails mapDetails, final boolean alive, final Vector2 position, final Vector2 velocity, final float maxAcceleration,
-            final float maxPitchAcceleration, final float pitch, final float singleDimensionVelocity)
+    public void init(final MapDetails mapDetails, final boolean alive, final Vector2 position, final Vector2 velocity,
+            final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
+            final float singleDimensionVelocity)
     {
         super.init(mapDetails, alive, position);
 
@@ -35,7 +36,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
     }
 
     @Override
-    public void update(float dt)
+    public void update(final float dt)
     {
         singleDimensionVelocity += acceleration;
         pitch += pitchAcceleration;
@@ -51,7 +52,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
         position.y += velocity.y * dt;
 
         sprite.setPosition(position.x, position.y);
-        
+
         if(position.y < 0)
         {
             kill();
@@ -103,18 +104,21 @@ public abstract class AbstractMoveable extends AbstractDrawable
             position.x = 0;
         }
 
-        //TODO will if y < 0
+        // TODO kill if y < 0
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void draw(SpriteBatch batch)
     {
         if(isAlive())
         {
-            sprite.draw(batch);
+            super.draw(batch);
         }
     }
-    
+
     public void addSingleDimensionVelocity(final float velocity)
     {
         singleDimensionVelocity += velocity;

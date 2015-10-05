@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.libgdx.airplane.game.drawable.AbstractDrawable;
 import com.libgdx.airplane.game.drawable.airplanes.Player;
 import com.libgdx.airplane.game.drawable.weapons.Bomb;
+import com.libgdx.airplane.game.drawable.weapons.Missile;
 
 /**
  * 
@@ -90,22 +91,40 @@ public class WorldRenderer implements Disposable
         batch.begin();
         for(AbstractDrawable drawable: drawables)
         {
-            //TODO remove buildings in the collision stage if they are killed.
+            // TODO remove buildings in the collision stage if they are killed.
             if(drawable.isAlive())
                 drawable.draw(batch);
         }
         target.draw(batch);
+        renderTargetWeapons(batch);
 
-        List<Bomb> bombs = target.getBombs();
+        batch.end();
+    }
 
-        for(Bomb bomb: bombs)
+    private void renderTargetWeapons(final SpriteBatch batch)
+    {
+        for(Bomb bomb: target.getBombs())
         {
-            //TODO remove bombs in the collision stage/airplane if they are killed.
+            // TODO remove bombs in the collision stage/airplane if they are
+            // killed.
             if(bomb.isAlive())
                 bomb.draw(batch);
         }
 
-        batch.end();
+        for(Missile missile: target.getMissiles())
+        {
+            // TODO remove bombs in the collision stage/airplane if they are
+            // killed.
+            if(missile.isAlive())
+                missile.draw(batch);
+        }
+        for(Missile bullet: target.getBullets())
+        {
+            // TODO remove bombs in the collision stage/airplane if they are
+            // killed.
+            if(bullet.isAlive())
+                bullet.draw(batch);
+        }
     }
 
     /**
