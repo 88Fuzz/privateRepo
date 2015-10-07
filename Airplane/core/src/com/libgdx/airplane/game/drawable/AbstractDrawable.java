@@ -78,7 +78,6 @@ public abstract class AbstractDrawable implements Hittable
         }
 
         sprite.setPosition(position.x, position.y);
-        
         drawCurrent(batch);
     }
 

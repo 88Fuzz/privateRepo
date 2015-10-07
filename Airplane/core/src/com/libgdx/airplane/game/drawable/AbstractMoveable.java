@@ -38,6 +38,15 @@ public abstract class AbstractMoveable extends AbstractDrawable
     @Override
     public void update(final float dt)
     {
+        checkBounds();
+        updatePosition(dt);
+    }
+
+    /**
+     * Updates the position of the sprite based on pitch and velocity.
+     */
+    protected void updatePosition(final float dt)
+    {
         singleDimensionVelocity += acceleration;
         pitch += pitchAcceleration;
 
@@ -45,8 +54,6 @@ public abstract class AbstractMoveable extends AbstractDrawable
 
         velocity.x = (float) (singleDimensionVelocity * Math.cos(Math.toRadians(pitch)));
         velocity.y = (float) (singleDimensionVelocity * Math.sin(Math.toRadians(pitch)));
-
-        checkBounds();
 
         position.x += velocity.x * dt;
         position.y += velocity.y * dt;
@@ -62,7 +69,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
     /**
      * Check and bounding properties like velocity, acceleration, position, etc.
      */
-    private void checkBounds()
+    protected void checkBounds()
     {
         checkAccelerations();
         checkPositions();

@@ -59,10 +59,15 @@ public class Missile extends AbstractMoveable implements Hittable
     public void update(final float dt)
     {
         Vector2 oldPos = new Vector2(position.x, position.y);
-        super.update(dt);
-        distanceTraveled += CollisionDetection.getDistance(oldPos, position);
-        if(distanceTraveled > maxDistance)
-            distanceReached();
+        updatePosition(dt);
+        if(isAlive())
+        {
+            distanceTraveled += CollisionDetection.getDistance(oldPos, position);
+            checkBounds();
+
+            if(distanceTraveled > maxDistance)
+                distanceReached();
+        }
     }
 
     /**
