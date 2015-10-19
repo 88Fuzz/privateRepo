@@ -149,6 +149,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         for(Iterator<Bomb> it = activeBombs.iterator(); it.hasNext();)
         {
             Bomb bomb = it.next();
+            int attackDamage = bomb.getAttackDamage();
 
             if(!bomb.isAlive())
             {
@@ -165,8 +166,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(bomb, building))
                 {
-                    bomb.hit();
-                    building.hit();
+                    bomb.hit(attackDamage);
+                    building.hit(attackDamage);
                 }
             }
 
@@ -179,8 +180,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(bomb, airplane))
                 {
-                    bomb.hit();
-                    airplane.hit();
+                    bomb.hit(attackDamage);
+                    airplane.hit(attackDamage);
                 }
             }
         }
@@ -189,6 +190,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         for(Iterator<Missile> it = activeMissiles.iterator(); it.hasNext();)
         {
             Missile missile = it.next();
+            int attackDamage = missile.getAttackDamage();
 
             if(!missile.isAlive())
             {
@@ -205,8 +207,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(missile, building))
                 {
-                    missile.hit();
-                    building.hit();
+                    missile.hit(attackDamage);
+                    building.hit(attackDamage);
                 }
             }
 
@@ -219,8 +221,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(missile, airplane))
                 {
-                    missile.hit();
-                    airplane.hit();
+                    missile.hit(attackDamage);
+                    airplane.hit(attackDamage);
                 }
             }
         }
@@ -229,6 +231,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         for(Iterator<Missile> it = activeBullets.iterator(); it.hasNext();)
         {
             Missile bullet = it.next();
+            int attackDamage = bullet.getAttackDamage();
 
             if(!bullet.isAlive())
             {
@@ -245,8 +248,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(bullet, building))
                 {
-                    bullet.hit();
-                    building.hit();
+                    bullet.hit(attackDamage);
+                    building.hit(attackDamage);
                 }
             }
 
@@ -259,8 +262,8 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
                 if(CollisionDetection.checkCollision(bullet, airplane))
                 {
-                    bullet.hit();
-                    airplane.hit();
+                    bullet.hit(attackDamage);
+                    airplane.hit(attackDamage);
                 }
             }
         }

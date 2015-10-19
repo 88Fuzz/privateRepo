@@ -11,6 +11,9 @@ import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Bomb extends AbstractMoveable implements Hittable
 {
+    //TODO figure out a better way to handle damage dealt with the health
+    private int damage;
+
     public Bomb()
     {
         super();
@@ -31,7 +34,9 @@ public class Bomb extends AbstractMoveable implements Hittable
     {
         super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
                 singleDimensionVelocity);
-        // super.init(position);
+
+        //TODO Damage should be calculated by a look up table with the bomb type
+        this.damage = 50;
 
         GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.SINGLE_PIXEL));
         sprite.setColor(Color.BLACK);
@@ -61,7 +66,7 @@ public class Bomb extends AbstractMoveable implements Hittable
      * {@inheritDoc}
      */
     @Override
-    public float hit()
+    public float hit(final int damageTaken)
     {
         return kill();
     }
@@ -70,6 +75,18 @@ public class Bomb extends AbstractMoveable implements Hittable
     protected void drawCurrent(SpriteBatch batch)
     {
         // DO nothing for now, will be used in the future
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public int getAttackDamage()
+    {
+        return damage;
+    }
+
+    @Override
+    public void getAttackDamageType()
+    {
         // TODO Auto-generated method stub
     }
 }

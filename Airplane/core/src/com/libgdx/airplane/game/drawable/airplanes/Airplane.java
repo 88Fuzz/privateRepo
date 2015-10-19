@@ -18,6 +18,8 @@ import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Airplane extends AbstractMoveable implements Hittable
 {
+    private float health;
+
     private final TextureAtlas atlas;
 
     private final List<Bomb> bombs;
@@ -88,6 +90,8 @@ public class Airplane extends AbstractMoveable implements Hittable
         fireBullets = false;
         this.bulletDelay = bulletDelay;
         this.bulletTimer = bulletDelay;
+        
+        health = 50;
     }
 
     /**
@@ -374,24 +378,45 @@ public class Airplane extends AbstractMoveable implements Hittable
     public float kill()
     {
         setAlive(false);
+        final float damageDone = health;
+        health = 0;
+
+        return damageDone;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void drawCurrent(final SpriteBatch batch)
+    {
+        // TODO implement later on, do nothing for now
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public float hit(final int damageTaken)
+    {
+        health -= damageTaken;
+        if(health <= 0)
+            kill();
+
+        return damageTaken;
+    }
+
+    @Override
+    public int getAttackDamage()
+    {
+        // TODO Auto-generated method stub
         return 0;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public float hit()
+    public void getAttackDamageType()
     {
-        return kill();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void drawCurrent(SpriteBatch batch)
-    {
-        // TODO implement later on, do nothing for now
+        // TODO Auto-generated method stub
+        
     }
 }

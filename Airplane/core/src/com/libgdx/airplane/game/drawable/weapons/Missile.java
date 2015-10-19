@@ -14,6 +14,7 @@ public class Missile extends AbstractMoveable implements Hittable
 {
     float maxDistance;
     float distanceTraveled;
+    int damage;
 
     public Missile()
     {
@@ -40,15 +41,20 @@ public class Missile extends AbstractMoveable implements Hittable
         this.maxDistance = maxDistance;
 
         GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.SINGLE_PIXEL));
+        // TODO this isMissile variable is stupid and temperary. It should be
+        // replaced when there is an item look up that tells what texture to
+        // grab, velocity, damage, and damage type
         if(isMissile)
         {
             sprite.setColor(Color.YELLOW);
             sprite.setBounds(0, 0, 15, 15);
+            damage = 25;
         }
         else
         {
             sprite.setColor(Color.CYAN);
             sprite.setBounds(0, 0, 10, 10);
+            damage = 10;
         }
     }
 
@@ -80,7 +86,7 @@ public class Missile extends AbstractMoveable implements Hittable
     }
 
     @Override
-    public float hit()
+    public float hit(final int damage)
     {
         return kill();
     }
@@ -96,6 +102,18 @@ public class Missile extends AbstractMoveable implements Hittable
     protected void drawCurrent(SpriteBatch batch)
     {
         // DO NOTHING for now
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public int getAttackDamage()
+    {
+        return damage;
+    }
+
+    @Override
+    public void getAttackDamageType()
+    {
         // TODO Auto-generated method stub
     }
 }
