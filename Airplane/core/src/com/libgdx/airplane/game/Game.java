@@ -3,7 +3,6 @@ package com.libgdx.airplane.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -14,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.libgdx.airplane.game.constants.TextureConstants;
 import com.libgdx.airplane.game.drawable.AbstractDrawable;
+import com.libgdx.airplane.game.drawable.airplanes.Airplane;
 import com.libgdx.airplane.game.drawable.airplanes.Player;
 import com.libgdx.airplane.game.drawable.buildings.Building;
 import com.libgdx.airplane.game.drawable.weapons.Bomb;
@@ -21,6 +21,7 @@ import com.libgdx.airplane.game.drawable.weapons.Missile;
 import com.libgdx.airplane.game.rendering.WorldRenderer;
 import com.libgdx.airplane.game.utils.CollisionDetection;
 import com.libgdx.airplane.game.utils.MapDetails;
+import com.libgdx.airplane.game.utils.RandomNumberUtils;
 
 //TODO make a GameState Abstract/interface that implements ApplicationsAdapter and
 //InputProcessor. It should also have an update method.
@@ -31,6 +32,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
     private AssetManager assMan;
     private TextureAtlas atlas;
     private Player player;
+    private List<AbstractDrawable> airplanes;
     private List<Bomb> activeBombs;
     private List<Missile> activeBullets;
     private List<Missile> activeMissiles;
@@ -49,17 +51,19 @@ public class Game extends ApplicationAdapter implements InputProcessor
         assMan.finishLoading();
         atlas = assMan.get(TextureConstants.TILE_TEXTURES);
 
-        player = new Player(atlas, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0, 0, 5, 5, 1, 2,
+        player = new Player(atlas, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0, 500, 5, 5, 1, 2,
                 .25f);
         activeBombs = new LinkedList<Bomb>();
         activeBullets = new LinkedList<Missile>();
         activeMissiles = new LinkedList<Missile>();
 
         constructBuildings();
+        constructAirplanes();
 
         timeSinceLastUpdate = 0;
         worldRenderer = new WorldRenderer(player);
         worldRenderer.addDrawables(buildings);
+        worldRenderer.addDrawables(airplanes);
         Gdx.input.setInputProcessor(this);
     }
 
@@ -81,10 +85,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         worldRenderer.render();
     }
 
-    // TODO remove this random thing
-    static private final Random random = new Random(1);
-
-    public void constructBuildings()
+    private void constructBuildings()
     {
         int numBuildings = 9;
         buildings = new LinkedList<AbstractDrawable>();
@@ -92,7 +93,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         float y = 0;
 
         float width = 80;
-        float height = 1000;
+        float height = 100;
 
         int xMax = 1000;
         int xMin = 400;
@@ -105,9 +106,35 @@ public class Game extends ApplicationAdapter implements InputProcessor
             buildings.add(new Building(atlas, mapDetails, new Vector2(x, y), width, height));
             height = 500;
 
-            x += random.nextInt(xMax - xMin + 1) + xMin;
-            height = random.nextInt(yMax - yMin + 1) + yMin;
-            System.out.println("blaaaah " + x + " y: " + y);
+            x += RandomNumberUtils.getRandomInt(xMin, xMax);
+            height = RandomNumberUtils.getRandomInt(yMin, yMax);
+        }
+    }
+
+    private void constructAirplanes()
+    {
+        final int numAirplanes = 20;
+        final int numBombs = 0;
+        final int numMissiles = 0;
+        final int bombDelay = 0;
+        final int missileDelay = 0;
+        final int bulletDelay = 0;
+        final int maxAcceleration = 1000;
+        final int maxPitchAcceleration = 0;
+        final int pitch = 0;
+
+        airplanes = new LinkedList<AbstractDrawable>();
+
+        for(int j = 0; j < numAirplanes; j++)
+        {
+            // TODO this needs to be much better at spawning planes
+            int x = RandomNumberUtils.getRandomInt(mapDetails.getMapWidth() / 2, mapDetails.getMapWidth());
+            int y = RandomNumberUtils.getRandomInt(Gdx.graphics.getHeight() / 2, Gdx.graphics.getHeight());
+            int singleDimensionVelocity = -1 * RandomNumberUtils.getRandomInt(maxAcceleration / 5, maxAcceleration / 2);
+
+            airplanes.add(new Airplane(atlas, mapDetails, new Vector2(x, y), new Vector2(0, 0), maxAcceleration,
+                    maxPitchAcceleration, pitch, singleDimensionVelocity, numBombs, numMissiles, bombDelay,
+                    missileDelay, bulletDelay));
         }
     }
 
@@ -142,6 +169,20 @@ public class Game extends ApplicationAdapter implements InputProcessor
                     building.hit();
                 }
             }
+
+            for(AbstractDrawable airplane: airplanes)
+            {
+                if(!airplane.isAlive())
+                {
+                    continue;
+                }
+
+                if(CollisionDetection.checkCollision(bomb, airplane))
+                {
+                    bomb.hit();
+                    airplane.hit();
+                }
+            }
         }
 
         // Use iterator to safely remove objects in the list
@@ -166,6 +207,20 @@ public class Game extends ApplicationAdapter implements InputProcessor
                 {
                     missile.hit();
                     building.hit();
+                }
+            }
+
+            for(AbstractDrawable airplane: airplanes)
+            {
+                if(!airplane.isAlive())
+                {
+                    continue;
+                }
+
+                if(CollisionDetection.checkCollision(missile, airplane))
+                {
+                    missile.hit();
+                    airplane.hit();
                 }
             }
         }
@@ -194,6 +249,20 @@ public class Game extends ApplicationAdapter implements InputProcessor
                     building.hit();
                 }
             }
+
+            for(AbstractDrawable airplane: airplanes)
+            {
+                if(!airplane.isAlive())
+                {
+                    continue;
+                }
+
+                if(CollisionDetection.checkCollision(bullet, airplane))
+                {
+                    bullet.hit();
+                    airplane.hit();
+                }
+            }
         }
     }
 
@@ -201,6 +270,20 @@ public class Game extends ApplicationAdapter implements InputProcessor
     {
         player.update(dt);
         getActiveWeapons();
+
+        // Use iterator to safely remove objects in the list
+        for(Iterator<AbstractDrawable> it = airplanes.iterator(); it.hasNext();)
+        {
+            AbstractDrawable airplane = it.next();
+
+            if(!airplane.isAlive())
+            {
+                it.remove();
+                continue;
+            }
+
+            airplane.update(dt);
+        }
     }
 
     /**

@@ -13,7 +13,6 @@ public abstract class AbstractMoveable extends AbstractDrawable
     protected float pitchAcceleration;
     protected float maxAcceleration;
     protected float maxPitchAcceleration;
-    protected boolean alive;
 
     public AbstractMoveable()
     {

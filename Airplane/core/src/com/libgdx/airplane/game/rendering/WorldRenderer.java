@@ -1,5 +1,6 @@
 package com.libgdx.airplane.game.rendering;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,11 +90,18 @@ public class WorldRenderer implements Disposable
     {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        for(AbstractDrawable drawable: drawables)
+        // Use iterator to safely remove objects in the list
+        for(Iterator<AbstractDrawable> it = drawables.iterator(); it.hasNext();)
         {
-            // TODO remove buildings in the collision stage if they are killed.
-            if(drawable.isAlive())
-                drawable.draw(batch);
+            AbstractDrawable drawable = it.next();
+            // remove drawables from local list if they are killed.
+            if(!drawable.isAlive())
+            {
+                it.remove();
+                continue;
+            }
+
+            drawable.draw(batch);
         }
         target.draw(batch);
         renderTargetWeapons(batch);
