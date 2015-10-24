@@ -90,7 +90,7 @@ public class Airplane extends AbstractMoveable implements Hittable
         fireBullets = false;
         this.bulletDelay = bulletDelay;
         this.bulletTimer = bulletDelay;
-        
+
         health = 50;
     }
 
@@ -267,7 +267,7 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     private Bomb getNewBomb()
     {
-        float gravity = -500.8f;
+        final float gravity = mapDetails.getGravity();
         float angle = (float) Math.toDegrees(Math.atan(gravity / velocity.x));
         float singleDimensionVelocity = (float) Math.sqrt(velocity.x * velocity.x + gravity * gravity);
 
@@ -417,6 +417,6 @@ public class Airplane extends AbstractMoveable implements Hittable
     public void getAttackDamageType()
     {
         // TODO Auto-generated method stub
-        
+
     }
 }

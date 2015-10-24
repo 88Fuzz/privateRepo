@@ -44,7 +44,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
     @Override
     public void create()
     {
-        mapDetails = new MapDetails(6500);
+        mapDetails = new MapDetails(6500, -500.8f);
 
         assMan = new AssetManager();
         assMan.load(TextureConstants.TILE_TEXTURES, TextureAtlas.class);
