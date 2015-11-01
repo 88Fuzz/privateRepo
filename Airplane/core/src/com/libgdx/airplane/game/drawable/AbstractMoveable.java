@@ -11,7 +11,8 @@ public abstract class AbstractMoveable extends AbstractDrawable
     protected Vector2 velocity;
     protected float acceleration;
     protected float pitchAcceleration;
-    protected float maxAcceleration;
+    protected float pitchGravityChange; 
+    protected float maxSingleDimensionVelocity;
     protected float maxPitchAcceleration;
 
     public AbstractMoveable()
@@ -20,7 +21,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
     }
 
     public void init(final MapDetails mapDetails, final boolean alive, final Vector2 position, final Vector2 velocity,
-            final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
+            final float maxSingleDimensionVelocity, final float maxPitchAcceleration, final float pitch,
             final float singleDimensionVelocity)
     {
         super.init(mapDetails, alive, position);
@@ -30,7 +31,8 @@ public abstract class AbstractMoveable extends AbstractDrawable
         this.velocity = velocity;
         this.acceleration = 0;
         this.pitchAcceleration = 0;
-        this.maxAcceleration = maxAcceleration;
+        this.pitchGravityChange = 0;
+        this.maxSingleDimensionVelocity = maxSingleDimensionVelocity;
         this.maxPitchAcceleration = maxPitchAcceleration;
     }
 
@@ -47,9 +49,10 @@ public abstract class AbstractMoveable extends AbstractDrawable
     protected void updatePosition(final float dt)
     {
         singleDimensionVelocity += acceleration;
-        pitch += pitchAcceleration;
+        float deltaPitch = pitchAcceleration + pitchGravityChange;
+        pitch += deltaPitch;
 
-        sprite.rotate(pitchAcceleration);
+        sprite.rotate(deltaPitch);
 
         velocity.x = (float) (singleDimensionVelocity * Math.cos(Math.toRadians(pitch)));
         velocity.y = (float) (singleDimensionVelocity * Math.sin(Math.toRadians(pitch)));
@@ -76,27 +79,32 @@ public abstract class AbstractMoveable extends AbstractDrawable
 
     private void checkAccelerations()
     {
-        if(singleDimensionVelocity < -1 * maxAcceleration)
+        if(singleDimensionVelocity < -1 * maxSingleDimensionVelocity)
         {
-            singleDimensionVelocity = -1 * maxAcceleration;
+            singleDimensionVelocity = -1 * maxSingleDimensionVelocity;
             setAcceleration(0);
         }
-        else if(singleDimensionVelocity > maxAcceleration)
+        else if(singleDimensionVelocity > maxSingleDimensionVelocity)
         {
-            singleDimensionVelocity = maxAcceleration;
+            singleDimensionVelocity = maxSingleDimensionVelocity;
             setAcceleration(0);
         }
 
-        if(pitch < -1 * maxPitchAcceleration)
-        {
-            pitch = -1 * maxPitchAcceleration;
-            setPitchAcceleration(0);
-        }
-        else if(pitch > maxPitchAcceleration)
-        {
-            pitch = maxPitchAcceleration;
-            setPitchAcceleration(0);
-        }
+        if(pitch > 360)
+            pitch -= 360;
+        else if(pitch < -360)
+            pitch += 360;
+
+        // if(pitch < -1 * maxPitchAcceleration)
+        // {
+        // pitch = -1 * maxPitchAcceleration;
+        // setPitchAcceleration(0);
+        // }
+        // else if(pitch > maxPitchAcceleration)
+        // {
+        // pitch = maxPitchAcceleration;
+        // setPitchAcceleration(0);
+        // }
     }
 
     private void checkPositions()

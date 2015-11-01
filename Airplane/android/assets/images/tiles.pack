@@ -3,6 +3,13 @@ tiles.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Airplane
+  rotate: false
+  xy: 1, 4
+  size: 100, 20
+  orig: 100, 20
+  offset: 0, 0
+  index: -1
 SinglePixel
   rotate: false
   xy: 1, 1

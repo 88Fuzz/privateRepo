@@ -2,8 +2,12 @@ package com.libgdx.airplane.game.drawable.airplanes;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.libgdx.airplane.game.constants.TextureConstants;
+import com.libgdx.airplane.game.utils.GraphicsUtils;
 import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Player extends Airplane
@@ -14,27 +18,24 @@ public class Player extends Airplane
     private final Vector2 initialPosition;
 
     public Player(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position,
-            final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
-            final float singleDimensionVelocity, final int numBombs, final int numMissiles, final float bombDelay,
-            final float missileDelay, final float bulletDelay)
+            final Vector2 velocity, final float maxSingleDimensionVelocity, final float maxPitchAcceleration,
+            final float pitch, final float singleDimensionVelocity, final int numBombs, final int numMissiles,
+            final float bombDelay, final float missileDelay, final float bulletDelay)
     {
         super(atlas);
         this.initialPosition = new Vector2();
 
-        init(atlas, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+        init(atlas, mapDetails, position, velocity, maxSingleDimensionVelocity, maxPitchAcceleration, pitch,
                 singleDimensionVelocity, numBombs, numMissiles, bombDelay, missileDelay, bulletDelay);
     }
 
     public void init(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position,
-            final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
-            final float singleDimensionVelocity, final int numBombs, final int numMissiles, final float bombDelay,
-            final float missileDelay, final float bulletDelay)
+            final Vector2 velocity, final float maxSingleDimensionVelocity, final float maxPitchAcceleration,
+            final float pitch, final float singleDimensionVelocity, final int numBombs, final int numMissiles,
+            final float bombDelay, final float missileDelay, final float bulletDelay)
     {
-        super.init(atlas, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+        super.init(atlas, mapDetails, position, velocity, maxSingleDimensionVelocity, maxPitchAcceleration, pitch,
                 singleDimensionVelocity, numBombs, numMissiles, bombDelay, missileDelay, bulletDelay);
-
-        sprite.setColor(Color.GREEN);
-        // sprite.setBounds(0, 0, 100, 20);
 
         initialPosition.x = position.x;
         initialPosition.y = position.y;

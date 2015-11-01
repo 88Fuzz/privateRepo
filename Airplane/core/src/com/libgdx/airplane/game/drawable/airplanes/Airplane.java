@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.libgdx.airplane.game.constants.TextureConstants;
 import com.libgdx.airplane.game.drawable.AbstractMoveable;
@@ -75,9 +76,8 @@ public class Airplane extends AbstractMoveable implements Hittable
     {
         super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
                 singleDimensionVelocity);
-        GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.SINGLE_PIXEL));
-        sprite.setColor(Color.YELLOW);
-        sprite.setBounds(0, 0, 100, 20);
+        GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.AIRPLANE));
+        sprite.setOrigin(0, 0);
 
         bombsLeft = numBombs;
         this.bombDelay = bombDelay;
@@ -238,11 +238,10 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     private Missile getNewMissile()
     {
-        float singleDimensionVelocity = this.singleDimensionVelocity + 500;
-        Vector2 dimension = getDimension();
+        final float singleDimensionVelocity = this.singleDimensionVelocity + 500;
 
-        return new Missile(atlas, mapDetails, new Vector2(position.x + dimension.x, position.y), new Vector2(),
-                Math.abs(singleDimensionVelocity), Math.abs(pitch), pitch, singleDimensionVelocity, 2000, true);
+        return new Missile(atlas, mapDetails, getFrontOfAirplane(), new Vector2(), Math.abs(singleDimensionVelocity),
+                Math.abs(pitch), pitch, singleDimensionVelocity, 2000, true);
     }
 
     /**
@@ -252,11 +251,10 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     private Missile getNewBullet()
     {
-        float singleDimensionVelocity = this.singleDimensionVelocity + 300;
-        Vector2 dimension = getDimension();
+        final float singleDimensionVelocity = this.singleDimensionVelocity + 300;
 
-        return new Missile(atlas, mapDetails, new Vector2(position.x + dimension.x, position.y), new Vector2(),
-                Math.abs(singleDimensionVelocity), Math.abs(pitch), pitch, singleDimensionVelocity, 1700, false);
+        return new Missile(atlas, mapDetails, getFrontOfAirplane(), new Vector2(), Math.abs(singleDimensionVelocity),
+                Math.abs(pitch), pitch, singleDimensionVelocity, 1700, false);
     }
 
     /**
@@ -273,6 +271,20 @@ public class Airplane extends AbstractMoveable implements Hittable
 
         return new Bomb(atlas, mapDetails, new Vector2(position.x, position.y), new Vector2(0, 0),
                 Math.abs(singleDimensionVelocity), Math.abs(angle), angle, singleDimensionVelocity);
+    }
+
+    /**
+     * Will return the front of the airplane after adjusting for the pitch
+     * 
+     * @return
+     */
+    protected Vector2 getFrontOfAirplane()
+    {
+        final Vector2 dimension = getDimension();
+        final float x = (float) (position.x + Math.cos(Math.toRadians(pitch)) * dimension.x);
+        final float y = (float) (position.y + Math.sin(Math.toRadians(pitch)) * dimension.x);
+
+        return new Vector2(x, y);
     }
 
     /**
