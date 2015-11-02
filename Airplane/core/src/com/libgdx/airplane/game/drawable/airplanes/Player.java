@@ -1,13 +1,10 @@
 package com.libgdx.airplane.game.drawable.airplanes;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.libgdx.airplane.game.constants.TextureConstants;
-import com.libgdx.airplane.game.utils.GraphicsUtils;
+import com.libgdx.airplane.game.drawable.airplanes.Maneuvers.RotationManeuver;
+import com.libgdx.airplane.game.drawable.airplanes.Maneuvers.UTurnManeuver;
 import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Player extends Airplane
@@ -80,6 +77,14 @@ public class Player extends Airplane
         else if(Input.Keys.S == keyCode)
         {
             addPitchAcceleration(-1 * MAX_PITCH_ACCELERATION);
+        }
+        else if(Input.Keys.Q == keyCode)
+        {
+            setManeuver(new RotationManeuver(2.0f, 360f));
+        }
+        else if(Input.Keys.E == keyCode)
+        {
+            setManeuver(new UTurnManeuver(2.0f));
         }
         else if(Input.Keys.SPACE == keyCode)
         {

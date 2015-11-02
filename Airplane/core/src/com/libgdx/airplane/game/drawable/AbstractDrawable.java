@@ -111,4 +111,15 @@ public abstract class AbstractDrawable implements Hittable
         // TODO things should have a different hitbox than drawing dimensions
         return new Vector2(sprite.getWidth(), sprite.getHeight());
     }
+
+    /**
+     * Will flip about the x or y axis.
+     * 
+     * @param xFlip
+     * @param yFlip
+     */
+    public void flipSprite(final boolean xFlip, final boolean yFlip)
+    {
+        sprite.flip(xFlip, yFlip);
+    }
 }

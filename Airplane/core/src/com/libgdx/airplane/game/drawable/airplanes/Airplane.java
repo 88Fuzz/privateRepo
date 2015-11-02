@@ -4,13 +4,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.libgdx.airplane.game.constants.TextureConstants;
 import com.libgdx.airplane.game.drawable.AbstractMoveable;
+import com.libgdx.airplane.game.drawable.airplanes.Maneuvers.ManeuverInterface;
 import com.libgdx.airplane.game.drawable.weapons.Bomb;
 import com.libgdx.airplane.game.drawable.weapons.Hittable;
 import com.libgdx.airplane.game.drawable.weapons.Missile;
@@ -19,8 +18,6 @@ import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Airplane extends AbstractMoveable implements Hittable
 {
-    private float health;
-
     private final TextureAtlas atlas;
 
     private final List<Bomb> bombs;
@@ -41,6 +38,9 @@ public class Airplane extends AbstractMoveable implements Hittable
     protected float bulletDelay;
     protected float bulletTimer;
     private boolean fireBullets;
+
+    private float health;
+    private ManeuverInterface maneuver;
 
     // Constructor should only be used by classes that extend this class. Once
     // this is called by child class, the child class should call init()
@@ -92,6 +92,7 @@ public class Airplane extends AbstractMoveable implements Hittable
         this.bulletTimer = bulletDelay;
 
         health = 50;
+        maneuver = null;
     }
 
     /**
@@ -104,6 +105,17 @@ public class Airplane extends AbstractMoveable implements Hittable
         updateWeapons(dt);
         updateTimers(dt);
         fireBullet();
+
+        if(maneuver != null)
+        {
+            maneuver.startManeuver(this);
+            maneuver.triggeredManeuver(this);
+            if(maneuver.isManeuverFinished(this))
+            {
+                maneuver.endManeuver(this);
+                maneuver = null;
+            }
+        }
     }
 
     /**
@@ -416,6 +428,16 @@ public class Airplane extends AbstractMoveable implements Hittable
             kill();
 
         return damageTaken;
+    }
+
+    public void setManeuver(final ManeuverInterface maneuver)
+    {
+        if(this.maneuver != null)
+        {
+            this.maneuver.endManeuver(this);
+        }
+
+        this.maneuver = maneuver;
     }
 
     @Override

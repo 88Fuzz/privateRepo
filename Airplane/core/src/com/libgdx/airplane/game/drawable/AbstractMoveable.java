@@ -11,7 +11,6 @@ public abstract class AbstractMoveable extends AbstractDrawable
     protected Vector2 velocity;
     protected float acceleration;
     protected float pitchAcceleration;
-    protected float pitchGravityChange; 
     protected float maxSingleDimensionVelocity;
     protected float maxPitchAcceleration;
 
@@ -31,7 +30,6 @@ public abstract class AbstractMoveable extends AbstractDrawable
         this.velocity = velocity;
         this.acceleration = 0;
         this.pitchAcceleration = 0;
-        this.pitchGravityChange = 0;
         this.maxSingleDimensionVelocity = maxSingleDimensionVelocity;
         this.maxPitchAcceleration = maxPitchAcceleration;
     }
@@ -49,7 +47,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
     protected void updatePosition(final float dt)
     {
         singleDimensionVelocity += acceleration;
-        float deltaPitch = pitchAcceleration + pitchGravityChange;
+        float deltaPitch = pitchAcceleration;
         pitch += deltaPitch;
 
         sprite.rotate(deltaPitch);
@@ -90,9 +88,9 @@ public abstract class AbstractMoveable extends AbstractDrawable
             setAcceleration(0);
         }
 
-        if(pitch > 360)
+        if(pitch >= 360)
             pitch -= 360;
-        else if(pitch < -360)
+        else if(pitch <= -360)
             pitch += 360;
 
         // if(pitch < -1 * maxPitchAcceleration)
@@ -150,11 +148,21 @@ public abstract class AbstractMoveable extends AbstractDrawable
 
     public void addPitchAcceleration(final float pitchAcceleration)
     {
-        this.pitchAcceleration = pitchAcceleration;
+        this.pitchAcceleration += pitchAcceleration;
     }
 
     public void setPitchAcceleration(final float pitchAcceleration)
     {
         this.pitchAcceleration = pitchAcceleration;
+    }
+
+    public float getPitch()
+    {
+        return pitch;
+    }
+
+    public float getPitchAcceleration()
+    {
+        return pitchAcceleration;
     }
 }
