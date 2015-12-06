@@ -7,6 +7,12 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.libgdx.airplane.game.constants.TextureConstants;
 import com.libgdx.airplane.game.drawable.AbstractMoveable;
 import com.libgdx.airplane.game.drawable.airplanes.Maneuvers.ManeuverInterface;
@@ -18,7 +24,10 @@ import com.libgdx.airplane.game.utils.MapDetails;
 
 public class Airplane extends AbstractMoveable implements Hittable
 {
+    private static final Vector2 AIRPLANE_SIZE = new Vector2(50, 10);
+
     private final TextureAtlas atlas;
+    private final World physicsWorld;
 
     private final List<Bomb> bombs;
     private final List<Bomb> newBombs;
@@ -44,10 +53,11 @@ public class Airplane extends AbstractMoveable implements Hittable
 
     // Constructor should only be used by classes that extend this class. Once
     // this is called by child class, the child class should call init()
-    public Airplane(final TextureAtlas atlas)
+    public Airplane(final TextureAtlas atlas, final World physicsWorld)
     {
         super();
         this.atlas = atlas;
+        this.physicsWorld = physicsWorld;
 
         // TODO: if this ever becomes mobile, pre-allocate bombs
         bombs = new LinkedList<Bomb>();
@@ -58,26 +68,45 @@ public class Airplane extends AbstractMoveable implements Hittable
         newBullets = new LinkedList<Missile>();
     }
 
-    public Airplane(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position,
-            final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
-            final float singleDimensionVelocity, final int numBombs, final int numMissiles, final float bombDelay,
-            final float missileDelay, final float bulletDelay)
+    public Airplane(final TextureAtlas atlas, final World physicsWorld, final MapDetails mapDetails,
+            final Vector2 position, final Vector2 velocity, final float maxAcceleration,
+            final float maxPitchAcceleration, final float pitch, final float singleDimensionVelocity,
+            final int numBombs, final int numMissiles, final float bombDelay, final float missileDelay,
+            final float bulletDelay)
     {
-        this(atlas);
+        this(atlas, physicsWorld);
 
-        init(atlas, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+        init(atlas, physicsWorld, mapDetails, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
                 singleDimensionVelocity, numBombs, numMissiles, bombDelay, missileDelay, bulletDelay);
     }
 
-    public void init(final TextureAtlas atlas, final MapDetails mapDetails, final Vector2 position,
-            final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
-            final float singleDimensionVelocity, final int numBombs, final int numMissiles, final float bombDelay,
-            final float missileDelay, final float bulletDelay)
+    public void init(final TextureAtlas atlas, final World physicsWorld, final MapDetails mapDetails,
+            final Vector2 position, final Vector2 velocity, final float maxAcceleration,
+            final float maxPitchAcceleration, final float pitch, final float singleDimensionVelocity,
+            final int numBombs, final int numMissiles, final float bombDelay, final float missileDelay,
+            final float bulletDelay)
     {
-        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+        final BodyDef defaultDynamicBodyDef = new BodyDef();
+        defaultDynamicBodyDef.type = BodyType.DynamicBody;
+
+        final PolygonShape square = new PolygonShape();
+//        square.setAsBox(AIRPLANE_SIZE.x / 2, AIRPLANE_SIZE.y / 2);
+        square.setAsBox(5f, 1f);
+
+        final FixtureDef boxFixtureDef = new FixtureDef();
+        boxFixtureDef.shape = square;
+        boxFixtureDef.density = 0.8f;
+        boxFixtureDef.friction = 0.8f;
+        boxFixtureDef.restitution = 0.15f;
+
+        defaultDynamicBodyDef.position.set(position.x, position.y);
+        Body body = physicsWorld.createBody(defaultDynamicBodyDef);
+        body.createFixture(boxFixtureDef);
+
+        super.init(body, AIRPLANE_SIZE, mapDetails, true, velocity, maxAcceleration, maxPitchAcceleration, pitch,
                 singleDimensionVelocity);
         GraphicsUtils.applyTextureRegion(sprite, atlas.findRegion(TextureConstants.AIRPLANE));
-        sprite.setOrigin(0, 0);
+        GraphicsUtils.applySpriteToBody(sprite, bodySize);
 
         bombsLeft = numBombs;
         this.bombDelay = bombDelay;
@@ -250,7 +279,7 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     private Missile getNewMissile()
     {
-        final float singleDimensionVelocity = this.singleDimensionVelocity + 500;
+        final float singleDimensionVelocity = this.maxSingleDimensionVelocity + 500;
 
         return new Missile(atlas, mapDetails, getFrontOfAirplane(), new Vector2(), Math.abs(singleDimensionVelocity),
                 Math.abs(pitch), pitch, singleDimensionVelocity, 2000, true);
@@ -263,7 +292,7 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     private Missile getNewBullet()
     {
-        final float singleDimensionVelocity = this.singleDimensionVelocity + 300;
+        final float singleDimensionVelocity = this.maxSingleDimensionVelocity + 300;
 
         return new Missile(atlas, mapDetails, getFrontOfAirplane(), new Vector2(), Math.abs(singleDimensionVelocity),
                 Math.abs(pitch), pitch, singleDimensionVelocity, 1700, false);
@@ -281,7 +310,7 @@ public class Airplane extends AbstractMoveable implements Hittable
         float angle = (float) Math.toDegrees(Math.atan(gravity / velocity.x));
         float singleDimensionVelocity = (float) Math.sqrt(velocity.x * velocity.x + gravity * gravity);
 
-        return new Bomb(atlas, mapDetails, new Vector2(position.x, position.y), new Vector2(0, 0),
+        return new Bomb(atlas, mapDetails, physicsBody.getPosition(), new Vector2(0, 0),
                 Math.abs(singleDimensionVelocity), Math.abs(angle), angle, singleDimensionVelocity);
     }
 
@@ -292,9 +321,10 @@ public class Airplane extends AbstractMoveable implements Hittable
      */
     protected Vector2 getFrontOfAirplane()
     {
-        final Vector2 dimension = getDimension();
-        final float x = (float) (position.x + Math.cos(Math.toRadians(pitch)) * dimension.x);
-        final float y = (float) (position.y + Math.sin(Math.toRadians(pitch)) * dimension.x);
+        // TODO this will probably break because of pixels to box2d meters.
+        final Vector2 position = physicsBody.getPosition();
+        final float x = (float) (position.x + Math.cos(Math.toRadians(pitch)) * bodySize.x);
+        final float y = (float) (position.y + Math.sin(Math.toRadians(pitch)) * bodySize.y);
 
         return new Vector2(x, y);
     }

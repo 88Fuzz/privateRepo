@@ -2,11 +2,11 @@ package com.libgdx.airplane.game.drawable;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.libgdx.airplane.game.utils.MapDetails;
 
 public abstract class AbstractMoveable extends AbstractDrawable
 {
-    protected float singleDimensionVelocity;
     protected float pitch;
     protected Vector2 velocity;
     protected float acceleration;
@@ -19,13 +19,12 @@ public abstract class AbstractMoveable extends AbstractDrawable
         super();
     }
 
-    public void init(final MapDetails mapDetails, final boolean alive, final Vector2 position, final Vector2 velocity,
+    public void init(final Body physicsBody, final Vector2 bodySize, final MapDetails mapDetails, final boolean alive, final Vector2 velocity,
             final float maxSingleDimensionVelocity, final float maxPitchAcceleration, final float pitch,
-            final float singleDimensionVelocity)
+            final float initialVelocity)
     {
-        super.init(mapDetails, alive, position);
+        super.init(physicsBody, bodySize, mapDetails, alive);
 
-        this.singleDimensionVelocity = singleDimensionVelocity;
         this.pitch = pitch;
         this.velocity = velocity;
         this.acceleration = 0;
@@ -46,19 +45,57 @@ public abstract class AbstractMoveable extends AbstractDrawable
      */
     protected void updatePosition(final float dt)
     {
-        singleDimensionVelocity += acceleration;
-        float deltaPitch = pitchAcceleration;
-        pitch += deltaPitch;
+        Vector2 linearVelocity = physicsBody.getLinearVelocity();
+        float length = linearVelocity.len();
+            System.out.println("velocity " + physicsBody.getLinearVelocity());
 
-        sprite.rotate(deltaPitch);
+        physicsBody.setLinearVelocity(0, 0);
+            physicsBody.applyAngularImpulse(pitchAcceleration, true);
+            float angle = physicsBody.getAngle();
+            final Vector2 force = new Vector2();
 
-        velocity.x = (float) (singleDimensionVelocity * Math.cos(Math.toRadians(pitch)));
-        velocity.y = (float) (singleDimensionVelocity * Math.sin(Math.toRadians(pitch)));
+//            force.x = (float) (force1d* Math.cos(angle));
+//            force.y = (float) (force1d* Math.sin(angle));
+            force.x = (float) (acceleration* Math.cos(angle));
+            force.y = (float) (acceleration* Math.sin(angle));
+            System.out.println("FORCE " + force);
+            
+//            TODO remove the oldFore vector, it is not needed
+            Vector2 oldForce = new Vector2();
+            oldForce.x = (float) (length * Math.cos(angle));
+            oldForce.y = (float) (length * Math.sin(angle));
+            
+            oldForce.scl(physicsBody.getMass() * 60);
 
-        position.x += velocity.x * dt;
-        position.y += velocity.y * dt;
+//            System.out.println(force + " " + angle);
+//            System.out.println(oldForce + " " + angle);
+            
+            force.add(oldForce);
+            System.out.println("FORCE2 " + force);
+            physicsBody.applyForceToCenter(force, true);
+
+        // singleDimensionVelocity += acceleration;
+        // float deltaPitch = pitchAcceleration;
+        // pitch += deltaPitch;
+        //
+        // sprite.rotate(deltaPitch);
+        //
+        // velocity.x = (float) (singleDimensionVelocity *
+        // Math.cos(Math.toRadians(pitch)));
+        // velocity.y = (float) (singleDimensionVelocity *
+        // Math.sin(Math.toRadians(pitch)));
+        //
+        // position.x += velocity.x * dt;
+        // position.y += velocity.y * dt;
+        //
+        // sprite.setPosition(position.x, position.y);
+
+        final Vector2 position = physicsBody.getPosition();
+        position.x = position.x - sprite.getWidth() / 2;
+        position.y = position.y - sprite.getHeight() / 2;
 
         sprite.setPosition(position.x, position.y);
+        sprite.setRotation((float) Math.toDegrees(physicsBody.getAngle()));
 
         if(position.y < 0)
         {
@@ -77,6 +114,7 @@ public abstract class AbstractMoveable extends AbstractDrawable
 
     private void checkAccelerations()
     {
+        float singleDimensionVelocity = physicsBody.getLinearVelocity().len();
         if(singleDimensionVelocity < -1 * maxSingleDimensionVelocity)
         {
             singleDimensionVelocity = -1 * maxSingleDimensionVelocity;
@@ -107,11 +145,12 @@ public abstract class AbstractMoveable extends AbstractDrawable
 
     private void checkPositions()
     {
+        Vector2 position = physicsBody.getPosition();
         if(position.x < 0)
         {
-            position.x = (float) mapDetails.getMapWidth();
+            position.x = mapDetails.getMapWidth();
         }
-        else if(position.x > (float) mapDetails.getMapWidth())
+        else if(position.x > mapDetails.getMapWidth())
         {
             position.x = 0;
         }
@@ -129,11 +168,6 @@ public abstract class AbstractMoveable extends AbstractDrawable
         {
             super.draw(batch);
         }
-    }
-
-    public void addSingleDimensionVelocity(final float velocity)
-    {
-        singleDimensionVelocity += velocity;
     }
 
     public void addAcceleration(final float acceleration)

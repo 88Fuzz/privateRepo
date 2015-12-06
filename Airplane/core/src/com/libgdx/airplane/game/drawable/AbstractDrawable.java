@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.libgdx.airplane.game.drawable.weapons.Hittable;
 import com.libgdx.airplane.game.utils.MapDetails;
 
@@ -14,21 +15,23 @@ import com.libgdx.airplane.game.utils.MapDetails;
  */
 public abstract class AbstractDrawable implements Hittable
 {
-    protected Vector2 position;
     protected Sprite sprite;
     protected boolean alive;
     protected MapDetails mapDetails;
+    protected Body physicsBody;
+    protected Vector2 bodySize;
 
     protected AbstractDrawable()
     {
         sprite = new Sprite();
     }
 
-    protected void init(final MapDetails mapDetails, final boolean alive, final Vector2 position)
+    protected void init(final Body physicsBody, final Vector2 bodySize, final MapDetails mapDetails, final boolean alive)
     {
+        this.physicsBody = physicsBody;
         this.mapDetails = mapDetails;
-        this.position = position;
         this.alive = alive;
+        this.bodySize = bodySize;
     }
 
     /**
@@ -62,6 +65,7 @@ public abstract class AbstractDrawable implements Hittable
 
         // In order to make a world wrapping, if objects are at the ends of the
         // playable map, draw the objects on both ends
+        final Vector2 position = physicsBody.getPosition();
         if(position.x < cameraWidth)
         {
             sprite.setPosition(mapWidth + position.x, position.y);
@@ -88,7 +92,7 @@ public abstract class AbstractDrawable implements Hittable
      */
     public Vector2 getPosition()
     {
-        return position;
+        return physicsBody.getPosition();
     }
 
     public boolean isAlive()

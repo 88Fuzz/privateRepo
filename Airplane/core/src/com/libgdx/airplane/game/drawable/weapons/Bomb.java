@@ -32,8 +32,9 @@ public class Bomb extends AbstractMoveable implements Hittable
             final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
             final float singleDimensionVelocity)
     {
-        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
-                singleDimensionVelocity);
+        //TODO fix this
+//        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+//                singleDimensionVelocity);
 
         //TODO Damage should be calculated by a look up table with the bomb type
         this.damage = 50;

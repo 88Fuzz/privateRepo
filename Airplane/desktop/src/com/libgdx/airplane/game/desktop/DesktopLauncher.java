@@ -22,8 +22,10 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Airplanes";
         config.useGL30 = false;
-        config.width = 1920;
-        config.height = 1080;
+//        config.width = 1920;
+//        config.height = 1080;
+        config.width = 800;
+        config.height = 600;
 		new LwjglApplication(new Game(), config);
 	}
 }

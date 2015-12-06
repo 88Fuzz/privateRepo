@@ -34,8 +34,9 @@ public class Missile extends AbstractMoveable implements Hittable
             final Vector2 velocity, final float maxAcceleration, final float maxPitchAcceleration, final float pitch,
             final float singleDimensionVelocity, final float maxDistance, final boolean isMissile)
     {
-        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
-                singleDimensionVelocity);
+        //TODO fix this
+//        super.init(mapDetails, true, position, velocity, maxAcceleration, maxPitchAcceleration, pitch,
+//                singleDimensionVelocity);
 
         distanceTraveled = 0;
         this.maxDistance = maxDistance;
@@ -64,11 +65,12 @@ public class Missile extends AbstractMoveable implements Hittable
     @Override
     public void update(final float dt)
     {
-        Vector2 oldPos = new Vector2(position.x, position.y);
+        //TODO this is for sure broken!!
+        Vector2 oldPos = physicsBody.getPosition();
         updatePosition(dt);
         if(isAlive())
         {
-            distanceTraveled += CollisionDetection.getDistance(oldPos, position);
+            distanceTraveled += CollisionDetection.getDistance(oldPos, physicsBody.getPosition());
             checkBounds();
 
             if(distanceTraveled > maxDistance)

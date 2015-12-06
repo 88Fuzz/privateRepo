@@ -11,6 +11,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 import com.libgdx.airplane.game.constants.TextureConstants;
 import com.libgdx.airplane.game.drawable.AbstractDrawable;
 import com.libgdx.airplane.game.drawable.airplanes.Airplane;
@@ -40,10 +41,13 @@ public class Game extends ApplicationAdapter implements InputProcessor
     private float timeSinceLastUpdate;
     private WorldRenderer worldRenderer;
     private MapDetails mapDetails;
+    private World physicsWorld;
 
     @Override
     public void create()
     {
+        physicsWorld = new World(new Vector2(0, 0), true);
+
         mapDetails = new MapDetails(6500, -500.8f);
 
         assMan = new AssetManager();
@@ -51,17 +55,18 @@ public class Game extends ApplicationAdapter implements InputProcessor
         assMan.finishLoading();
         atlas = assMan.get(TextureConstants.TILE_TEXTURES);
 
-        player = new Player(atlas, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0, 500, 5, 5, 1, 2,
-                .25f);
+        player = new Player(atlas, physicsWorld, mapDetails, new Vector2(100, 700), new Vector2(0, 0), 1000, 10, 0,
+                500, 5, 5, 1, 2, .25f);
         activeBombs = new LinkedList<Bomb>();
         activeBullets = new LinkedList<Missile>();
         activeMissiles = new LinkedList<Missile>();
 
         constructBuildings();
-        constructAirplanes();
+        // constructAirplanes();
+        airplanes = new LinkedList<AbstractDrawable>();
 
         timeSinceLastUpdate = 0;
-        worldRenderer = new WorldRenderer(player);
+        worldRenderer = new WorldRenderer(physicsWorld, player, true);
         worldRenderer.addDrawables(buildings);
         worldRenderer.addDrawables(airplanes);
         Gdx.input.setInputProcessor(this);
@@ -79,6 +84,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {
             timeSinceLastUpdate -= TIMEPERFRAME;
+            physicsWorld.step(TIMEPERFRAME, 8, 3);
             update(TIMEPERFRAME);
             checkCollisions();
         }
@@ -103,7 +109,7 @@ public class Game extends ApplicationAdapter implements InputProcessor
 
         for(int j = 0; j < numBuildings; j++)
         {
-            buildings.add(new Building(atlas, mapDetails, new Vector2(x, y), width, height));
+            buildings.add(new Building(atlas, physicsWorld, mapDetails, new Vector2(x, y), width, height));
             height = 500;
 
             x += RandomNumberUtils.getRandomInt(xMin, xMax);
@@ -132,9 +138,9 @@ public class Game extends ApplicationAdapter implements InputProcessor
             int y = RandomNumberUtils.getRandomInt(Gdx.graphics.getHeight() / 2, Gdx.graphics.getHeight());
             int singleDimensionVelocity = -1 * RandomNumberUtils.getRandomInt(maxAcceleration / 5, maxAcceleration / 2);
 
-            airplanes.add(new Airplane(atlas, mapDetails, new Vector2(x, y), new Vector2(0, 0), maxAcceleration,
-                    maxPitchAcceleration, pitch, singleDimensionVelocity, numBombs, numMissiles, bombDelay,
-                    missileDelay, bulletDelay));
+            airplanes.add(new Airplane(atlas, physicsWorld, mapDetails, new Vector2(x, y), new Vector2(0, 0),
+                    maxAcceleration, maxPitchAcceleration, pitch, singleDimensionVelocity, numBombs, numMissiles,
+                    bombDelay, missileDelay, bulletDelay));
         }
     }
 
@@ -301,6 +307,12 @@ public class Game extends ApplicationAdapter implements InputProcessor
     }
 
     @Override
+    public void resize(int width, int height)
+    {
+        worldRenderer.update(width, height);
+    }
+
+    @Override
     public boolean keyDown(final int keyCode)
     {
         player.processKeyDown(keyCode);
@@ -354,5 +366,12 @@ public class Game extends ApplicationAdapter implements InputProcessor
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    // TODO figure out what needs to be disposed
+    @Override
+    public void dispose()
+    {
+        worldRenderer.dispose();
     }
 }
