@@ -6,7 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.pixel.wars.game.config.PixelConfig;
-import com.pixel.wars.game.config.TeamConfig.TeamConfigKeys;
+import com.pixel.wars.game.config.PixelConfig.PixelConfigKeys;
 import com.pixel.wars.game.data.Pixels;
 import com.pixel.wars.game.drawing.Pixel;
 import com.pixel.wars.game.drawing.Pixel.Team;
@@ -43,7 +43,7 @@ public class PowerProcessor implements GestureListener
     private float pixelPunchWaitTime;
     private boolean pixelPunch;
     private Vector2 pixelPunchLocation;
-    private Map<TeamConfigKeys, Float> teamConfigValues;
+    private Map<PixelConfigKeys, Float> teamConfigValues;
 
     public PowerProcessor()
     {
@@ -94,7 +94,7 @@ public class PowerProcessor implements GestureListener
             final int x = getRandomNumberInGrid((int) paraPixelBaseLocation.x, variation, pixels.getWidth());
             final int y = getRandomNumberInGrid((int) paraPixelBaseLocation.y, variation, pixels.getHeight());
             final int newPixelOffset = 1;
-            convertPixels(x, y, newPixelOffset, getSpecialHealth(teamConfigValues.get(TeamConfigKeys.PARA_PIXEL_HEALTH_MULTIPLIER)));
+            convertPixels(x, y, newPixelOffset, getSpecialHealth(teamConfigValues.get(PixelConfigKeys.PARA_PIXEL_HEALTH_MULTIPLIER)));
 
             paraPixelDrops++;
             paraPixelWaitTime = PARAPIXEL_WAIT_TIME;
@@ -145,7 +145,7 @@ public class PowerProcessor implements GestureListener
                     break;
                 }
 
-                convertPixels(i, (int) pixelPunchLocation.y, 1, getSpecialHealth(teamConfigValues.get(TeamConfigKeys.PIXEL_PUNCH_HEALTH_MULTIPLIER)));
+                convertPixels(i, (int) pixelPunchLocation.y, 1, getSpecialHealth(teamConfigValues.get(PixelConfigKeys.PIXEL_PUNCH_HEALTH_MULTIPLIER)));
             }
             pixelPunchLocation.x = i;
         }
@@ -154,7 +154,7 @@ public class PowerProcessor implements GestureListener
 
     private float getSpecialHealth(final float multiplier)
     {
-        return teamConfigValues.get(TeamConfigKeys.HEALTH) * multiplier;
+        return teamConfigValues.get(PixelConfigKeys.HEALTH) * multiplier;
     }
 
     // TODO, figure out if we should actually loop forever

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.pixel.wars.game.config.PixelConfig;
+import com.pixel.wars.game.config.TeamConfig;
 import com.pixel.wars.game.data.Pixels;
 import com.pixel.wars.game.drawing.Pixel.Team;
 import com.pixel.wars.game.rendering.TextureConstants;
@@ -29,6 +30,8 @@ public class MainGame extends ApplicationAdapter
 
     private TextureAtlas atlas;
     private StateManager stateManager;
+    private TeamConfig playerConfig;
+    private TeamConfig otherConfig;
     private WorldRenderer worldRenderer;
     private Stack<State> stateStack;
     private float timeSinceLastUpdate;
@@ -41,6 +44,11 @@ public class MainGame extends ApplicationAdapter
         worldRenderer = new WorldRenderer();
         stateManager = new StateManager();
 
+        playerConfig = new TeamConfig();
+        otherConfig = new TeamConfig();
+        playerConfig.init(level);
+        otherConfig.init(level * .9f);
+
         final AssetManager assMan = new AssetManager();
         assMan.load(TextureConstants.TILE_TEXTURES, TextureAtlas.class);
         assMan.finishLoading();
@@ -52,7 +60,6 @@ public class MainGame extends ApplicationAdapter
         final BattleIntroState battleIntroState = (BattleIntroState) stateManager.getState(StateId.BATTLE_INTRO);
         initBattleIntroState(battleIntroState);
         stateStack.add(battleIntroState);
-        // stateStack.add(battleState);
         // TODO insert default menu state
         timeSinceLastUpdate = 0;
     }
@@ -162,9 +169,9 @@ public class MainGame extends ApplicationAdapter
     private PixelConfig getPixelConfig()
     {
         final PixelConfig pixelConfig = new PixelConfig();
-        
-        pixelConfig.setTeamConfigValues(Team.PLAYER, level);
-        pixelConfig.setTeamConfigValues(Team.OTHER, level * 0.9f);
+
+        pixelConfig.setTeamConfigValues(Team.PLAYER, playerConfig);
+        pixelConfig.setTeamConfigValues(Team.OTHER, otherConfig);
 
         return pixelConfig;
     }

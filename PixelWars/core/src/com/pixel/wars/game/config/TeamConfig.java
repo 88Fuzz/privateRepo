@@ -3,82 +3,59 @@ package com.pixel.wars.game.config;
 import java.util.HashMap;
 import java.util.Map;
 
-//TODO Have the player be able to upgrade their damage done, and % of health after take over, and everything else (THIS MAKE THESE UPGRADE-ABLE)
+import com.pixel.wars.game.config.PixelConfig.PixelConfigKeys;
+
+/**
+ * Class that holds what a team's attribute levels are at. Attribute levels are
+ * defined in PixelConfig.
+ * 
+ */
 public class TeamConfig
 {
-    private static final int BASE_HEALTH = 100;
-    private static final float MULTI_HEALTH = 1.07f;
+    private static final float DEFAULT_LEVEL = 0;
+    private final Map<PixelConfigKeys, Float> configMap;
 
-    // TODO this should have a cap
-    private static final float BASE_PERCENT_RES_HEALTH = 0.3f;
-    private static final float MULTI_PRECENT_RES_HEALTH = 1.05f;
-
-    private static final float BASE_MAX_ATTACK = 20;
-    private static final float MULTI_MAX_ATTACK = 1.05f;
-
-    private static final float BASE_MIN_ATTACK = 10;
-    private static final float MULTI_MIN_ATTACK = 1.0489f;
-
-    // TODO this should have a cap
-    private static final float BASE_CRIT_PERCENT = 0.01f;
-    private static final float MULTI_CRIT_PERCENT = 1.03f;
-
-    // TODO this should have a cap
-    private static final float BASE_CRIT_MULTIPLIER = 1.5f;
-    private static final float MULTI_CRIT_MULTIPLIER = 1.05f;
-
-    private static final float BASE_MAX_DEFENSE = 5;
-    private static final float MULTI_MAX_DEFENSE = 1.03f;
-
-    private static final float BASE_MIN_DEFENSE = 1;
-    private static final float MULTI_MIN_DEFENSE = 1.029f;
-
-    private static final float BASE_PARA_PIXEL_HEALTH_MULTIPLIER = 1.5f;
-    private static final float MULTI_PARA_PIXEL_HEALTH_MULTIPLIER = 1.01f;
-
-    private static final float BASE_PIXEL_PUNCH_HEALTH_MULTIPLIER = 1.5f;
-    private static final float MULTI_PIXEL_PUNCH_HEALTH_MULTIPLIER = 1.01f;
-
-    public enum TeamConfigKeys
+    public TeamConfig()
     {
-        HEALTH(BASE_HEALTH, MULTI_HEALTH), RES_HEALTH(BASE_PERCENT_RES_HEALTH, MULTI_PRECENT_RES_HEALTH), MAX_ATTACK(BASE_MAX_ATTACK, MULTI_MAX_ATTACK), MIN_ATTACK(BASE_MIN_ATTACK, MULTI_MIN_ATTACK), CRIT_PERCENT(
-                BASE_CRIT_PERCENT, MULTI_CRIT_PERCENT), CRIT_MULTIPLIER(BASE_CRIT_MULTIPLIER, MULTI_CRIT_MULTIPLIER), MAX_DEFENSE(BASE_MAX_DEFENSE, MULTI_MAX_DEFENSE), MIN_DEFENSE(BASE_MIN_DEFENSE,
-                MULTI_MIN_DEFENSE), PARA_PIXEL_HEALTH_MULTIPLIER(BASE_PARA_PIXEL_HEALTH_MULTIPLIER, MULTI_PARA_PIXEL_HEALTH_MULTIPLIER), PIXEL_PUNCH_HEALTH_MULTIPLIER(
-                BASE_PIXEL_PUNCH_HEALTH_MULTIPLIER, MULTI_PIXEL_PUNCH_HEALTH_MULTIPLIER);
-
-        private final float baseValue;
-        private final float multiplierValue;
-
-        private TeamConfigKeys(final float baseValue, final float multiplierValue)
-        {
-            this.baseValue = baseValue;
-            this.multiplierValue = multiplierValue;
-        }
-
-        public float getBaseValue()
-        {
-            return baseValue;
-        }
-
-        public float getMultiplierValue()
-        {
-            return multiplierValue;
-        }
-    };
-
-    public static Map<TeamConfigKeys, Float> getConfigForLevel(final float level)
-    {
-        final Map<TeamConfigKeys, Float> map = new HashMap<TeamConfigKeys, Float>();
-        for(final TeamConfigKeys key: TeamConfigKeys.values())
-        {
-            map.put(key, getLinearValue(key, level));
-        }
-
-        return map;
+        this.configMap = new HashMap<PixelConfigKeys, Float>();
+        init();
     }
 
-    private static float getLinearValue(final TeamConfigKeys key, final float level)
+    public void init()
     {
-        return (float) (Math.pow(key.getMultiplierValue(), level) * key.getBaseValue());
+        init(DEFAULT_LEVEL);
+    }
+
+    public void init(final float value)
+    {
+        for(final PixelConfigKeys key: PixelConfigKeys.values())
+        {
+            configMap.put(key, value);
+        }
+    }
+
+    // TODO come up with an equations for this and not just all +1, so that
+    // levels at beginning are < 1 but later is > 1
+    public void incrementAllStats()
+    {
+        for(final Map.Entry<PixelConfigKeys, Float> entry: configMap.entrySet())
+        {
+            configMap.put(entry.getKey(), entry.getValue() + 1);
+        }
+    }
+
+    public void incrementSingleStatByOne(final PixelConfigKeys key)
+    {
+        incrementSingleStat(key, 1);
+    }
+
+    public void incrementSingleStat(final PixelConfigKeys key, final float value)
+    {
+        configMap.put(key, configMap.get(key) + value);
+    }
+
+    public float getStatLevel(final PixelConfigKeys key)
+    {
+        return configMap.get(key);
     }
 }

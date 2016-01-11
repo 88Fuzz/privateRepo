@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.pixel.wars.game.config.PixelConfig;
-import com.pixel.wars.game.config.TeamConfig.TeamConfigKeys;
+import com.pixel.wars.game.config.PixelConfig.PixelConfigKeys;
 import com.pixel.wars.game.rendering.TextureConstants;
 import com.pixel.wars.game.utils.RandomUtil;
 
@@ -33,7 +33,7 @@ public class Pixel implements Drawable
     }
 
     private PixelConfig pixelConfig;
-    private Map<TeamConfigKeys, Float> teamConfig;
+    private Map<PixelConfigKeys, Float> teamConfig;
     private final Sprite sprite;
     private final RandomUtil numberGenerator;
     private Rectangle rectangle;
@@ -58,7 +58,7 @@ public class Pixel implements Drawable
     {
         this.pixelConfig = pixelConfig;
         setTeam(team);
-        this.health = teamConfig.get(TeamConfigKeys.HEALTH);
+        this.health = teamConfig.get(PixelConfigKeys.HEALTH);
         this.rectangle = rectangle;
         this.gridPosition.x = rectangle.x / rectangle.width;
         this.gridPosition.y = rectangle.y / rectangle.height;
@@ -110,21 +110,21 @@ public class Pixel implements Drawable
         if(health < 1)
         {
             setTeam(attackingTeam);
-            health = teamConfig.get(TeamConfigKeys.HEALTH) * teamConfig.get(TeamConfigKeys.RES_HEALTH);
+            health = teamConfig.get(PixelConfigKeys.HEALTH) * teamConfig.get(PixelConfigKeys.RES_HEALTH);
         }
     }
 
     private float getDefense()
     {
-        return numberGenerator.getFloat(teamConfig.get(TeamConfigKeys.MIN_DEFENSE), teamConfig.get(TeamConfigKeys.MAX_DEFENSE));
+        return numberGenerator.getFloat(teamConfig.get(PixelConfigKeys.MIN_DEFENSE), teamConfig.get(PixelConfigKeys.MAX_DEFENSE));
     }
 
     public float getAttack()
     {
-        float attack = numberGenerator.getFloat(teamConfig.get(TeamConfigKeys.MIN_ATTACK), teamConfig.get(TeamConfigKeys.MAX_ATTACK));
+        float attack = numberGenerator.getFloat(teamConfig.get(PixelConfigKeys.MIN_ATTACK), teamConfig.get(PixelConfigKeys.MAX_ATTACK));
         if(isCrit())
         {
-            attack *= teamConfig.get(TeamConfigKeys.CRIT_MULTIPLIER);
+            attack *= teamConfig.get(PixelConfigKeys.CRIT_MULTIPLIER);
         }
 
         return attack;
@@ -132,9 +132,9 @@ public class Pixel implements Drawable
 
     private boolean isCrit()
     {
-        return numberGenerator.getFloat(0, 1) < teamConfig.get(TeamConfigKeys.CRIT_PERCENT);
-//        final float random = numberGenerator.getFloat(0, 1);
-//        final float percent = teamConfig.get(TeamConfigKeys.CRIT_PERCENT);
-//        return random < percent;
+        return numberGenerator.getFloat(0, 1) < teamConfig.get(PixelConfigKeys.CRIT_PERCENT);
+        // final float random = numberGenerator.getFloat(0, 1);
+        // final float percent = teamConfig.get(TeamConfigKeys.CRIT_PERCENT);
+        // return random < percent;
     }
 }
