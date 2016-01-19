@@ -41,4 +41,19 @@ public interface State
      * Called when the game is closed.
      */
     public void dispose();
+    
+    /**
+     * Called when a key is pressed.
+     */
+    public boolean keyDown(final int keycode);
+    
+    /**
+     * Called when a key is released.
+     */
+    public boolean keyUp(final int keyCode);
+    
+    /**
+     * Called when a unicode character is entered.
+     */
+    public boolean unicodeEntered(final char character);
 }

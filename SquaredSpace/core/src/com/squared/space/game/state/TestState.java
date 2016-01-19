@@ -46,4 +46,25 @@ public class TestState implements State
     {
         // TODO Auto-generated method stub
     }
+
+    @Override
+    public boolean keyDown(int keycode)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keyCode)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean unicodeEntered(char character)
+    {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }
