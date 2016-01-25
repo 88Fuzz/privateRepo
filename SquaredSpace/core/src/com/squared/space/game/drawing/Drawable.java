@@ -10,4 +10,11 @@ public interface Drawable
      * @param batch
      */
     public void draw(final SpriteBatch batch);
+
+    /**
+     * Method called with the time since the last call to update.
+     * 
+     * @param dt
+     */
+    public void update(final float dt);
 }
