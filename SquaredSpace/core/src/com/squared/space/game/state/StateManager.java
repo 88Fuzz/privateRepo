@@ -9,8 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.math.Vector2;
 
 public class StateManager
 {
@@ -18,7 +17,7 @@ public class StateManager
 
     public enum StateId
     {
-        TEXT_STATE, MENU_STATE, TEST_STATE, NONE;
+        MENU_STATE, SCENE_STATE, TEST_STATE, TEXT_STATE, NONE;
     }
 
     public enum StateAction
@@ -69,14 +68,16 @@ public class StateManager
 
     public StateManager(final TextureAtlas atlas)
     {
-        final BitmapFont font = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), false);
-        final Label label = new Label("", new LabelStyle(font, Color.BLACK));
-        label.setPosition(Gdx.graphics.getWidth() / 10, Gdx.graphics.getHeight() / 2 - Gdx.graphics.getHeight() / 10);
-        label.setWidth(Gdx.graphics.getWidth() - (Gdx.graphics.getWidth() * 2));
         pendingActions = new LinkedList<PendingAction>();
-        STATE_MAP.put(StateId.TEXT_STATE, new TextState(this, label, atlas));
+
+        final BitmapFont font = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), false);
+        font.setColor(Color.BLACK);
+        STATE_MAP.put(StateId.TEXT_STATE, new TextState(this, font,
+                new Vector2(Gdx.graphics.getWidth() / 10, Gdx.graphics.getHeight() / 2 - Gdx.graphics.getHeight() / 10),
+                atlas));
         STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
         STATE_MAP.put(StateId.TEST_STATE, new TestState(this));
+        STATE_MAP.put(StateId.SCENE_STATE, new SceneState(this));
     }
 
     public void addAction(final StateAction action)

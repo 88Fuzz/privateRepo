@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.squared.space.game.event.StateEvent;
-import com.squared.space.game.constants.TextureConstants;
+import com.squared.space.event.StateEvent;
 import com.squared.space.game.context.SceneContext;
 import com.squared.space.game.drawing.Actor;
 import com.squared.space.game.drawing.WorldRenderer;
@@ -23,7 +19,6 @@ public class SceneState implements State
     private static final int ACTION_BUTTON = Input.Keys.SPACE;
 
     private final StateManager stateManager;
-    private Sprite superBackground;
     private Actor player;
     private List<Actor> actors;
     private NavigableMap<Integer, StateEvent> activateEvents;
@@ -35,27 +30,18 @@ public class SceneState implements State
         actors = new ArrayList<Actor>();
     }
 
-    public void init(final SceneContext context)
+    public void init(final WorldRenderer worldRenderer, final SceneContext context)
     {
         this.activateEvents.clear();
         this.activateEvents.putAll(context.getActivateEvents());
         this.actors.clear();
         this.actors.addAll(context.getActors());
 
-        player = new Actor();
         // TODO this should be some kind of "Context" object where it I would do
         // context.getSuperBackground() and context.getPlayer() and everything
         // is scaled correctly.
-        final AtlasRegion pixelRegion = context.getAtlas().findRegion(TextureConstants.SINGLE_PIXEL);
-        superBackground = new Sprite(pixelRegion);
-        superBackground.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        superBackground.setColor(1, 1, 0, 1);
-
-        final Sprite playerSprite = new Sprite(pixelRegion);
-        final int size = Gdx.graphics.getHeight() / 10;
-        playerSprite.setBounds(0, 0, size, size);
-        playerSprite.setColor(0, 0, 1, 1);
-        player.init(new Vector2(0, 0), playerSprite);
+        player = context.getPlayer();
+        worldRenderer.setClearColor(context.getClearColor());
     }
 
     @Override
@@ -85,7 +71,6 @@ public class SceneState implements State
     @Override
     public void render(final WorldRenderer worldRenderer)
     {
-        worldRenderer.render(superBackground);
         worldRenderer.render(actors);
         worldRenderer.render(player);
     }

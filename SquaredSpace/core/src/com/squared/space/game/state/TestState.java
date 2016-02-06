@@ -10,7 +10,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.squared.space.game.event.StateEvent;
+import com.squared.space.event.StateEvent;
 import com.squared.space.game.constants.TextureConstants;
 import com.squared.space.game.context.SceneContext;
 import com.squared.space.game.drawing.Actor;

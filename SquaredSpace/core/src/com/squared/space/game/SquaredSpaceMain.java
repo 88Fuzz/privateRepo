@@ -9,6 +9,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.squared.space.game.constants.TextureConstants;
 import com.squared.space.game.drawing.WorldRenderer;
+import com.squared.space.game.state.SceneState;
 import com.squared.space.game.state.State;
 import com.squared.space.game.state.StateManager;
 import com.squared.space.game.state.StateManager.PendingAction;
@@ -40,9 +41,15 @@ public class SquaredSpaceMain extends ApplicationAdapter implements InputProcess
         stateManager = new StateManager((TextureAtlas) assMan.get(TextureConstants.TILE_TEXTURES));
         timeSinceLastUpdate = 0;
 
-        TestState testState = (TestState) stateManager.getState(StateId.TEST_STATE);
-        testState.init(sceneStateConfig.getContext(SceneStateConfig.TEST_SCENE));
-        stateStack.add(testState);
+        //IntroScene
+//        TestState testState = (TestState) stateManager.getState(StateId.TEST_STATE);
+//        testState.init(sceneStateConfig.getContext(SceneStateConfig.TEST_SCENE));
+//        stateStack.add(testState);
+
+        //IntroScene
+        SceneState sceneState = (SceneState) stateManager.getState(StateId.SCENE_STATE);
+        sceneState.init(worldRenderer, sceneStateConfig.getContext(SceneStateConfig.INTRO_SCENE));
+        stateStack.add(sceneState);
 
         Gdx.input.setInputProcessor(this);
     }

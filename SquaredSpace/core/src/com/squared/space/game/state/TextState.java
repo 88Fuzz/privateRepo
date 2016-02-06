@@ -1,45 +1,52 @@
 package com.squared.space.game.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.math.Vector2;
 import com.squared.space.game.constants.TextureConstants;
-import com.squared.space.game.drawing.Text;
 import com.squared.space.game.drawing.WorldRenderer;
+import com.squared.space.game.drawing.text.Text;
 import com.squared.space.game.state.StateManager.PendingAction;
 import com.squared.space.game.state.StateManager.StateAction;
 
 public class TextState implements State
 {
     private static final int NEXT_TEXT_BUTTON = Input.Keys.SPACE;
+    private static final int SELECTION_UP_BUTTON = Input.Keys.W;
+    private static final int SELECTION_DOWN_BUTTON = Input.Keys.S;
+    private final Vector2 position;
+    private final Vector2 namePosition;
+    private final BitmapFont font;
     private final StateManager stateManager;
-    private final Label label;
+    private final TextureAtlas atlas;
     private PendingAction nextState;
-    private int activeText;
-    private List<Text> texts;
+    private Text activeText;
     private Sprite sprite;
 
-    public TextState(final StateManager stateManager, final Label label, final TextureAtlas atlas)
+    public TextState(final StateManager stateManager, final BitmapFont font, final Vector2 position,
+            final TextureAtlas atlas)
     {
-        this.texts = new ArrayList<Text>();
+        this.atlas = atlas;
+        this.position = position;
+        this.font = font;
         this.stateManager = stateManager;
-        this.label = label;
         this.nextState = null;
 
+        namePosition = new Vector2(0, Gdx.graphics.getHeight() / 30);
+        final int boxHeight = Gdx.graphics.getHeight() / 2;
         sprite = new Sprite(atlas.findRegion(TextureConstants.SINGLE_PIXEL));
-        sprite.setBounds(0, Gdx.graphics.getHeight() / 30, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
+        sprite.setBounds(namePosition.x, namePosition.y, Gdx.graphics.getWidth(), boxHeight);
+        namePosition.y += boxHeight;
+        namePosition.x += 5;
         sprite.setColor(1, 1, 1, 0.9f);
     }
 
-    public void init(final List<Text> texts)
+    public void init(final Text text)
     {
-        activeText = 0;
-        this.texts.addAll(texts);
+        activeText = text;
         initActiveText();
     }
 
@@ -64,17 +71,17 @@ public class TextState implements State
     @Override
     public void update(float dt)
     {
-        if(activeText < texts.size())
-            texts.get(activeText).update(dt);
+        if(activeText != null)
+            activeText.update(dt);
     }
 
     @Override
     public void render(final WorldRenderer worldRenderer)
     {
-        if(activeText < texts.size())
+        if(activeText != null)
         {
             worldRenderer.render(sprite);
-            worldRenderer.render(texts.get(activeText));
+            worldRenderer.render(activeText);
         }
     }
 
@@ -89,26 +96,27 @@ public class TextState implements State
     {
         if(keyCode == NEXT_TEXT_BUTTON)
         {
-            final Text currentText = texts.get(activeText);
-            if(!currentText.isFinishedText())
+            if(!activeText.isFinishedText())
             {
-                currentText.finishText();
-
+                activeText.finishText();
                 return true;
-            }else if(++activeText >= texts.size())
+            }
+
+            activeText = activeText.getNextText();
+            if(activeText == null)
             {
                 stateManager.addAction(StateAction.POP);
                 if(nextState != null)
                     stateManager.addAction(nextState);
-
                 return true;
             }
 
             initActiveText();
-            return true;
-        }
-        // TODO Auto-generated method stub
-        return false;
+        }else if(keyCode == SELECTION_UP_BUTTON)
+            activeText.selectionUp();
+        else if(keyCode == SELECTION_DOWN_BUTTON)
+            activeText.selectionDown();
+        return true;
     }
 
     @Override
@@ -127,6 +135,6 @@ public class TextState implements State
 
     private void initActiveText()
     {
-        texts.get(activeText).setLabel(label);
+        activeText.init(atlas, font, position, namePosition);
     }
 }

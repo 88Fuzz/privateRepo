@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.squared.space.game.event.StateEvent;
+import com.squared.space.event.StateEvent;
 import com.squared.space.game.constants.TextureConstants;
 import com.squared.space.game.context.SceneContext;
 import com.squared.space.game.drawing.Actor;
@@ -19,6 +21,8 @@ import com.squared.space.game.state.StateManager.StateId;
 public class SceneStateConfig
 {
     public static final String TEST_SCENE = "TEST_SCENE";
+    public static final String INTRO_SCENE = "INTRO_SCENE";
+    private static final Rectangle CLEAR_COLOR = new Rectangle(31/255f, 25/255f, 102/255f, 1);
 
     private final Map<String, SceneContext> sceneContextConfig;
     private final WorldRenderer worldRenderer;
@@ -35,21 +39,47 @@ public class SceneStateConfig
 
     private void initMap()
     {
+        final TextureAtlas atlas = assMan.get(TextureConstants.TILE_TEXTURES);
+        final Actor player = new Actor();
+        final Sprite playerSprite = new Sprite(atlas.findRegion(TextureConstants.SINGLE_PIXEL));
+        final int size = Gdx.graphics.getHeight() / 10;
+        playerSprite.setBounds(0, 0, size, size);
+        playerSprite.setColor(0, 0, 1, 1);
+        player.init(new Vector2(0, 0), playerSprite);
+
+        final Actor emptyPlayer = new Actor();
+        final Sprite emptySprite = new Sprite(atlas.findRegion(TextureConstants.SINGLE_PIXEL));
+        emptySprite.setColor(0, 0, 0, 0);
+        emptyPlayer.init(new Vector2(0, 0), emptySprite);
+
         // TEST_SCENE
-        final SceneContext testScene = new SceneContext();
-        final StateEvent stateEvent = new StateEvent(StateId.TEXT_STATE, TextStateConfig.TEST_TEXT, 600, 700);
-        final TreeMap<Integer, StateEvent> activateEvents = new TreeMap<Integer, StateEvent>();
+        StateEvent stateEvent = new StateEvent(StateId.TEXT_STATE, TextStateConfig.TEST_TEXT, 600, 700);
+        TreeMap<Integer, StateEvent> activateEvents = new TreeMap<Integer, StateEvent>();
         activateEvents.put(600, stateEvent);
 
-        final Actor singleActor = new Actor();
-        final Sprite singleSprite = new Sprite(
-                ((TextureAtlas) assMan.get(TextureConstants.TILE_TEXTURES)).findRegion(TextureConstants.SINGLE_PIXEL));
+        SceneContext scene = new SceneContext();
+        Actor singleActor = new Actor();
+        Sprite singleSprite = new Sprite(atlas.findRegion(TextureConstants.SINGLE_PIXEL));
         singleActor.init(new Vector2(600, 0), singleSprite);
         singleSprite.setBounds(600, 0, 100, 400);
         singleSprite.setColor(1, 1, 1, 1);
-        testScene.init(activateEvents, Collections.singletonList(singleActor));
 
-        sceneContextConfig.put(TEST_SCENE, testScene);
+        scene.init(activateEvents, Collections.singletonList(singleActor), player, CLEAR_COLOR);
+        sceneContextConfig.put(TEST_SCENE, scene);
+
+        // INTRO_SCENE
+        stateEvent = new StateEvent(StateId.TEXT_STATE, TextStateConfig.INTRO_TEXT, Integer.MIN_VALUE,
+                Integer.MAX_VALUE);
+        activateEvents = new TreeMap<Integer, StateEvent>();
+        activateEvents.put(Integer.MIN_VALUE, stateEvent);
+
+        scene = new SceneContext();
+        singleActor = new Actor();
+        singleSprite = new Sprite(atlas.findRegion(TextureConstants.AMBULANCE));
+        singleActor.init(new Vector2(0, 0), singleSprite);
+
+        scene.init(activateEvents, Collections.singletonList(singleActor), emptyPlayer, CLEAR_COLOR);
+        sceneContextConfig.put(INTRO_SCENE, scene);
     }
 
     public SceneContext getContext(final String sceneState)

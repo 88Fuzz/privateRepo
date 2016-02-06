@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class WorldRenderer
@@ -15,12 +16,14 @@ public class WorldRenderer
     private OrthographicCamera camera;
     private OrthographicCamera cameraGUI;
     private SpriteBatch batch;
+    private Rectangle clearColor;
 
     public WorldRenderer()
     {
         batch = new SpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraGUI = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        clearColor = new Rectangle();
 
         init();
     }
@@ -35,12 +38,17 @@ public class WorldRenderer
         cameraGUI.update();
     }
 
+    public void setClearColor(final Rectangle clearColor)
+    {
+        this.clearColor = clearColor;
+    }
+
     public void clearScreen()
     {
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(clearColor.x, clearColor.y, clearColor.width, clearColor.height);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
-    
+
     public void render(final Sprite sprite)
     {
         batch.setProjectionMatrix(camera.combined);
@@ -81,7 +89,8 @@ public class WorldRenderer
 
     public Vector2 getCameraPosition()
     {
-        Vector2 tmpVector = new Vector2(camera.position.x / camera.zoom - Gdx.graphics.getWidth() / 2, camera.position.y / camera.zoom - Gdx.graphics.getHeight() / 2);
+        Vector2 tmpVector = new Vector2(camera.position.x / camera.zoom - Gdx.graphics.getWidth() / 2,
+                camera.position.y / camera.zoom - Gdx.graphics.getHeight() / 2);
         return tmpVector;
     }
 }
