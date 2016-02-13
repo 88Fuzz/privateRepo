@@ -9,9 +9,11 @@ import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.Direction;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
+import com.murder.game.level.Tile.TileType;
 import com.murder.game.level.room.Room;
 import com.murder.game.level.Tile;
 import com.murder.game.level.serial.LevelSerialize;
+import com.murder.game.state.StateManager.StateAction;
 import com.murder.game.utils.StringUtils;
 
 public class GameState implements State
@@ -83,6 +85,11 @@ public class GameState implements State
             }
 
             prevPlayerRoom = currPlayerRoom;
+        }
+
+        if(TileType.EXIT == tile.getTileType())
+        {
+            stateManager.addAction(StateAction.POP);
         }
     }
 

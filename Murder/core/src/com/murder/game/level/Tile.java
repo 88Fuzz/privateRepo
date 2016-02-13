@@ -14,6 +14,7 @@ public class Tile implements Drawable
     {
         WALL(TextureConstants.WALL_TILE, true),
         FLOOR(TextureConstants.FLOOR_TILE, false),
+        EXIT(TextureConstants.EXIT_TILE, false),
         DOOR(TextureConstants.DOOR_TILE, true),
         NONE("None", true);
 

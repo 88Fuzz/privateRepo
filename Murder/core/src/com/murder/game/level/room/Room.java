@@ -19,7 +19,7 @@ public class Room implements Drawable
         this.rectangle = rectangle;
         blackBox = new Sprite(textureAtlas.findRegion(TextureConstants.SINGLE_PIXEL_TEXTURE));
         blackBox.setBounds(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-        turnOffLight();
+        turnOnLight();
     }
 
     public void turnOnLight()

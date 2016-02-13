@@ -1,5 +1,6 @@
 package com.murder.game.level;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,7 @@ public class Level implements Drawable
 
     public List<Room> getRooms(final String roomId)
     {
-        return rooms.get(roomId);
+        return new LinkedList<Room>();
+        // return rooms.get(roomId);
     }
 }

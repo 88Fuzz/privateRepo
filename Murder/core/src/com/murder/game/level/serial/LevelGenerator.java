@@ -52,7 +52,8 @@ public class LevelGenerator
 
             tiles.add(innerList);
         }
-
+        
+        tiles.get(8).get(1).setTileType(TileType.EXIT);
         final Actor player = new Actor(new Vector2(tileSize * 2 - tileSize / 2, tileSize * 2 - tileSize / 2), 0);
         addWalls(tiles);
         return new LevelSerialize(new Level(roomMap, tiles), player);
