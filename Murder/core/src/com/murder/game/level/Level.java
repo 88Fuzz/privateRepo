@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.level.room.Room;
 
-public class Level implements Drawable
+public class Level extends Drawable
 {
     private Map<String, List<Room>> rooms;
     private List<List<Tile>> tiles;

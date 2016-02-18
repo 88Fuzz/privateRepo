@@ -1,14 +1,17 @@
 package com.murder.game.drawing;
 
+import java.util.Set;
+
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
+import com.murder.game.drawing.Item.InventoryItem;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 
-public class Actor implements Drawable
+public class Actor extends Drawable
 {
     private static final float MAX_VELOCITY = 460;
     private static final float SQRT_TWO = 1.41421356237f;
@@ -21,9 +24,7 @@ public class Actor implements Drawable
         RIGHT;
     }
 
-    private Sprite sprite;
-    private Vector2 position;
-    private Vector2 tilePosition;
+    private Set<InventoryItem> inventory;
     private float velocity;
     private float rotation;
     private Vector2 velocityVector;
@@ -82,8 +83,9 @@ public class Actor implements Drawable
         if(directionalVelocity.y != 0)
         {
             // TODO These can be structured a lot better. YO
-            // TODO something you should try now is ALWAYS move the player. 
-            // Once the movement is done, check the 8? corners of the circle to see if they are in a wall.
+            // TODO something you should try now is ALWAYS move the player.
+            // Once the movement is done, check the 8? corners of the circle to
+            // see if they are in a wall.
             // If in a wall, move the player out of the wall
             if(directionalVelocity.y > 0)
             {
@@ -91,7 +93,8 @@ public class Actor implements Drawable
                 newTilePos.y = (int) ((newPos.y + (sprite.getHeight() / 2)) / sprite.getHeight());
                 if(!isTileValid(newTilePos))
                 {
-                    //TODO this should actually set the player to the edge of the wall and not the original player position
+                    // TODO this should actually set the player to the edge of
+                    // the wall and not the original player position
                     newPos.y = position.y;
                 }
                 else
@@ -266,17 +269,6 @@ public class Actor implements Drawable
     public Vector2 getPosition()
     {
         return new Vector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
-    }
-
-    private void setTilePosition()
-    {
-        tilePosition.x = (int) (position.x / sprite.getWidth());
-        tilePosition.y = (int) (position.y / sprite.getHeight());
-    }
-
-    private void setSpritePosition()
-    {
-        sprite.setPosition(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
     }
 
     private boolean isTileValid(final Vector2 tilePos)

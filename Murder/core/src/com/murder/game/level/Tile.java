@@ -8,7 +8,7 @@ import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.utils.GraphicsUtils;
 
-public class Tile implements Drawable
+public class Tile extends Drawable
 {
     public enum TileType
     {
@@ -41,13 +41,11 @@ public class Tile implements Drawable
     private TextureAtlas textureAtlas;
     private String roomId;
     private TileType tileType;
-    private Sprite sprite;
-    private Vector2 position;
 
     public Tile(final TextureAtlas textureAtlas, final TileType tileType, final Vector2 position, final String roomId)
     {
         this.roomId = roomId;
-        this.position = position;
+        this.position.set(position);
         this.textureAtlas = textureAtlas;
         this.sprite = new Sprite();
         setTileType(tileType);
