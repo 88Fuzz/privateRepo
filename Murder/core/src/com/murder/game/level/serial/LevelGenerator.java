@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.drawing.Actor;
+import com.murder.game.drawing.Item;
+import com.murder.game.drawing.Item.InventoryItem;
 import com.murder.game.level.Level;
 import com.murder.game.level.room.Room;
 import com.murder.game.level.Tile;
@@ -42,17 +44,35 @@ public class LevelGenerator
             {
                 if(j == 0 || j == 9 || i == 0 || i == 9)
                 {
-                    innerList.add(
-                            new Tile(textureAtlas, TileType.WALL, new Vector2(i * tileSize, j * tileSize), roomId));
+                    innerList.add(new Tile(textureAtlas, TileType.WALL, new Vector2(i * tileSize, j * tileSize), roomId,
+                            null));
                     continue;
                 }
+                final Item item;
+                if(i == 2 && j == 8)
+                {
+                    item = new Item(InventoryItem.GREEN_KEY, new Vector2(i * tileSize, j * tileSize));
+                }
+                else
+                {
+                    item = null;
+                }
 
-                innerList.add(new Tile(textureAtlas, TileType.FLOOR, new Vector2(i * tileSize, j * tileSize), roomId));
+                if(i == 4 && j == 1)
+                {
+                    innerList.add(new Tile(textureAtlas, TileType.DOOR, new Vector2(i * tileSize, j * tileSize), roomId,
+                            item));
+                }
+                else
+                {
+                    innerList.add(new Tile(textureAtlas, TileType.FLOOR, new Vector2(i * tileSize, j * tileSize),
+                            roomId, item));
+                }
             }
 
             tiles.add(innerList);
         }
-        
+
         tiles.get(8).get(1).setTileType(TileType.EXIT);
         final Actor player = new Actor(new Vector2(tileSize * 2 - tileSize / 2, tileSize * 2 - tileSize / 2), 0);
         addWalls(tiles);

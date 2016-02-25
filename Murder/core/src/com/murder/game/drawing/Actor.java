@@ -1,5 +1,8 @@
 package com.murder.game.drawing;
 
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,11 +13,27 @@ import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Item.InventoryItem;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
+import com.murder.game.level.Tile.TileType;
 
 public class Actor extends Drawable
 {
+    private static final List<Vector2> TESTING_EDGES = new LinkedList<Vector2>();
+    private static final int SPRITE_SIZE = 200;
+    private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
     private static final float MAX_VELOCITY = 460;
     private static final float SQRT_TWO = 1.41421356237f;
+
+    static
+    {
+        TESTING_EDGES.add(new Vector2(0, CIRCLE_RADIUS));
+        TESTING_EDGES.add(new Vector2(0, -1 * CIRCLE_RADIUS));
+        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS, 0));
+        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS, 0));
+        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
+    }
 
     public enum Direction
     {
@@ -34,6 +53,7 @@ public class Actor extends Drawable
     {
         this.position = position;
         this.rotation = rotation;
+        inventory = new HashSet<InventoryItem>();
         tilePosition = new Vector2();
         velocityVector = new Vector2();
         velocity = MAX_VELOCITY;
@@ -44,7 +64,7 @@ public class Actor extends Drawable
         sprite = new Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         sprite.setOriginCenter();
         this.level = level;
-        setSpritePosition();
+        centerSpritePosition();
         setTilePosition();
     }
 
@@ -58,7 +78,6 @@ public class Actor extends Drawable
     public void update(final float dt)
     {
         final Vector2 directionalVelocity = new Vector2();
-
         if(rotation == 0)
         {
             final float mag = velocityVector.len();
@@ -75,148 +94,191 @@ public class Actor extends Drawable
         }
 
         final Vector2 newPos = position.cpy();
-        newPos.x = position.x + directionalVelocity.x * dt;
-        newPos.y = position.y + directionalVelocity.y * dt;
-
-        Vector2 newTilePos = new Vector2();
-        // Assume the actor is a circle.
-        if(directionalVelocity.y != 0)
-        {
-            // TODO These can be structured a lot better. YO
-            // TODO something you should try now is ALWAYS move the player.
-            // Once the movement is done, check the 8? corners of the circle to
-            // see if they are in a wall.
-            // If in a wall, move the player out of the wall
-            if(directionalVelocity.y > 0)
-            {
-                newTilePos.x = (int) (newPos.x / sprite.getWidth());
-                newTilePos.y = (int) ((newPos.y + (sprite.getHeight() / 2)) / sprite.getHeight());
-                if(!isTileValid(newTilePos))
-                {
-                    // TODO this should actually set the player to the edge of
-                    // the wall and not the original player position
-                    newPos.y = position.y;
-                }
-                else
-                {
-                    final float originalXDiagonal = (float) (newPos.x + 0.5 * sprite.getWidth() / 2 * SQRT_TWO);
-
-                    newTilePos.y = (int) ((newPos.y + 0.5 * sprite.getHeight() / 2 * SQRT_TWO) / sprite.getHeight());
-                    newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
-
-                    if(!isTileValid(newTilePos))
-                    {
-                        newPos.y = position.y;
-                    }
-                    else
-                    {
-                        newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) / sprite.getWidth());
-
-                        if(!isTileValid(newTilePos))
-                        {
-                            newPos.y = position.y;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                newTilePos.x = (int) (newPos.x / sprite.getWidth());
-                newTilePos.y = (int) ((newPos.y - (sprite.getHeight() / 2)) / sprite.getHeight());
-                if(!isTileValid(newTilePos))
-                {
-                    newPos.y = position.y;
-                }
-                else
-                {
-                    final float originalXDiagonal = (float) (newPos.x + 0.5 * sprite.getWidth() / 2 * SQRT_TWO);
-                    newTilePos.y = (int) ((newPos.y - 0.5 * sprite.getHeight() / 2 * SQRT_TWO) / sprite.getHeight());
-                    newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
-
-                    if(!isTileValid(newTilePos))
-                    {
-                        newPos.y = position.y;
-                    }
-                    else
-                    {
-                        newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) / sprite.getWidth());
-
-                        if(!isTileValid(newTilePos))
-                        {
-                            newPos.y = position.y;
-                        }
-                    }
-                }
-            }
-        }
-
+        // Check x and y independently in case player is moving up against a
+        // wall and with a wall.
         if(directionalVelocity.x != 0)
         {
-            if(directionalVelocity.x > 0)
+            newPos.x = position.x + directionalVelocity.x * dt;
+            if(!checkNewPosition(newPos))
             {
-                newTilePos.x = (int) ((newPos.x + (sprite.getWidth() / 2)) / sprite.getWidth());
-                newTilePos.y = (int) (newPos.y / sprite.getHeight());
-                if(!isTileValid(newTilePos))
-                {
-                    newPos.x = position.x;
-                }
-                else
-                {
-                    final float originalYDiagonal = (float) (newPos.y + 0.5 * sprite.getHeight() / 2 * SQRT_TWO);
-                    newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
-                    newTilePos.x = (int) ((newPos.x + 0.5 * sprite.getWidth() / 2 * SQRT_TWO) / sprite.getWidth());
-
-                    if(!isTileValid(newTilePos))
-                    {
-                        newPos.x = position.x;
-                    }
-                    else
-                    {
-                        newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight()) / sprite.getHeight());
-
-                        if(!isTileValid(newTilePos))
-                        {
-                            newPos.x = position.x;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                newTilePos.x = (int) ((newPos.x - (sprite.getWidth() / 2)) / sprite.getWidth());
-                newTilePos.y = (int) (newPos.y / sprite.getHeight());
-                if(!isTileValid(newTilePos))
-                {
-                    newPos.x = position.x;
-                }
-                else
-                {
-                    final float originalYDiagonal = (float) (newPos.y + 0.5 * sprite.getHeight() / 2 * SQRT_TWO);
-                    newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
-                    newTilePos.x = (int) ((newPos.x - 0.5 * sprite.getWidth() / 2 * SQRT_TWO) / sprite.getWidth());
-
-                    if(!isTileValid(newTilePos))
-                    {
-                        newPos.x = position.x;
-                    }
-                    else
-                    {
-                        newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight()) / sprite.getHeight());
-
-                        if(!isTileValid(newTilePos))
-                        {
-                            newPos.x = position.x;
-                        }
-                    }
-                }
+                newPos.x = position.x;
             }
         }
+
+        if(directionalVelocity.y != 0)
+        {
+            newPos.y = position.y + directionalVelocity.y * dt;
+            if(!checkNewPosition(newPos))
+            {
+                newPos.y = position.y;
+            }
+        }
+
+        // Vector2 newTilePos = new Vector2();
+        // // Assume the actor is a circle.
+        // if(directionalVelocity.y != 0)
+        // {
+        // // TODO These can be structured a lot better. YO
+        // // TODO something you should try now is ALWAYS move the player.
+        // // Once the movement is done, check the 8? corners of the circle to
+        // // see if they are in a wall.
+        // // If in a wall, move the player out of the wall
+        // if(directionalVelocity.y > 0)
+        // {
+        // newTilePos.x = (int) (newPos.x / sprite.getWidth());
+        // newTilePos.y = (int) ((newPos.y + (sprite.getHeight() / 2)) /
+        // sprite.getHeight());
+        // if(!isTileValid(newTilePos))
+        // {
+        // // TODO this should actually set the player to the edge of
+        // // the wall and not the original player position
+        // newPos.y = position.y;
+        // }
+        // else
+        // {
+        // final float originalXDiagonal = (float) (newPos.x + 0.5 *
+        // sprite.getWidth() / 2 * SQRT_TWO);
+        //
+        // newTilePos.y = (int) ((newPos.y + 0.5 * sprite.getHeight() / 2 *
+        // SQRT_TWO) / sprite.getHeight());
+        // newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.y = position.y;
+        // }
+        // else
+        // {
+        // newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) /
+        // sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.y = position.y;
+        // }
+        // }
+        // }
+        // }
+        // else
+        // {
+        // newTilePos.x = (int) (newPos.x / sprite.getWidth());
+        // newTilePos.y = (int) ((newPos.y - (sprite.getHeight() / 2)) /
+        // sprite.getHeight());
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.y = position.y;
+        // }
+        // else
+        // {
+        // final float originalXDiagonal = (float) (newPos.x + 0.5 *
+        // sprite.getWidth() / 2 * SQRT_TWO);
+        // newTilePos.y = (int) ((newPos.y - 0.5 * sprite.getHeight() / 2 *
+        // SQRT_TWO) / sprite.getHeight());
+        // newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.y = position.y;
+        // }
+        // else
+        // {
+        // newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) /
+        // sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.y = position.y;
+        // }
+        // }
+        // }
+        // }
+        // }
+        //
+        // if(directionalVelocity.x != 0)
+        // {
+        // if(directionalVelocity.x > 0)
+        // {
+        // newTilePos.x = (int) ((newPos.x + (sprite.getWidth() / 2)) /
+        // sprite.getWidth());
+        // newTilePos.y = (int) (newPos.y / sprite.getHeight());
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // else
+        // {
+        // final float originalYDiagonal = (float) (newPos.y + 0.5 *
+        // sprite.getHeight() / 2 * SQRT_TWO);
+        // newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
+        // newTilePos.x = (int) ((newPos.x + 0.5 * sprite.getWidth() / 2 *
+        // SQRT_TWO) / sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // else
+        // {
+        // newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight())
+        // / sprite.getHeight());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // }
+        // }
+        // }
+        // else
+        // {
+        // newTilePos.x = (int) ((newPos.x - (sprite.getWidth() / 2)) /
+        // sprite.getWidth());
+        // newTilePos.y = (int) (newPos.y / sprite.getHeight());
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // else
+        // {
+        // final float originalYDiagonal = (float) (newPos.y + 0.5 *
+        // sprite.getHeight() / 2 * SQRT_TWO);
+        // newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
+        // newTilePos.x = (int) ((newPos.x - 0.5 * sprite.getWidth() / 2 *
+        // SQRT_TWO) / sprite.getWidth());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // else
+        // {
+        // newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight())
+        // / sprite.getHeight());
+        //
+        // if(!isTileValid(newTilePos))
+        // {
+        // newPos.x = position.x;
+        // }
+        // }
+        // }
+        // }
+        // }
 
         position.x = newPos.x;
         position.y = newPos.y;
 
         setTilePosition();
-        setSpritePosition();
+        centerSpritePosition();
+
+        final Tile tile = level.getTile((int) tilePosition.x, (int) tilePosition.y);
+        if(tile != null)
+        {
+            final Item item = tile.getItem();
+            if(item != null)
+            {
+                inventory.add(item.getInventoryItem());
+            }
+        }
     }
 
     public void moveDirection(final Direction direction)
@@ -261,6 +323,26 @@ public class Actor extends Drawable
         }
     }
 
+    private boolean checkNewPosition(final Vector2 newPosition)
+    {
+        final Vector2 testPos = new Vector2();
+        final Vector2 testTilePos = new Vector2();
+        for(final Vector2 edge: TESTING_EDGES)
+        {
+            testPos.x = newPosition.x + edge.x;
+            testPos.y = newPosition.y + edge.y;
+
+            testTilePos.x = testPos.x / (SPRITE_SIZE);
+            testTilePos.y = testPos.y / (SPRITE_SIZE);
+
+            if(!isTileValid(testTilePos))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Vector2 getTilePosition()
     {
         return tilePosition.cpy();
@@ -279,8 +361,19 @@ public class Actor extends Drawable
 
     private boolean isValidMove(final Tile tile)
     {
-        if(tile == null || tile.getTileType().isBlocking())
+        if(tile == null || tile.isLocked())
+        {
+            if(tile != null && tile.getTileType() == TileType.DOOR)
+            {
+                if(inventory.contains(tile.getUnlockingItem()))
+                {
+                    tile.setLock(false);
+                    return true;
+                }
+            }
+
             return false;
+        }
         return true;
     }
 }

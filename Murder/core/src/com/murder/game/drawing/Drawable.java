@@ -18,12 +18,20 @@ public abstract class Drawable
         tilePosition = new Vector2();
     }
 
-    protected void init(final TextureAtlas textureAtlas, final String textureKey)
+    protected void init(final TextureAtlas textureAtlas, final String textureKey, final boolean centerSprite)
     {
         sprite = new Sprite(textureAtlas.findRegion(textureKey));
         sprite.setOriginCenter();
-        setSpritePosition();
+        if(centerSprite)
+            centerSpritePosition();
+        else
+            setSpritePosition();
         setTilePosition();
+    }
+
+    protected void init(final TextureAtlas textureAtlas, final String textureKey)
+    {
+        init(textureAtlas, textureKey, true);
     }
 
     /**
@@ -46,8 +54,13 @@ public abstract class Drawable
         tilePosition.y = (int) (position.y / sprite.getHeight());
     }
 
-    protected void setSpritePosition()
+    protected void centerSpritePosition()
     {
         sprite.setPosition(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
+    }
+
+    protected void setSpritePosition()
+    {
+        sprite.setPosition(position.x, position.y);
     }
 }
