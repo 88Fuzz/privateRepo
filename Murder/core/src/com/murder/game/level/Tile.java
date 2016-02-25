@@ -3,6 +3,7 @@ package com.murder.game.level;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Drawable;
@@ -71,13 +72,13 @@ public class Tile extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch)
+    public void draw(final SpriteBatch batch, final Matrix4 matrix)
     {
         if(tileType != TileType.NONE)
             sprite.draw(batch);
 
         if(item != null)
-            item.draw(batch);
+            item.draw(batch, matrix);
     }
 
     @Override

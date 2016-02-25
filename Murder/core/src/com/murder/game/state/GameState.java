@@ -99,6 +99,7 @@ public class GameState implements State
         worldRenderer.adjustCamera();
         worldRenderer.render(level);
         worldRenderer.render(player);
+        worldRenderer.render(player.getFlashlight());
     }
 
     @Override
@@ -123,6 +124,12 @@ public class GameState implements State
             return true;
         case Input.Keys.D:
             player.moveDirection(Direction.RIGHT);
+            return true;
+        case Input.Keys.LEFT:
+            player.rotate(-1);
+            return true;
+        case Input.Keys.RIGHT:
+            player.rotate(1);
             return true;
         }
         return false;

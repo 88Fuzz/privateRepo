@@ -3,6 +3,7 @@ package com.murder.game.level.room;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Drawable;
@@ -32,7 +33,7 @@ public class Room extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch)
+    public void draw(final SpriteBatch batch, final Matrix4 matrix)
     {
         sprite.draw(batch);
     }

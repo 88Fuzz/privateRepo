@@ -3,6 +3,7 @@ package com.murder.game.drawing;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Drawable
@@ -39,7 +40,7 @@ public abstract class Drawable
      * 
      * @param batch
      */
-    public abstract void draw(final SpriteBatch batch);
+    public abstract void draw(final SpriteBatch batch, final Matrix4 matrix);
 
     /**
      * Method called with the time since the last call to update.

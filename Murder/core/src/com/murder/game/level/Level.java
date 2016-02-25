@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.level.room.Room;
@@ -21,13 +22,13 @@ public class Level extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch)
+    public void draw(final SpriteBatch batch, final Matrix4 matrix)
     {
         for(final List<Tile> tileList: tiles)
         {
             for(final Tile tile: tileList)
             {
-                tile.draw(batch);
+                tile.draw(batch, matrix);
             }
         }
 
@@ -35,7 +36,7 @@ public class Level extends Drawable
         {
             for(final Room room: roomList)
             {
-                room.draw(batch);
+                room.draw(batch, matrix);
             }
         }
     }

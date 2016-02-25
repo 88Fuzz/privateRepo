@@ -4,9 +4,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -16,16 +18,21 @@ public class WorldRenderer
     private OrthographicCamera camera;
     private OrthographicCamera cameraGUI;
     private SpriteBatch batch;
+    private PolygonSpriteBatch polyBatch;
     private Rectangle clearColor;
     private Rectangle bounds;
     private Actor target;
+    private BitmapFont font;
 
     public WorldRenderer()
     {
         batch = new SpriteBatch();
+        polyBatch = new PolygonSpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraGUI = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         clearColor = new Rectangle();
+        font = new BitmapFont(Gdx.files.internal("images/arial-15.fnt"), false);
+        font.setColor(Color.CYAN);
 
         init(null, new Rectangle());
     }
@@ -54,14 +61,6 @@ public class WorldRenderer
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    public void render(final Sprite sprite)
-    {
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        sprite.draw(batch);
-        batch.end();
-    }
-
     /**
      * Renders a drawable object on the screen.
      */
@@ -79,10 +78,41 @@ public class WorldRenderer
         batch.begin();
         for(final Drawable drawable: drawables)
         {
-            drawable.draw(batch);
+            drawable.draw(batch, camera.combined);
         }
 
         batch.end();
+    }
+
+    public <T extends DrawablePolygon> void render(final T drawablePolygon)
+    {
+        polyBatch.setProjectionMatrix(camera.combined);
+        polyBatch.begin();
+        drawablePolygon.draw(polyBatch);
+        polyBatch.end();
+    }
+
+    /**
+     * Draws any user interface related components to the screen
+     */
+    public void renderGUI()
+    {
+        batch.setProjectionMatrix(cameraGUI.combined);
+        batch.begin();
+        drawFPSCounter();
+        batch.end();
+    }
+
+    /**
+     * Draws the FPS counter.
+     */
+    private void drawFPSCounter()
+    {
+        float x = camera.viewportWidth - 75;
+        float y = camera.viewportHeight - 25;
+        int fps = Gdx.graphics.getFramesPerSecond();
+
+        font.draw(batch, "FPS: " + fps, x, y);
     }
 
     public float getCameraZoom()

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Item.InventoryItem;
@@ -22,6 +23,7 @@ public class Actor extends Drawable
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
     private static final float MAX_VELOCITY = 460;
     private static final float SQRT_TWO = 1.41421356237f;
+    private static final float SPIN = 45;
 
     static
     {
@@ -48,11 +50,13 @@ public class Actor extends Drawable
     private float rotation;
     private Vector2 velocityVector;
     private Level level;
+    private Flashlight flashlight;
 
     public Actor(final Vector2 position, final float rotation)
     {
         this.position = position;
         this.rotation = rotation;
+        flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
         tilePosition = new Vector2();
         velocityVector = new Vector2();
@@ -63,15 +67,17 @@ public class Actor extends Drawable
     {
         sprite = new Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         sprite.setOriginCenter();
+        flashlight.init(textureAtlas, SPRITE_SIZE);
         this.level = level;
         centerSpritePosition();
         setTilePosition();
     }
 
     @Override
-    public void draw(final SpriteBatch batch)
+    public void draw(final SpriteBatch batch, final Matrix4 matrix)
     {
         sprite.draw(batch);
+        flashlight.draw(batch);
     }
 
     @Override
@@ -81,11 +87,11 @@ public class Actor extends Drawable
         if(rotation == 0)
         {
             final float mag = velocityVector.len();
-            if(mag == 0)
-                return;
-
-            directionalVelocity.x = velocity * velocityVector.x / mag;
-            directionalVelocity.y = velocity * velocityVector.y / mag;
+            if(mag != 0)
+            {
+                directionalVelocity.x = velocity * velocityVector.x / mag;
+                directionalVelocity.y = velocity * velocityVector.y / mag;
+            }
         }
         else
         {
@@ -114,156 +120,6 @@ public class Actor extends Drawable
             }
         }
 
-        // Vector2 newTilePos = new Vector2();
-        // // Assume the actor is a circle.
-        // if(directionalVelocity.y != 0)
-        // {
-        // // TODO These can be structured a lot better. YO
-        // // TODO something you should try now is ALWAYS move the player.
-        // // Once the movement is done, check the 8? corners of the circle to
-        // // see if they are in a wall.
-        // // If in a wall, move the player out of the wall
-        // if(directionalVelocity.y > 0)
-        // {
-        // newTilePos.x = (int) (newPos.x / sprite.getWidth());
-        // newTilePos.y = (int) ((newPos.y + (sprite.getHeight() / 2)) /
-        // sprite.getHeight());
-        // if(!isTileValid(newTilePos))
-        // {
-        // // TODO this should actually set the player to the edge of
-        // // the wall and not the original player position
-        // newPos.y = position.y;
-        // }
-        // else
-        // {
-        // final float originalXDiagonal = (float) (newPos.x + 0.5 *
-        // sprite.getWidth() / 2 * SQRT_TWO);
-        //
-        // newTilePos.y = (int) ((newPos.y + 0.5 * sprite.getHeight() / 2 *
-        // SQRT_TWO) / sprite.getHeight());
-        // newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // else
-        // {
-        // newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) /
-        // sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // }
-        // }
-        // }
-        // else
-        // {
-        // newTilePos.x = (int) (newPos.x / sprite.getWidth());
-        // newTilePos.y = (int) ((newPos.y - (sprite.getHeight() / 2)) /
-        // sprite.getHeight());
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // else
-        // {
-        // final float originalXDiagonal = (float) (newPos.x + 0.5 *
-        // sprite.getWidth() / 2 * SQRT_TWO);
-        // newTilePos.y = (int) ((newPos.y - 0.5 * sprite.getHeight() / 2 *
-        // SQRT_TWO) / sprite.getHeight());
-        // newTilePos.x = (int) (originalXDiagonal / sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // else
-        // {
-        // newTilePos.x = (int) ((originalXDiagonal - 0.5 * sprite.getWidth()) /
-        // sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // }
-        // }
-        // }
-        // }
-        //
-        // if(directionalVelocity.x != 0)
-        // {
-        // if(directionalVelocity.x > 0)
-        // {
-        // newTilePos.x = (int) ((newPos.x + (sprite.getWidth() / 2)) /
-        // sprite.getWidth());
-        // newTilePos.y = (int) (newPos.y / sprite.getHeight());
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // else
-        // {
-        // final float originalYDiagonal = (float) (newPos.y + 0.5 *
-        // sprite.getHeight() / 2 * SQRT_TWO);
-        // newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
-        // newTilePos.x = (int) ((newPos.x + 0.5 * sprite.getWidth() / 2 *
-        // SQRT_TWO) / sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // else
-        // {
-        // newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight())
-        // / sprite.getHeight());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // }
-        // }
-        // }
-        // else
-        // {
-        // newTilePos.x = (int) ((newPos.x - (sprite.getWidth() / 2)) /
-        // sprite.getWidth());
-        // newTilePos.y = (int) (newPos.y / sprite.getHeight());
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // else
-        // {
-        // final float originalYDiagonal = (float) (newPos.y + 0.5 *
-        // sprite.getHeight() / 2 * SQRT_TWO);
-        // newTilePos.y = (int) (originalYDiagonal / sprite.getHeight());
-        // newTilePos.x = (int) ((newPos.x - 0.5 * sprite.getWidth() / 2 *
-        // SQRT_TWO) / sprite.getWidth());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // else
-        // {
-        // newTilePos.y = (int) ((originalYDiagonal - 0.5 * sprite.getHeight())
-        // / sprite.getHeight());
-        //
-        // if(!isTileValid(newTilePos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // }
-        // }
-        // }
-        // }
-
         position.x = newPos.x;
         position.y = newPos.y;
 
@@ -279,6 +135,8 @@ public class Actor extends Drawable
                 inventory.add(item.getInventoryItem());
             }
         }
+
+        flashlight.update(level, position, rotation);
     }
 
     public void moveDirection(final Direction direction)
@@ -323,6 +181,11 @@ public class Actor extends Drawable
         }
     }
 
+    public void rotate(final int direction)
+    {
+        rotation += direction * SPIN;
+    }
+
     private boolean checkNewPosition(final Vector2 newPosition)
     {
         final Vector2 testPos = new Vector2();
@@ -351,6 +214,11 @@ public class Actor extends Drawable
     public Vector2 getPosition()
     {
         return new Vector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
+    }
+
+    public Flashlight getFlashlight()
+    {
+        return flashlight;
     }
 
     private boolean isTileValid(final Vector2 tilePos)

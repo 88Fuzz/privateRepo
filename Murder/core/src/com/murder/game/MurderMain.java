@@ -197,6 +197,8 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
                 state.update(dt);
                 state.render(worldRenderer);
             }
+
+            worldRenderer.renderGUI();
         }
     }
 

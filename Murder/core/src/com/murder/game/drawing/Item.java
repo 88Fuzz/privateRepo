@@ -3,6 +3,7 @@ package com.murder.game.drawing;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
 
@@ -48,7 +49,7 @@ public class Item extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch)
+    public void draw(final SpriteBatch batch, final Matrix4 matrix)
     {
         sprite.draw(batch);
     }
