@@ -78,7 +78,7 @@ public class WorldRenderer
         batch.begin();
         for(final Drawable drawable: drawables)
         {
-            drawable.draw(batch, camera.combined);
+            drawable.draw(batch);
         }
 
         batch.end();

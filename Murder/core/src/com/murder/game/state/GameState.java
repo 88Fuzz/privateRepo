@@ -1,7 +1,5 @@
 package com.murder.game.state;
 
-import java.util.List;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -10,18 +8,15 @@ import com.murder.game.drawing.Actor.Direction;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile.TileType;
-import com.murder.game.level.room.Room;
 import com.murder.game.level.Tile;
 import com.murder.game.level.serial.LevelSerialize;
 import com.murder.game.state.StateManager.StateAction;
-import com.murder.game.utils.StringUtils;
 
 public class GameState implements State
 {
     private Actor player;
     private Level level;
     private StateManager stateManager;
-    private String prevPlayerRoom;
 
     public GameState(final StateManager stateManager)
     {
@@ -32,6 +27,7 @@ public class GameState implements State
             final TextureAtlas textureAtlas)
     {
         level = levelSerialize.getLevel();
+        level.init(textureAtlas);
         player = levelSerialize.getPlayer();
         player.init(textureAtlas, level);
         worldRenderer.init(player, level.getLevelBounds());
@@ -62,30 +58,6 @@ public class GameState implements State
         player.update(dt);
         final Vector2 playerPos = player.getTilePosition();
         final Tile tile = level.getTile((int) playerPos.x, (int) playerPos.y);
-        final String currPlayerRoom = tile.getRoomId();
-
-        if(!StringUtils.equals(prevPlayerRoom, currPlayerRoom))
-        {
-            List<Room> rooms = level.getRooms(prevPlayerRoom);
-            if(rooms != null)
-            {
-                for(final Room room: rooms)
-                {
-                    room.turnOffLight();
-                }
-            }
-
-            rooms = level.getRooms(currPlayerRoom);
-            if(rooms != null)
-            {
-                for(final Room room: rooms)
-                {
-                    room.turnOnLight();
-                }
-            }
-
-            prevPlayerRoom = currPlayerRoom;
-        }
 
         if(TileType.EXIT == tile.getTileType())
         {

@@ -38,7 +38,7 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         worldRenderer = new WorldRenderer();
         textureAtlas = assMan.get(TextureConstants.TILE_TEXTURES);
         stateManager = new StateManager(textureAtlas);
-        levelGenerator = new LevelGenerator(textureAtlas);
+        levelGenerator = new LevelGenerator();
         timeSinceLastUpdate = 0;
 
         final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
@@ -186,6 +186,9 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     {
         float dt = Gdx.graphics.getDeltaTime();
 
+        // TODO this needs to be reworked. MASIVELY, Fix timestamp shouldn't be
+        // used, if the framerate drops below 60, then anything that moves is
+        // "jumped"
         timeSinceLastUpdate += dt;
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {

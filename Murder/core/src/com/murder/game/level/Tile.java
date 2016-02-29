@@ -3,16 +3,21 @@ package com.murder.game.level;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.Drawable;
-import com.murder.game.drawing.Item;
-import com.murder.game.drawing.Item.InventoryItem;
+import com.murder.game.level.Item.InventoryItem;
 import com.murder.game.utils.GraphicsUtils;
 
 public class Tile extends Drawable
 {
+    private static final String TILE_TYPE = "tileType";
+    private static final String POSITION = "position";
+    private static final String ITEM = "item";
+
     public enum TileType
     {
         WALL(TextureConstants.WALL_TILE, true, true),
@@ -48,23 +53,30 @@ public class Tile extends Drawable
         }
     }
 
-    private TextureAtlas textureAtlas;
-    private String roomId;
     private TileType tileType;
     private Item item;
+    @JsonIgnore
+    private TextureAtlas textureAtlas;
+    @JsonIgnore
     private boolean locked;
 
-    public Tile(final TextureAtlas textureAtlas, final TileType tileType, final Vector2 position, final String roomId,
-            final Item item)
+    @JsonCreator
+    public Tile(@JsonProperty(TILE_TYPE) final TileType tileType, @JsonProperty(POSITION) final Vector2 position,
+            @JsonProperty(ITEM) final Item item)
     {
-        this.roomId = roomId;
         this.position.set(position);
-        this.textureAtlas = textureAtlas;
         this.sprite = new Sprite();
         this.item = item;
         this.locked = tileType.getDefaultLocking();
-        setTileType(tileType);
+        this.tileType = tileType;
         sprite.setPosition(position.x, position.y);
+    }
+
+    public void init(final TextureAtlas textureAtlas)
+    {
+        this.textureAtlas = textureAtlas;
+        setTileType(tileType);
+
         if(item != null)
         {
             item.init(textureAtlas);
@@ -72,28 +84,23 @@ public class Tile extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch, final Matrix4 matrix)
+    public void draw(final SpriteBatch batch)
     {
         if(tileType != TileType.NONE)
             sprite.draw(batch);
 
         if(item != null)
-            item.draw(batch, matrix);
+            item.draw(batch);
     }
 
     @Override
     public void update(final float dt)
     {}
 
-    public String getRoomId()
-    {
-        return roomId;
-    }
-
     public void setTileType(final TileType tileType)
     {
         this.tileType = tileType;
-        if(tileType != TileType.NONE)
+        if(textureAtlas != null && tileType != TileType.NONE)
             GraphicsUtils.applyTextureRegion(sprite, textureAtlas.findRegion(tileType.getTextureName()));
     }
 
@@ -109,6 +116,7 @@ public class Tile extends Drawable
         return retItem;
     }
 
+    @JsonIgnore
     public InventoryItem getUnlockingItem()
     {
         return InventoryItem.GREEN_KEY;

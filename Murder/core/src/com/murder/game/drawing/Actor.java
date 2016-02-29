@@ -8,17 +8,22 @@ import java.util.Set;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.TextureConstants;
-import com.murder.game.drawing.Item.InventoryItem;
+import com.murder.game.level.Item;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
+import com.murder.game.level.Item.InventoryItem;
 import com.murder.game.level.Tile.TileType;
+import com.murder.game.level.serial.MyVector2;
 
 public class Actor extends Drawable
 {
-    private static final List<Vector2> TESTING_EDGES = new LinkedList<Vector2>();
+    private static final String POSITION = "position";
+    private static final String ROTATION = "rotation";
+    private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
     private static final float MAX_VELOCITY = 460;
@@ -27,14 +32,14 @@ public class Actor extends Drawable
 
     static
     {
-        TESTING_EDGES.add(new Vector2(0, CIRCLE_RADIUS));
-        TESTING_EDGES.add(new Vector2(0, -1 * CIRCLE_RADIUS));
-        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS, 0));
-        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS, 0));
-        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new Vector2(CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new Vector2(-1 * CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new MyVector2(0, CIRCLE_RADIUS));
+        TESTING_EDGES.add(new MyVector2(0, -1 * CIRCLE_RADIUS));
+        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS, 0));
+        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS, 0));
+        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
+        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
     }
 
     public enum Direction
@@ -45,21 +50,27 @@ public class Actor extends Drawable
         RIGHT;
     }
 
-    private Set<InventoryItem> inventory;
-    private float velocity;
     private float rotation;
-    private Vector2 velocityVector;
+    @JsonIgnore
+    private Set<InventoryItem> inventory;
+    @JsonIgnore
+    private float velocity;
+    @JsonIgnore
+    private MyVector2 velocityVector;
+    @JsonIgnore
     private Level level;
+    @JsonIgnore
     private Flashlight flashlight;
 
-    public Actor(final Vector2 position, final float rotation)
+    @JsonCreator
+    public Actor(@JsonProperty(POSITION) final MyVector2 position, @JsonProperty(ROTATION) final float rotation)
     {
         this.position = position;
-        this.rotation = rotation;
+        this.rotation = 180;
         flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
-        tilePosition = new Vector2();
-        velocityVector = new Vector2();
+        tilePosition = new MyVector2();
+        velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
     }
 
@@ -74,7 +85,7 @@ public class Actor extends Drawable
     }
 
     @Override
-    public void draw(final SpriteBatch batch, final Matrix4 matrix)
+    public void draw(final SpriteBatch batch)
     {
         sprite.draw(batch);
         flashlight.draw(batch);
@@ -83,23 +94,23 @@ public class Actor extends Drawable
     @Override
     public void update(final float dt)
     {
-        final Vector2 directionalVelocity = new Vector2();
-        if(rotation == 0)
+        final MyVector2 directionalVelocity = new MyVector2();
+        // if(rotation == 0)
+        // {
+        final float mag = velocityVector.len();
+        if(mag != 0)
         {
-            final float mag = velocityVector.len();
-            if(mag != 0)
-            {
-                directionalVelocity.x = velocity * velocityVector.x / mag;
-                directionalVelocity.y = velocity * velocityVector.y / mag;
-            }
+            directionalVelocity.x = velocity * velocityVector.x / mag;
+            directionalVelocity.y = velocity * velocityVector.y / mag;
         }
-        else
-        {
-            directionalVelocity.x = (float) (velocity * Math.sin(rotation));
-            directionalVelocity.y = (float) (velocity * Math.cos(rotation));
-        }
+        // }
+        // else
+        // {
+        // directionalVelocity.x = (float) (velocity * Math.sin(rotation));
+        // directionalVelocity.y = (float) (velocity * Math.cos(rotation));
+        // }
 
-        final Vector2 newPos = position.cpy();
+        final MyVector2 newPos = position.cpy();
         // Check x and y independently in case player is moving up against a
         // wall and with a wall.
         if(directionalVelocity.x != 0)
@@ -186,11 +197,11 @@ public class Actor extends Drawable
         rotation += direction * SPIN;
     }
 
-    private boolean checkNewPosition(final Vector2 newPosition)
+    private boolean checkNewPosition(final MyVector2 newPosition)
     {
-        final Vector2 testPos = new Vector2();
-        final Vector2 testTilePos = new Vector2();
-        for(final Vector2 edge: TESTING_EDGES)
+        final MyVector2 testPos = new MyVector2();
+        final MyVector2 testTilePos = new MyVector2();
+        for(final MyVector2 edge: TESTING_EDGES)
         {
             testPos.x = newPosition.x + edge.x;
             testPos.y = newPosition.y + edge.y;
@@ -206,14 +217,14 @@ public class Actor extends Drawable
         return true;
     }
 
-    public Vector2 getTilePosition()
+    public MyVector2 getTilePosition()
     {
         return tilePosition.cpy();
     }
 
-    public Vector2 getPosition()
+    public MyVector2 getPosition()
     {
-        return new Vector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
+        return new MyVector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
     }
 
     public Flashlight getFlashlight()
@@ -221,7 +232,7 @@ public class Actor extends Drawable
         return flashlight;
     }
 
-    private boolean isTileValid(final Vector2 tilePos)
+    private boolean isTileValid(final MyVector2 tilePos)
     {
         final Tile tile = level.getTile((int) tilePos.x, (int) tilePos.y);
         return isValidMove(tile);

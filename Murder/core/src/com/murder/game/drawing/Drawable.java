@@ -3,20 +3,21 @@ package com.murder.game.drawing;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.murder.game.level.serial.MyVector2;
 
 public abstract class Drawable
 {
+    @JsonIgnore
     protected Sprite sprite;
-    protected Vector2 position;
-    protected Vector2 tilePosition;
+    protected MyVector2 position;
+    protected MyVector2 tilePosition;
 
     protected Drawable()
     {
         sprite = new Sprite();
-        position = new Vector2();
-        tilePosition = new Vector2();
+        position = new MyVector2();
+        tilePosition = new MyVector2();
     }
 
     protected void init(final TextureAtlas textureAtlas, final String textureKey, final boolean centerSprite)
@@ -40,7 +41,7 @@ public abstract class Drawable
      * 
      * @param batch
      */
-    public abstract void draw(final SpriteBatch batch, final Matrix4 matrix);
+    public abstract void draw(final SpriteBatch batch);
 
     /**
      * Method called with the time since the last call to update.
@@ -63,5 +64,10 @@ public abstract class Drawable
     protected void setSpritePosition()
     {
         sprite.setPosition(position.x, position.y);
+    }
+
+    public MyVector2 getPosition()
+    {
+        return position.cpy();
     }
 }
