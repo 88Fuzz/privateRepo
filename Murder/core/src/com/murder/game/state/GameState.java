@@ -19,6 +19,7 @@ public class GameState implements State
     private Actor player;
     private Level level;
     private StateManager stateManager;
+    //TODO when the app is suspended and brought back, buttonsPressed should be set back to 0
     private int buttonsPressed;
 
     public GameState(final StateManager stateManager)
