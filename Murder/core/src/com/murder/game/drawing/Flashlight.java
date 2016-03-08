@@ -80,29 +80,21 @@ public class Flashlight implements DrawablePolygon
             beams[i * 2] = beamEndPos.x;
             beams[i * 2 + 1] = beamEndPos.y;
 
-//            System.out.println("lowestBeamValue: " + lowestBeamValue + " beamPos: " + beamEndPos + " positionX: " + position.x + " delta: " + deltaAngle);
-            if(beamEndPos.y < lowestBeamValue && beamEndPos.x - MIN_BEAM_POS_THRESHOLD < position.x && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
+            // System.out.println("lowestBeamValue: " + lowestBeamValue +
+            // " beamPos: " + beamEndPos + " positionX: " + position.x +
+            // " delta: " + deltaAngle);
+            if(beamEndPos.y < lowestBeamValue && beamEndPos.x - MIN_BEAM_POS_THRESHOLD < position.x
+                    && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
             {
                 lowestBeamValue = beamEndPos.y;
                 lowestBeamPos = i * 2;
             }
         }
 
-        vertices[offset++] = beams[lowestBeamPos];
-        vertices[offset++] = beams[lowestBeamPos + 1];
-
-        int lcv = lowestBeamPos + 2;
-        try {
-        while(lcv != lowestBeamPos)
-        {
-            vertices[offset++] = beams[lcv++];
-            if(lcv > (numberOfBeams + 1) * 2 - 1)
-                lcv = 0;
-        }
-        } catch (final Exception e)
-        {
-            throw e;
-        }
+        System.arraycopy(beams, lowestBeamPos, vertices, offset, beams.length - lowestBeamPos);
+        offset += beams.length - lowestBeamPos;
+        System.arraycopy(beams, 0, vertices, offset, lowestBeamPos);
+        offset += lowestBeamPos;
 
         vertices[offset++] = beams[lowestBeamPos];
         vertices[offset++] = beams[lowestBeamPos + 1];
@@ -147,8 +139,8 @@ public class Flashlight implements DrawablePolygon
     private void updatePolySprite()
     {
         final Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-         pix.setColor(0xCCAAFFEF);
-//        pix.setColor(0x000000FF);
+        pix.setColor(0xCCAAFFEF);
+        // pix.setColor(0x000000FF);
         pix.fill();
         final Texture textureSolid = new Texture(pix);
         final TextureRegion textureRegion = new TextureRegion(textureSolid);
