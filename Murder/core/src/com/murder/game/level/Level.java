@@ -13,12 +13,20 @@ import com.murder.game.drawing.Drawable;
 public class Level extends Drawable
 {
     private static final String TILES = "tiles";
+    private static final String LEVEL_ID = "levelId";
+    private static final String NEXT_LEVEL_ID = "nextLevelId";
+
+    private String levelId;
+    private String nextLevelId;
     private List<List<Tile>> tiles;
 
     @JsonCreator
-    public Level(@JsonProperty(TILES) final List<List<Tile>> tiles)
+    public Level(@JsonProperty(TILES) final List<List<Tile>> tiles, @JsonProperty(LEVEL_ID) final String levelId,
+            @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId)
     {
         this.tiles = tiles;
+        this.levelId = levelId;
+        this.nextLevelId = nextLevelId;
     }
 
     public void init(final TextureAtlas textureAtlas)
@@ -70,7 +78,23 @@ public class Level extends Drawable
 
     public Tile getTile(final int x, final int y)
     {
+        if(x >= tiles.size())
+            return null;
+
         final List<Tile> list = tiles.get(x);
+        if(y >= list.size())
+            return null;
+
         return list.get(y);
+    }
+
+    public String getLevelId()
+    {
+        return levelId;
+    }
+
+    public String getNextLevelId()
+    {
+        return nextLevelId;
     }
 }

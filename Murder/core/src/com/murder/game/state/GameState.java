@@ -10,7 +10,9 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile.TileType;
 import com.murder.game.level.Tile;
 import com.murder.game.level.serial.LevelSerialize;
+import com.murder.game.level.serial.MyVector2;
 import com.murder.game.state.StateManager.StateAction;
+import com.murder.game.state.StateManager.StateId;
 
 public class GameState implements State
 {
@@ -59,9 +61,10 @@ public class GameState implements State
         final Vector2 playerPos = player.getTilePosition();
         final Tile tile = level.getTile((int) playerPos.x, (int) playerPos.y);
 
-        if(TileType.EXIT == tile.getTileType())
+        if(tile != null && TileType.EXIT == tile.getTileType())
         {
             stateManager.addAction(StateAction.POP);
+            stateManager.addAction(StateAction.PUSH, StateId.GAME_STATE, level.getNextLevelId());
         }
     }
 
@@ -139,22 +142,24 @@ public class GameState implements State
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        // TODO Auto-generated method stub
-        return false;
+        // TODO Should this be controlled by the player?
+        adjustPlayerRotation(screenX, screenY);
+        player.startMove(true);
+        return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        // TODO Auto-generated method stub
-        return false;
+        player.startMove(false);
+        return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        // TODO Auto-generated method stub
-        return false;
+        adjustPlayerRotation(screenX, screenY);
+        return true;
     }
 
     @Override
@@ -169,5 +174,14 @@ public class GameState implements State
     {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    private void adjustPlayerRotation(final int screenX, final int screenY)
+    {
+        final MyVector2 position = player.getCenterPosition();
+        final float deltaX = screenX - position.x;
+        final float deltaY = screenY - position.y;
+
+        player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
     }
 }

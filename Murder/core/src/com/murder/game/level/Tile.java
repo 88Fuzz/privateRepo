@@ -23,6 +23,7 @@ public class Tile extends Drawable
         WALL(TextureConstants.WALL_TILE, true, true),
         FLOOR(TextureConstants.FLOOR_TILE, false, false),
         EXIT(TextureConstants.EXIT_TILE, false, false),
+        DOOR_MAT(TextureConstants.DOOR_MAT_TILE, false, false),
         DOOR(TextureConstants.DOOR_TILE, false, true),
         NONE("None", true, true);
 
@@ -100,6 +101,7 @@ public class Tile extends Drawable
     public void setTileType(final TileType tileType)
     {
         this.tileType = tileType;
+        locked = tileType.getDefaultLocking();
         if(textureAtlas != null && tileType != TileType.NONE)
             GraphicsUtils.applyTextureRegion(sprite, textureAtlas.findRegion(tileType.getTextureName()));
     }
@@ -111,8 +113,15 @@ public class Tile extends Drawable
 
     public Item getItem()
     {
+        return getItem(false);
+    }
+
+    public Item getItem(boolean removeItem)
+    {
         final Item retItem = item;
-        item = null;
+        if(removeItem)
+            item = null;
+
         return retItem;
     }
 

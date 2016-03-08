@@ -13,12 +13,16 @@ public class StateManager
 
     public enum StateId
     {
-        MENU_STATE, GAME_STATE, TEST_STATE, NONE;
+        MENU_STATE,
+        GAME_STATE,
+        TEST_STATE,
+        NONE;
     }
 
     public enum StateAction
     {
-        PUSH, POP;
+        PUSH,
+        POP;
     }
 
     public class PendingAction
@@ -67,9 +71,9 @@ public class StateManager
         pendingActions = new LinkedList<PendingAction>();
 
         STATE_MAP.put(StateId.GAME_STATE, new GameState(this));
-//        STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
-//        STATE_MAP.put(StateId.TEST_STATE, new TestState(this));
-//        STATE_MAP.put(StateId.SCENE_STATE, new SceneState(this));
+        // STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
+        // STATE_MAP.put(StateId.TEST_STATE, new TestState(this));
+        // STATE_MAP.put(StateId.SCENE_STATE, new SceneState(this));
     }
 
     public void addAction(final StateAction action)

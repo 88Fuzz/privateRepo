@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer
 {
@@ -131,7 +132,7 @@ public class WorldRenderer
     {
         if(target != null)
         {
-            final Vector2 targetPosition = target.getPosition();
+            final Vector2 targetPosition = target.getCenterPosition();
             final Vector2 middlePosition = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
             if(targetPosition.x - middlePosition.x < bounds.x)
             {
@@ -160,5 +161,17 @@ public class WorldRenderer
             }
             camera.update();
         }
+    }
+
+    public Vector2 getWorldCoordinates(final float screenX, final float screenY)
+    {
+        // final Vector3 unprojected = camera.unproject(new Vector3(screenX,
+        // screenY, 1), camera.position.x,
+        // camera.position.y, Gdx.graphics.getWidth(),
+        // Gdx.graphics.getHeight());
+        // return new Vector2(unprojected.x, unprojected.y);
+
+        final Vector3 unprojected = camera.unproject(new Vector3(screenX, screenY, 0));
+        return new Vector2(unprojected.x, unprojected.y);
     }
 }

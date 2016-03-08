@@ -10,10 +10,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.EarClippingTriangulator;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ShortArray;
 import com.murder.game.constants.TextureConstants;
@@ -22,6 +22,7 @@ import com.murder.game.level.Tile;
 
 public class Flashlight implements DrawablePolygon
 {
+    private static final int MIN_BEAM_POS_THRESHOLD = 5;
     private float playerSize;
     private float beamIncrement;
     private int numberOfBeams;
@@ -30,6 +31,7 @@ public class Flashlight implements DrawablePolygon
     private PolygonSprite polySprite;
     private List<Sprite> flashlightSprites;
     private float[] vertices;
+    private float[] beams;
 
     public Flashlight()
     {
@@ -37,6 +39,7 @@ public class Flashlight implements DrawablePolygon
         numberOfBeams = 220;
         flashlightAngle = 110;
         vertices = new float[(numberOfBeams + 9) * 2];
+        beams = new float[(numberOfBeams + 1) * 2];
     }
 
     public void init(final TextureAtlas textureAtlas, final float spriteSize)
@@ -53,18 +56,8 @@ public class Flashlight implements DrawablePolygon
         }
     }
 
-    public void draw(final SpriteBatch batch)
-    {
-        // for(final Sprite beam: flashlightSprites)
-        // {
-        // beam.draw(batch);
-        // }
-    }
-
     public void update(final Level level, final Vector2 position, final float rotation)
     {
-        // TODO constantly allocating beams is most likely not efficient
-        final float beams[] = new float[(numberOfBeams + 1) * 2];
         final float baseAngle = rotation - flashlightAngle / 2;
         final float deltaAngle = flashlightAngle / numberOfBeams;
         int i;
@@ -87,7 +80,8 @@ public class Flashlight implements DrawablePolygon
             beams[i * 2] = beamEndPos.x;
             beams[i * 2 + 1] = beamEndPos.y;
 
-            if((int) beamEndPos.x == (int) position.x && beamEndPos.y < lowestBeamValue)
+//            System.out.println("lowestBeamValue: " + lowestBeamValue + " beamPos: " + beamEndPos + " positionX: " + position.x + " delta: " + deltaAngle);
+            if(beamEndPos.y < lowestBeamValue && beamEndPos.x - MIN_BEAM_POS_THRESHOLD < position.x && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
             {
                 lowestBeamValue = beamEndPos.y;
                 lowestBeamPos = i * 2;
@@ -98,11 +92,16 @@ public class Flashlight implements DrawablePolygon
         vertices[offset++] = beams[lowestBeamPos + 1];
 
         int lcv = lowestBeamPos + 2;
+        try {
         while(lcv != lowestBeamPos)
         {
             vertices[offset++] = beams[lcv++];
             if(lcv > (numberOfBeams + 1) * 2 - 1)
                 lcv = 0;
+        }
+        } catch (final Exception e)
+        {
+            throw e;
         }
 
         vertices[offset++] = beams[lowestBeamPos];
@@ -111,35 +110,22 @@ public class Flashlight implements DrawablePolygon
         vertices[offset++] = position.x;
         vertices[offset++] = 0;
 
-        // TODO 100000 should be the size of the level, not just random numbers
-        vertices[offset++] = 100000;
+        final Rectangle levelBounds = level.getLevelBounds();
+        levelBounds.width += beamLength;
+        levelBounds.height += beamLength;
+        vertices[offset++] = levelBounds.width;
         vertices[offset++] = 0;
 
-        vertices[offset++] = 100000;
-        vertices[offset++] = 100000;
+        vertices[offset++] = levelBounds.width;
+        vertices[offset++] = levelBounds.height;
 
         vertices[offset++] = 0;
-        vertices[offset++] = 100000;
+        vertices[offset++] = levelBounds.height;
 
         vertices[offset++] = 0;
         vertices[offset++] = 0;
 
         updatePolySprite();
-    }
-
-    private float getBeamLength(final Level level, final Vector2 position, final float angle)
-    {
-        for(float length = playerSize / 2 + beamIncrement; length < beamLength; length += beamIncrement)
-        {
-            final float x = (float) (position.x + length * Math.sin(Math.toRadians(angle)));
-            final float y = (float) (position.y + length * Math.cos(Math.toRadians(angle)));
-
-            final Tile tile = level.getTile((int) (x / playerSize), (int) (y / playerSize));
-            if(tile == null || tile.isLocked())
-                return length - beamIncrement;
-        }
-
-        return beamLength;
     }
 
     private Vector2 getBeamEnd(final Level level, final Vector2 position, final float angle)
@@ -161,8 +147,8 @@ public class Flashlight implements DrawablePolygon
     private void updatePolySprite()
     {
         final Pixmap pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        // pix.setColor(0xCCAAFFEF);
-        pix.setColor(0x000000FF);
+         pix.setColor(0xCCAAFFEF);
+//        pix.setColor(0x000000FF);
         pix.fill();
         final Texture textureSolid = new Texture(pix);
         final TextureRegion textureRegion = new TextureRegion(textureSolid);

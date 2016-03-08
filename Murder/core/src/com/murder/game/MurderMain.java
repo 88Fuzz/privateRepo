@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.serial.LevelGenerator;
@@ -19,7 +20,9 @@ import com.murder.game.state.StateManager.StateId;
 
 public class MurderMain extends ApplicationAdapter implements InputProcessor
 {
-    private static final float TIMEPERFRAME = 1.0f / 60.0f;
+    // TODO there is probably a bunch of shit that needs to be disposed. Like
+    // TextureAtlas, renderers??
+    private static final float TIMEPERFRAME = 1.0f / 30.0f;
 
     private Stack<State> stateStack;
     private WorldRenderer worldRenderer;
@@ -42,7 +45,7 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         timeSinceLastUpdate = 0;
 
         final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
-        final LevelSerialize levelSerialize = levelGenerator.getLevel("Nothing");
+        final LevelSerialize levelSerialize = levelGenerator.getLevel("Level01");
 
         gameState.init(worldRenderer, levelSerialize, textureAtlas);
         stateStack.push(gameState);
@@ -130,9 +133,11 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button)
     {
+        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+
         for(final State state: stateStack)
         {
-            if(state.touchDown(screenX, screenY, pointer, button))
+            if(state.touchDown((int) touchPosition.x, (int) touchPosition.y, pointer, button))
                 return true;
         }
         return false;
@@ -141,9 +146,11 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button)
     {
+        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+
         for(final State state: stateStack)
         {
-            if(state.touchUp(screenX, screenY, pointer, button))
+            if(state.touchUp((int) touchPosition.x, (int) touchPosition.y, pointer, button))
                 return true;
         }
         return false;
@@ -152,9 +159,11 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDragged(final int screenX, final int screenY, final int pointer)
     {
+        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+
         for(final State state: stateStack)
         {
-            if(state.touchDragged(screenX, screenY, pointer))
+            if(state.touchDragged((int) touchPosition.x, (int) touchPosition.y, pointer))
                 return true;
         }
         return false;
@@ -163,9 +172,11 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean mouseMoved(final int screenX, final int screenY)
     {
+        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+
         for(final State state: stateStack)
         {
-            if(state.mouseMoved(screenX, screenY))
+            if(state.mouseMoved((int) touchPosition.x, (int) touchPosition.y))
                 return true;
         }
         return false;
@@ -198,11 +209,16 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
             for(final State state: stateStack)
             {
                 state.update(dt);
-                state.render(worldRenderer);
+                // state.render(worldRenderer);
             }
-
-            worldRenderer.renderGUI();
+            // worldRenderer.renderGUI();
         }
+        for(final State state: stateStack)
+        {
+            state.update(dt);
+            state.render(worldRenderer);
+        }
+        worldRenderer.renderGUI();
     }
 
     private void processStateActions()
@@ -216,12 +232,12 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
                 if((state = stateManager.getState(pendingAction.getId())) != null)
                 {
                     initState(state, pendingAction.getStateConfig());
-                    // TODO initState(state);
                     stateStack.push(state);
                 }
                 break;
             case POP:
-                stateStack.pop();
+                if(!stateStack.isEmpty())
+                    stateStack.pop();
                 break;
             }
         }
@@ -229,5 +245,10 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     }
 
     private void initState(final State state, final String stateConfig)
-    {}
+    {
+        if(state instanceof GameState)
+        {
+            ((GameState) state).init(worldRenderer, levelGenerator.getLevel(stateConfig), textureAtlas);
+        }
+    }
 }

@@ -7,6 +7,7 @@ public class TextureConstants
     public static final String FLOOR_TILE = "FloorTile";
     public static final String EXIT_TILE = "ExitTile";
     public static final String DOOR_TILE = "DoorTile";
+    public static final String DOOR_MAT_TILE = "DootMatTile";
     public static final String WALL_TILE = "WallTile";
     public static final String CIRCLE_TEXTURE = "CircleTexture";
     public static final String KEY_TEXTURE = "KeyTexture";

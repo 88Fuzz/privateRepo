@@ -21,12 +21,13 @@ import com.murder.game.level.serial.MyVector2;
 
 public class Actor extends Drawable
 {
+    private static final String MOVE = "move";
     private static final String POSITION = "position";
     private static final String ROTATION = "rotation";
     private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
-    private static final float MAX_VELOCITY = 460;
+    private static final float MAX_VELOCITY = 460/2;
     private static final float SQRT_TWO = 1.41421356237f;
     private static final float SPIN = 45;
 
@@ -51,6 +52,7 @@ public class Actor extends Drawable
     }
 
     private float rotation;
+    private boolean move;
     @JsonIgnore
     private Set<InventoryItem> inventory;
     @JsonIgnore
@@ -63,15 +65,22 @@ public class Actor extends Drawable
     private Flashlight flashlight;
 
     @JsonCreator
-    public Actor(@JsonProperty(POSITION) final MyVector2 position, @JsonProperty(ROTATION) final float rotation)
+    public Actor(@JsonProperty(POSITION) final MyVector2 position, @JsonProperty(ROTATION) final float rotation,
+            @JsonProperty(MOVE) final boolean move)
     {
+        this.move = move;
         this.position = position;
-        this.rotation = 180;
+        this.rotation = rotation;
         flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
         tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
+    }
+
+    public Actor(final MyVector2 position, final float rotation)
+    {
+        this(position, rotation, false);
     }
 
     public void init(final TextureAtlas textureAtlas, final Level level)
@@ -88,27 +97,26 @@ public class Actor extends Drawable
     public void draw(final SpriteBatch batch)
     {
         sprite.draw(batch);
-        flashlight.draw(batch);
     }
 
     @Override
     public void update(final float dt)
     {
         final MyVector2 directionalVelocity = new MyVector2();
-        // if(rotation == 0)
-        // {
-        final float mag = velocityVector.len();
-        if(mag != 0)
+        if(move)
         {
-            directionalVelocity.x = velocity * velocityVector.x / mag;
-            directionalVelocity.y = velocity * velocityVector.y / mag;
+            directionalVelocity.x = (float) (velocity * Math.sin(Math.toRadians(rotation)));
+            directionalVelocity.y = (float) (velocity * Math.cos(Math.toRadians(rotation)));
         }
-        // }
-        // else
-        // {
-        // directionalVelocity.x = (float) (velocity * Math.sin(rotation));
-        // directionalVelocity.y = (float) (velocity * Math.cos(rotation));
-        // }
+        else
+        {
+            final float mag = velocityVector.len();
+            if(mag != 0)
+            {
+                directionalVelocity.x = velocity * velocityVector.x / mag;
+                directionalVelocity.y = velocity * velocityVector.y / mag;
+            }
+        }
 
         final MyVector2 newPos = position.cpy();
         // Check x and y independently in case player is moving up against a
@@ -140,7 +148,7 @@ public class Actor extends Drawable
         final Tile tile = level.getTile((int) tilePosition.x, (int) tilePosition.y);
         if(tile != null)
         {
-            final Item item = tile.getItem();
+            final Item item = tile.getItem(true);
             if(item != null)
             {
                 inventory.add(item.getInventoryItem());
@@ -217,6 +225,21 @@ public class Actor extends Drawable
         return true;
     }
 
+    public void startMove(final boolean move)
+    {
+        this.move = move;
+    }
+
+    public void setRotation(final float rotation)
+    {
+        this.rotation = rotation;
+    }
+
+    public float getRotation()
+    {
+        return rotation;
+    }
+
     public MyVector2 getTilePosition()
     {
         return tilePosition.cpy();
@@ -224,7 +247,12 @@ public class Actor extends Drawable
 
     public MyVector2 getPosition()
     {
-        return new MyVector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
+        return new MyVector2(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
+    }
+
+    public MyVector2 getCenterPosition()
+    {
+        return position.cpy();
     }
 
     public Flashlight getFlashlight()
