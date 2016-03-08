@@ -19,10 +19,12 @@ public class GameState implements State
     private Actor player;
     private Level level;
     private StateManager stateManager;
+    private int buttonsPressed;
 
     public GameState(final StateManager stateManager)
     {
         this.stateManager = stateManager;
+        buttonsPressed = 0;
     }
 
     public void init(final WorldRenderer worldRenderer, final LevelSerialize levelSerialize,
@@ -142,16 +144,19 @@ public class GameState implements State
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        buttonsPressed++;
+
         // TODO Should this be controlled by the player?
         adjustPlayerRotation(screenX, screenY);
-        player.startMove(true);
+        adjustPlayerMove();
         return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        player.startMove(false);
+        buttonsPressed--;
+        adjustPlayerMove();
         return true;
     }
 
@@ -183,5 +188,13 @@ public class GameState implements State
         final float deltaY = screenY - position.y;
 
         player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
+    }
+    
+    private void adjustPlayerMove()
+    {
+        if(buttonsPressed == 1)
+            player.startMove(true);
+        else
+            player.startMove(false);
     }
 }
