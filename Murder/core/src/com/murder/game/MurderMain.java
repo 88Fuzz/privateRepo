@@ -1,5 +1,6 @@
 package com.murder.game;
 
+import java.util.Collections;
 import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
+import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.serial.LevelGenerator;
 import com.murder.game.level.serial.LevelSerialize;
@@ -17,6 +19,7 @@ import com.murder.game.state.State;
 import com.murder.game.state.StateManager;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.TextState;
 
 public class MurderMain extends ApplicationAdapter implements InputProcessor
 {
@@ -48,7 +51,11 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         final LevelSerialize levelSerialize = levelGenerator.getLevel("Level01");
 
         gameState.init(worldRenderer, levelSerialize, textureAtlas);
-        stateStack.push(gameState);
+//        stateStack.push(gameState);
+        final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
+        final Text text = new Text();
+        textState.init(Collections.singletonList(text));
+        stateStack.push(textState);
 
         Gdx.input.setInputProcessor(this);
     }
