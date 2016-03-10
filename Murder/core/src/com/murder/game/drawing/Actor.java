@@ -17,7 +17,7 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.level.Item.InventoryItem;
 import com.murder.game.level.Tile.TileType;
-import com.murder.game.level.serial.MyVector2;
+import com.murder.game.state.serial.MyVector2;
 
 public class Actor extends Drawable
 {
@@ -27,7 +27,7 @@ public class Actor extends Drawable
     private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
-    private static final float MAX_VELOCITY = 460/2;
+    private static final float MAX_VELOCITY = 460 / 2;
     private static final float SQRT_TWO = 1.41421356237f;
     private static final float SPIN = 45;
 
@@ -250,6 +250,7 @@ public class Actor extends Drawable
         return new MyVector2(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
     }
 
+    @JsonIgnore
     public MyVector2 getCenterPosition()
     {
         return position.cpy();

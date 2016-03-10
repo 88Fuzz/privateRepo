@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.murder.game.level.serial.MyVector2;
+import com.murder.game.state.serial.MyVector2;
 
 public abstract class Drawable
 {

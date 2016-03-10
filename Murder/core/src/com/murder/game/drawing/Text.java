@@ -1,31 +1,33 @@
 package com.murder.game.drawing;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.murder.game.drawing.fonts.FontGenerator;
+import com.murder.game.drawing.fonts.FontGenerator.FontType;
+import com.murder.game.state.serial.MyVector2;
 
 public class Text extends Drawable
 {
-    final BitmapFont font;
+    private BitmapFont font;
+    private FontType fontType;
+    private String text;
 
-    public Text()
+    public Text(final MyVector2 position, final FontType fontType, final String text)
     {
-        final FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/Bluebird.otf"));
-        final FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-        parameter.size = 12;
-        parameter.color = Color.WHITE;
-        // TODO all fonts should be loaded into a key value pair. Key being font type and value being BitmapFont. This constructor will take the key.
-        font = fontGenerator.generateFont(parameter);
-        fontGenerator.dispose();
+        this.position = position;
+        this.fontType = fontType;
+        this.text = text;
+    }
+
+    public void init(final FontGenerator fontGenerator)
+    {
+        font = fontGenerator.getFont(fontType);
     }
 
     @Override
     public void draw(final SpriteBatch batch)
     {
-        font.draw(batch, "TEST", 100, 100);
+        font.draw(batch, text, position.x, position.y);
     }
 
     @Override

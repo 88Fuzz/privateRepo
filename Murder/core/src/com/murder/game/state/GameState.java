@@ -9,17 +9,17 @@ import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile.TileType;
 import com.murder.game.level.Tile;
-import com.murder.game.level.serial.LevelSerialize;
-import com.murder.game.level.serial.MyVector2;
 import com.murder.game.state.StateManager.StateAction;
-import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.serial.LevelSerialize;
+import com.murder.game.state.serial.MyVector2;
 
 public class GameState implements State
 {
     private Actor player;
     private Level level;
     private StateManager stateManager;
-    //TODO when the app is suspended and brought back, buttonsPressed should be set back to 0
+    // TODO when the app is suspended and brought back, buttonsPressed should be
+    // set back to 0
     private int buttonsPressed;
 
     public GameState(final StateManager stateManager)
@@ -28,8 +28,7 @@ public class GameState implements State
         buttonsPressed = 0;
     }
 
-    public void init(final WorldRenderer worldRenderer, final LevelSerialize levelSerialize,
-            final TextureAtlas textureAtlas)
+    public void init(final WorldRenderer worldRenderer, final LevelSerialize levelSerialize, final TextureAtlas textureAtlas)
     {
         level = levelSerialize.getLevel();
         level.init(textureAtlas);
@@ -67,7 +66,7 @@ public class GameState implements State
         if(tile != null && TileType.EXIT == tile.getTileType())
         {
             stateManager.addAction(StateAction.POP);
-            stateManager.addAction(StateAction.PUSH, StateId.GAME_STATE, level.getNextLevelId());
+            stateManager.addAction(StateAction.PUSH, level.getNextStateId(), level.getNextLevelId());
         }
     }
 
@@ -190,7 +189,7 @@ public class GameState implements State
 
         player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
     }
-    
+
     private void adjustPlayerMove()
     {
         if(buttonsPressed == 1)

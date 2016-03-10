@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
+import com.murder.game.drawing.fonts.FontGenerator;
 
 public class TextState implements State
 {
@@ -15,9 +16,13 @@ public class TextState implements State
         this.stateManager = stateManager;
     }
 
-    public void init(final List<Text> drawableTexts)
+    public void init(final FontGenerator fontGenerator, final List<Text> drawableTexts)
     {
         this.drawableTexts = drawableTexts;
+        for(final Text text: drawableTexts)
+        {
+            text.init(fontGenerator);
+        }
     }
 
     @Override

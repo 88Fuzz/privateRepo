@@ -1,6 +1,5 @@
 package com.murder.game;
 
-import java.util.Collections;
 import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -10,16 +9,16 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.constants.TextureConstants;
-import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
+import com.murder.game.drawing.fonts.FontGenerator;
 import com.murder.game.level.serial.LevelGenerator;
-import com.murder.game.level.serial.LevelSerialize;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.StateManager;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateId;
 import com.murder.game.state.TextState;
+import com.murder.game.state.serial.LevelSerialize;
 
 public class MurderMain extends ApplicationAdapter implements InputProcessor
 {
@@ -33,6 +32,7 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     private float timeSinceLastUpdate;
     private TextureAtlas textureAtlas;
     private LevelGenerator levelGenerator;
+    private FontGenerator fontGenerator;
 
     @Override
     public void create()
@@ -45,17 +45,14 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         textureAtlas = assMan.get(TextureConstants.TILE_TEXTURES);
         stateManager = new StateManager(textureAtlas);
         levelGenerator = new LevelGenerator();
+        fontGenerator = new FontGenerator();
         timeSinceLastUpdate = 0;
 
         final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
         final LevelSerialize levelSerialize = levelGenerator.getLevel("Level01");
 
         gameState.init(worldRenderer, levelSerialize, textureAtlas);
-//        stateStack.push(gameState);
-        final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
-        final Text text = new Text();
-        textState.init(Collections.singletonList(text));
-        stateStack.push(textState);
+        stateStack.push(gameState);
 
         Gdx.input.setInputProcessor(this);
     }
@@ -256,6 +253,10 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         if(state instanceof GameState)
         {
             ((GameState) state).init(worldRenderer, levelGenerator.getLevel(stateConfig), textureAtlas);
+        }
+        else if(state instanceof TextState)
+        {
+            ((TextState) state).init(fontGenerator, levelGenerator.getTexts(stateConfig));
         }
     }
 }

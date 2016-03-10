@@ -9,24 +9,28 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.drawing.Drawable;
+import com.murder.game.state.StateManager.StateId;
 
 public class Level extends Drawable
 {
     private static final String TILES = "tiles";
     private static final String LEVEL_ID = "levelId";
     private static final String NEXT_LEVEL_ID = "nextLevelId";
+    private static final String NEXT_STATE_ID = "nextStateId";
 
     private String levelId;
+    private StateId nextStateId;
     private String nextLevelId;
     private List<List<Tile>> tiles;
 
     @JsonCreator
     public Level(@JsonProperty(TILES) final List<List<Tile>> tiles, @JsonProperty(LEVEL_ID) final String levelId,
-            @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId)
+            @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId, @JsonProperty(NEXT_STATE_ID) final StateId nextStateId)
     {
         this.tiles = tiles;
         this.levelId = levelId;
         this.nextLevelId = nextLevelId;
+        this.nextStateId = nextStateId;
     }
 
     public void init(final TextureAtlas textureAtlas)
@@ -96,5 +100,10 @@ public class Level extends Drawable
     public String getNextLevelId()
     {
         return nextLevelId;
+    }
+
+    public StateId getNextStateId()
+    {
+        return nextStateId;
     }
 }
