@@ -76,6 +76,7 @@ public class Actor extends Drawable
         tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
+        this.rotation = 172.39261f;
     }
 
     public Actor(final MyVector2 position, final float rotation)
