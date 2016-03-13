@@ -2,7 +2,7 @@ package com.murder.game.constants;
 
 public class TextureConstants
 {
-    public static final String TILE_TEXTURES = "../android/assets/images/tiles.pack";
+    public static final String TILE_TEXTURES = "images/tiles.pack";
 
     public static final String FLOOR_TILE = "FloorTile";
     public static final String EXIT_TILE = "ExitTile";

@@ -36,7 +36,7 @@ public class Flashlight implements DrawablePolygon
     public Flashlight()
     {
         beamIncrement = 2;
-        numberOfBeams = 220;
+        numberOfBeams = 220 / 2;
         flashlightAngle = 110;
         vertices = new float[(numberOfBeams + 9) * 2];
         beams = new float[(numberOfBeams + 1) * 2];
@@ -80,9 +80,6 @@ public class Flashlight implements DrawablePolygon
             beams[i * 2] = beamEndPos.x;
             beams[i * 2 + 1] = beamEndPos.y;
 
-            // System.out.println("lowestBeamValue: " + lowestBeamValue +
-            // " beamPos: " + beamEndPos + " positionX: " + position.x +
-            // " delta: " + deltaAngle);
             if(beamEndPos.y < lowestBeamValue && beamEndPos.x - MIN_BEAM_POS_THRESHOLD < position.x
                     && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
             {

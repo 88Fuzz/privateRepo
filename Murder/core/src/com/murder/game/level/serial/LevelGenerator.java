@@ -3,6 +3,7 @@ package com.murder.game.level.serial;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import com.murder.game.level.Tile.TileType;
 import com.murder.game.state.StateManager.StateId;
 import com.murder.game.state.serial.LevelSerialize;
 import com.murder.game.state.serial.MyVector2;
+import com.murder.game.utils.FileUtils;
 
 public class LevelGenerator
 {
@@ -130,26 +132,33 @@ public class LevelGenerator
 
     private LevelSerialize loadLevelFromFile(final String levelId)
     {
+        final String tag = "MURDER EXCEPTION";
         try
         {
-            System.out.println("FILE: " + Gdx.files.internal(DIRECTORY + levelId + FILE_EXTENSION).file().getAbsolutePath());
-            final List<String> lines = Files.readAllLines(Gdx.files.internal(DIRECTORY + levelId + FILE_EXTENSION).file().toPath(),
-                    StandardCharsets.UTF_8);
-            if(!lines.isEmpty())
-            {
-                return SERIALIZER.readValue(lines.get(0), LevelSerialize.class);
-            }
+            return SERIALIZER.readValue(Gdx.files.internal(DIRECTORY + levelId + FILE_EXTENSION).readString(), LevelSerialize.class);
         }
-        catch(IOException e)
+        catch(final Exception e)
         {
-            e.printStackTrace();
+            Gdx.app.error(tag, e.getMessage());
+            Gdx.app.error(tag, getStackTrace(e));
+            throw new RuntimeException(e);
         }
-
-        return null;
     }
 
     public List<Text> getTexts(final String levelId)
     {
         return null;
+    }
+
+    private String getStackTrace(final Throwable e)
+    {
+        final StringBuilder sb = new StringBuilder();
+        for(final StackTraceElement element: e.getStackTrace())
+        {
+            sb.append(element);
+            sb.append("\n");
+        }
+
+        return sb.toString();
     }
 }
