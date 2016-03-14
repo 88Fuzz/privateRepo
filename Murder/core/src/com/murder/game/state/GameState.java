@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.drawing.Actor;
-import com.murder.game.drawing.Actor.Direction;
+import com.murder.game.drawing.Actor.MoveDirection;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile.TileType;
@@ -91,16 +91,16 @@ public class GameState implements State
         switch(keyCode)
         {
         case Input.Keys.W:
-            player.moveDirection(Direction.UP);
+            player.moveDirection(MoveDirection.UP);
             return true;
         case Input.Keys.S:
-            player.moveDirection(Direction.DOWN);
+            player.moveDirection(MoveDirection.DOWN);
             return true;
         case Input.Keys.A:
-            player.moveDirection(Direction.LEFT);
+            player.moveDirection(MoveDirection.LEFT);
             return true;
         case Input.Keys.D:
-            player.moveDirection(Direction.RIGHT);
+            player.moveDirection(MoveDirection.RIGHT);
             return true;
         case Input.Keys.LEFT:
             player.rotate(-1);
@@ -118,16 +118,16 @@ public class GameState implements State
         switch(keyCode)
         {
         case Input.Keys.W:
-            player.stopMoveDirection(Direction.UP);
+            player.stopMoveDirection(MoveDirection.UP);
             return true;
         case Input.Keys.S:
-            player.stopMoveDirection(Direction.DOWN);
+            player.stopMoveDirection(MoveDirection.DOWN);
             return true;
         case Input.Keys.A:
-            player.stopMoveDirection(Direction.LEFT);
+            player.stopMoveDirection(MoveDirection.LEFT);
             return true;
         case Input.Keys.D:
-            player.stopMoveDirection(Direction.RIGHT);
+            player.stopMoveDirection(MoveDirection.RIGHT);
             return true;
         }
         // TODO Auto-generated method stub

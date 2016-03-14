@@ -24,6 +24,9 @@ public class Actor extends Drawable
     private static final String MOVE = "move";
     private static final String POSITION = "position";
     private static final String ROTATION = "rotation";
+
+    private static final int MAX_ANGLE = 360;
+
     private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
@@ -43,7 +46,7 @@ public class Actor extends Drawable
         TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
     }
 
-    public enum Direction
+    public enum MoveDirection
     {
         UP,
         DOWN,
@@ -51,7 +54,15 @@ public class Actor extends Drawable
         RIGHT;
     }
 
+    public enum RotationDirection
+    {
+        NONE,
+        COUNTER_CLOCKWISE,
+        CLOCKWISE;
+    }
+
     private float rotation;
+    private RotationDirection rotationDirection;
     private boolean move;
     @JsonIgnore
     private Set<InventoryItem> inventory;
@@ -88,6 +99,7 @@ public class Actor extends Drawable
         sprite = new Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         sprite.setOriginCenter();
         flashlight.init(textureAtlas, SPRITE_SIZE);
+        this.rotationDirection = RotationDirection.NONE;
         this.level = level;
         centerSpritePosition();
         setTilePosition();
@@ -155,10 +167,10 @@ public class Actor extends Drawable
             }
         }
 
-        flashlight.update(level, position, rotation);
+        flashlight.update(level, position, rotation, rotationDirection);
     }
 
-    public void moveDirection(final Direction direction)
+    public void moveDirection(final MoveDirection direction)
     {
         switch(direction)
         {
@@ -177,7 +189,7 @@ public class Actor extends Drawable
         }
     }
 
-    public void stopMoveDirection(final Direction direction)
+    public void stopMoveDirection(final MoveDirection direction)
     {
         switch(direction)
         {
@@ -202,7 +214,7 @@ public class Actor extends Drawable
 
     public void rotate(final int direction)
     {
-        rotation += direction * SPIN;
+        setRotation(rotation + direction * SPIN);
     }
 
     private boolean checkNewPosition(final MyVector2 newPosition)
@@ -232,7 +244,28 @@ public class Actor extends Drawable
 
     public void setRotation(final float rotation)
     {
-        this.rotation = rotation;
+        if(rotation < 0)
+        {
+            this.rotation = MAX_ANGLE + rotation;
+            rotationDirection = RotationDirection.COUNTER_CLOCKWISE;
+        }
+        else if(rotation > MAX_ANGLE)
+        {
+            this.rotation = MAX_ANGLE - rotation;
+            rotationDirection = RotationDirection.CLOCKWISE;
+        }
+        else
+        {
+            if(this.rotation < rotation)
+            {
+                rotationDirection = RotationDirection.COUNTER_CLOCKWISE;
+            }
+            else
+            {
+                rotationDirection = RotationDirection.CLOCKWISE;
+            }
+            this.rotation = rotation;
+        }
     }
 
     public float getRotation()
