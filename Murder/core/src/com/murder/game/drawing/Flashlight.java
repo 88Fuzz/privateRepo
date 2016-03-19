@@ -40,51 +40,7 @@ public class Flashlight implements DrawablePolygon
         public boolean continueBeam(final Tile tile);
     }
 
-    private class Beam
-    {
-        private float angle;
-        private Vector2 endPos = new Vector2();
-        private float distance;
-
-        public Beam()
-        {
-            angle = -1;
-            endPos = new Vector2();
-            distance = 0;
-        }
-
-        public void setAngle(final float angle)
-        {
-            this.angle = angle;
-        }
-
-        public float getAngle()
-        {
-            // TODO round this to some decimal place
-            return angle;
-        }
-
-        public void setEndPos(final float x, final float y)
-        {
-            endPos.x = x;
-            endPos.y = y;
-        }
-
-        public Vector2 getEndPos()
-        {
-            return endPos;
-        }
-
-        public void setDistance(final float distance)
-        {
-            this.distance = distance;
-        }
-
-        public float getDistance()
-        {
-            return distance;
-        }
-    }
+    
 
     private static final BeamIncrementor beamAdder = new BeamIncrementor()
     {
@@ -138,6 +94,9 @@ public class Flashlight implements DrawablePolygon
 
     public Flashlight()
     {
+        lowestBeamValue = Integer.MAX_VALUE;
+        lowestBeamPosition = 0;
+
         prevRotation = -1;
         prevPosition = new Vector2();
 
@@ -162,7 +121,6 @@ public class Flashlight implements DrawablePolygon
     {
         boolean updateVertices = false;
         final float roundedRotation = roundToHalf(rotation);
-        // TODO do this with position too
 
         if(rotationDirection != RotationDirection.NONE)
         {
@@ -331,14 +289,11 @@ public class Flashlight implements DrawablePolygon
         endPos.x = tmpX;
         endPos.y = tmpY;
 
-        
-        You need to figure out a way to move the data in beams to vertices to draw the flashlight. YO
-
-            if(beamEndPos.y < lowestBeamValue && beamEndPos.x - MIN_BEAM_POS_THRESHOLD < position.x
-                    && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
-            {
-                
-            }
+        if(endPos.y < lowestBeamValue)
+        {
+            lowestBeamValue = endPos.y;
+            // record the position of the lowestBeamValue.
+        }
 
         return localLength;
     }
