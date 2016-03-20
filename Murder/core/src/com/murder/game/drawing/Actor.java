@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.TextureConstants;
+import com.murder.game.drawing.flashlight.Flashlight;
 import com.murder.game.level.Item;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
@@ -81,7 +82,8 @@ public class Actor extends Drawable
     {
         this.move = move;
         this.position = position;
-        this.rotation = rotation;
+//        this.rotation = rotation;
+        this.rotation = 180;
         flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
         tilePosition = new MyVector2();
@@ -98,11 +100,11 @@ public class Actor extends Drawable
     {
         sprite = new Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         sprite.setOriginCenter();
-        flashlight.init(textureAtlas, SPRITE_SIZE);
         this.rotationDirection = RotationDirection.NONE;
         this.level = level;
         centerSpritePosition();
         setTilePosition();
+        flashlight.init(level, position, SPRITE_SIZE, rotation);
     }
 
     @Override
