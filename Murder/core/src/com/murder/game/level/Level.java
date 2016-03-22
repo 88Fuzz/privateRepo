@@ -82,7 +82,7 @@ public class Level extends Drawable
 
     public Tile getTile(final int x, final int y)
     {
-        if(x >= tiles.size())
+        if(x >= tiles.size() || x < 0 || y < 0)
             return null;
 
         final List<Tile> list = tiles.get(x);

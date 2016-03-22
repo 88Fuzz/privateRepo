@@ -19,14 +19,13 @@ import com.murder.game.level.Tile;
 import com.murder.game.level.Item.InventoryItem;
 import com.murder.game.level.Tile.TileType;
 import com.murder.game.state.serial.MyVector2;
+import com.murder.game.utils.RotationUtils;
 
 public class Actor extends Drawable
 {
     private static final String MOVE = "move";
     private static final String POSITION = "position";
     private static final String ROTATION = "rotation";
-
-    private static final int MAX_ANGLE = 360;
 
     private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
@@ -55,15 +54,7 @@ public class Actor extends Drawable
         RIGHT;
     }
 
-    public enum RotationDirection
-    {
-        NONE,
-        COUNTER_CLOCKWISE,
-        CLOCKWISE;
-    }
-
     private float rotation;
-    private RotationDirection rotationDirection;
     private boolean move;
     @JsonIgnore
     private Set<InventoryItem> inventory;
@@ -82,8 +73,8 @@ public class Actor extends Drawable
     {
         this.move = move;
         this.position = position;
-//        this.rotation = rotation;
-        this.rotation = 180;
+        // this.rotation = rotation;
+        this.rotation = 0;
         flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
         tilePosition = new MyVector2();
@@ -100,7 +91,6 @@ public class Actor extends Drawable
     {
         sprite = new Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         sprite.setOriginCenter();
-        this.rotationDirection = RotationDirection.NONE;
         this.level = level;
         centerSpritePosition();
         setTilePosition();
@@ -169,7 +159,7 @@ public class Actor extends Drawable
             }
         }
 
-        flashlight.update(level, position, rotation, rotationDirection);
+        flashlight.update(level, position, rotation);
     }
 
     public void moveDirection(final MoveDirection direction)
@@ -241,33 +231,14 @@ public class Actor extends Drawable
 
     public void startMove(final boolean move)
     {
-        this.move = move;
+        // this.move = move;
     }
 
     public void setRotation(final float rotation)
     {
-        if(rotation < 0)
-        {
-            this.rotation = MAX_ANGLE + rotation;
-            rotationDirection = RotationDirection.COUNTER_CLOCKWISE;
-        }
-        else if(rotation > MAX_ANGLE)
-        {
-            this.rotation = MAX_ANGLE - rotation;
-            rotationDirection = RotationDirection.CLOCKWISE;
-        }
-        else
-        {
-            if(this.rotation < rotation)
-            {
-                rotationDirection = RotationDirection.COUNTER_CLOCKWISE;
-            }
-            else
-            {
-                rotationDirection = RotationDirection.CLOCKWISE;
-            }
-            this.rotation = rotation;
-        }
+        final float tmpRotation = RotationUtils.adjustAngleAbout360(rotation);
+
+        this.rotation = tmpRotation;
     }
 
     public float getRotation()

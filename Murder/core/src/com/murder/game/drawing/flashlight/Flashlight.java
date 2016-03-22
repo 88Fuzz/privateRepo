@@ -11,9 +11,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ShortArray;
 import com.murder.game.drawing.DrawablePolygon;
-import com.murder.game.drawing.Actor.RotationDirection;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
+import com.murder.game.utils.RotationUtils;
+import com.murder.game.utils.RotationUtils.RotationDirection;
 
 public class Flashlight implements DrawablePolygon
 {
@@ -75,6 +76,7 @@ public class Flashlight implements DrawablePolygon
     private static final int MIN_BEAM_THRESHOLD = 5;
     private static final int NUMBER_OF_BEAMS = 220;
     private static final int FLASHLIGHT_ANGLE = 110;
+    private static final float DELTA_ANGLE = (float) FLASHLIGHT_ANGLE / NUMBER_OF_BEAMS;
 
     protected static final int BEAM_INCREMENT = 2;
     protected static final float BEAM_LENGTH_MULTIPLIER = 2.7f;
@@ -85,7 +87,6 @@ public class Flashlight implements DrawablePolygon
     private float maxbeamLength;
     private PolygonSprite polySprite;
     private float[] vertices;
-    // private float[] beams;
     private BeamList beams;
     private Beam lowestBeam;
 
@@ -118,14 +119,14 @@ public class Flashlight implements DrawablePolygon
         updateVertices(level, position);
     }
 
-    public void update(final Level level, final Vector2 position, final float rotation, final RotationDirection rotationDirection)
+    public void update(final Level level, final Vector2 position, final float rotation)
     {
         boolean updateVertices = false;
         final float roundedRotation = roundToHalf(rotation);
 
-        if(rotationDirection != RotationDirection.NONE)
+        if(prevRotation != roundedRotation)
         {
-            processRotation(level, position, roundedRotation, rotationDirection);
+            processRotation(level, position, roundedRotation);
             prevRotation = roundedRotation;
             updateVertices = true;
         }
@@ -146,34 +147,47 @@ public class Flashlight implements DrawablePolygon
 
     // TODO this code is riddled with assumptions of the incrementation of the
     // angles to be 0.5
-    private void processRotation(final Level level, final Vector2 position, final float rotation, final RotationDirection rotationDirection)
+    private void processRotation(final Level level, final Vector2 position, final float rotation)
     {
-        final float deltaAngle = FLASHLIGHT_ANGLE / NUMBER_OF_BEAMS;
-        final float baseAngle = roundToHalf(rotation - FLASHLIGHT_ANGLE / 2);
-        final int adjustments = (int) Math.abs((prevRotation - rotation) * deltaAngle);
+        final RotationDirection rotationDirection = RotationUtils.getRotationDirection(prevRotation, rotation);
+        final int adjustments = (int) (RotationUtils.getRotationDistance(prevRotation, rotation) / DELTA_ANGLE);
+        float baseAngle = roundToHalf(rotation - FLASHLIGHT_ANGLE / 2) + adjustments * DELTA_ANGLE;
+
+        System.out.println("prevRotation " + prevRotation + " rotation " + rotation + " baseAngle " + baseAngle + " adjustments " + adjustments);
+
+        // If the number of beams to update is greater than the number of beams
+        // in the flashlight, it is best to just redraw all beams
+        if(adjustments > NUMBER_OF_BEAMS)
+        {
+            setAllFlashlightBeams(level, position, rotation);
+            return;
+        }
 
         if(rotationDirection == RotationDirection.COUNTER_CLOCKWISE)
         {
+            IF I continuously rotate this guy counter clockwise, it eventually fucks up :(
+            System.out.println("counter " + adjustments);
             // Take from the back and add to the front.
             for(int i = 0; i < adjustments; i++)
             {
                 final Beam moving = beams.pollTail();
-                final Beam first = beams.getHead();
 
-                calculateBeamEnd(level, moving, first.getAngle() - baseAngle, position);
-                beams.addTail(moving);
+                calculateBeamEnd(level, moving, baseAngle, position);
+                beams.addHead(moving);
+                baseAngle -= DELTA_ANGLE;
             }
         }
         else
         {
+            System.out.println("clock " + adjustments);
             // Take from the front and add to the back.
             for(int i = 0; i < adjustments; i++)
             {
                 final Beam moving = beams.pollHead();
-                final Beam last = beams.getTail();
 
-                calculateBeamEnd(level, moving, last.getAngle() + baseAngle, position);
+                calculateBeamEnd(level, moving, baseAngle, position);
                 beams.addTail(moving);
+                baseAngle += DELTA_ANGLE;
             }
         }
     }
@@ -183,73 +197,12 @@ public class Flashlight implements DrawablePolygon
 
     }
 
-    // public void update(final Level level, final Vector2 position, final float
-    // rotation)
-    // {
-    // final float baseAngle = rotation - flashlightAngle / 2;
-    // final float deltaAngle = flashlightAngle / numberOfBeams;
-    // int i;
-    // int offset = 0;
-    // vertices[offset++] = 0;
-    // vertices[offset++] = 0;
-    //
-    // vertices[offset++] = position.x;
-    // vertices[offset++] = 0;
-    //
-    // // beams[0] = position.x;
-    // // beams[1] = position.y;
-    // int lowestBeamPos = 0;
-    // float lowestBeamValue = position.y;
-    // for(i = 1; i < numberOfBeams + 1; i++)
-    // {
-    // final float angle = baseAngle + deltaAngle * (i - 1);
-    //
-    // final Vector2 beamEndPos = getBeamEnd(level, position, angle);
-    // // beams[i * 2] = beamEndPos.x;
-    // // beams[i * 2 + 1] = beamEndPos.y;
-    //
-    // if(beamEndPos.y < lowestBeamValue && beamEndPos.x -
-    // MIN_BEAM_POS_THRESHOLD < position.x
-    // && beamEndPos.x + MIN_BEAM_POS_THRESHOLD > position.x)
-    // {
-    // lowestBeamValue = beamEndPos.y;
-    // lowestBeamPos = i * 2;
-    // }
-    // }
-    //
-    // // System.arraycopy(beams, lowestBeamPos, vertices, offset, beams.length
-    // // - lowestBeamPos);
-    // // offset += beams.length - lowestBeamPos;
-    // // System.arraycopy(beams, 0, vertices, offset, lowestBeamPos);
-    // // offset += lowestBeamPos;
-    //
-    // // vertices[offset++] = beams[lowestBeamPos];
-    // // vertices[offset++] = beams[lowestBeamPos + 1];
-    //
-    // vertices[offset++] = position.x;
-    // vertices[offset++] = 0;
-    //
-    // final Rectangle levelBounds = level.getLevelBounds();
-    // levelBounds.width += beamLength;
-    // levelBounds.height += beamLength;
-    // vertices[offset++] = levelBounds.width;
-    // vertices[offset++] = 0;
-    //
-    // vertices[offset++] = levelBounds.width;
-    // vertices[offset++] = levelBounds.height;
-    //
-    // vertices[offset++] = 0;
-    // vertices[offset++] = levelBounds.height;
-    //
-    // vertices[offset++] = 0;
-    // vertices[offset++] = 0;
-    //
-    // updatePolySprite();
-    // }
-
     private void calculateBeamEnd(final Level level, final Beam beam, final float angle, final Vector2 position)
     {
-        final Tile tile = getTile(level, beam.getEndPos().x, beam.getEndPos().y);
+        final float x = getXFromDistance(position, angle, beam.getDistance());
+        final float y = getYFromDistance(position, angle, beam.getDistance());
+
+        final Tile tile = getTile(level, x, y);
         // If the tile is currently in a valid position (openTile), keep moving
         // the beam forward until it runs out of length or hits an invalid tile.
         if(isValidTile(tile))
@@ -295,8 +248,8 @@ public class Flashlight implements DrawablePolygon
                 break;
             }
 
-            tmpX = (float) (position.x + nextDistance * Math.sin(Math.toRadians(angle)));
-            tmpY = (float) (position.y + nextDistance * Math.cos(Math.toRadians(angle)));
+            tmpX = getXFromDistance(position, angle, nextDistance);
+            tmpY = getYFromDistance(position, angle, nextDistance);
 
             tile = getTile(level, tmpX, tmpY);
         }while(beamIncrementor.continueBeam(tile));
@@ -306,16 +259,28 @@ public class Flashlight implements DrawablePolygon
         return nextDistance;
     }
 
+    private float getXFromDistance(final Vector2 position, final float angle, final float distance)
+    {
+        return (float) (position.x + distance * Math.sin(Math.toRadians(angle)));
+    }
+
+    private float getYFromDistance(final Vector2 position, final float angle, final float distance)
+    {
+        return (float) (position.y + distance * Math.cos(Math.toRadians(angle)));
+    }
+
     private void setAllFlashlightBeams(final Level level, final Vector2 position, final float rotation)
     {
         final float baseAngle = rotation - FLASHLIGHT_ANGLE / 2;
-        final float deltaAngle = (float) FLASHLIGHT_ANGLE / NUMBER_OF_BEAMS;
         Beam currBeam = beams.getHead();
         int counter = 0;
 
         while(currBeam != null)
         {
-            final float angle = baseAngle + deltaAngle * counter;
+            final float angle = baseAngle + DELTA_ANGLE * counter;
+
+            // TODO This is 100% wrong. Based on the tile BEAM_ADDER or
+            // BEAM_SUBBER should be used. Not hard coded to a single one
             calculateBeamEnd(BEAM_ADDER, level, currBeam, angle, position);
 
             currBeam = currBeam.getNextBeam();
@@ -350,6 +315,7 @@ public class Flashlight implements DrawablePolygon
 
         while(starterBeam != null)
         {
+            System.out.println(starterBeam.getEndPos() + " " + starterBeam.getAngle() + " " + starterBeam.getDistance());
             vertices[offset++] = starterBeam.getEndPos().x;
             vertices[offset++] = starterBeam.getEndPos().y;
 
@@ -367,6 +333,7 @@ public class Flashlight implements DrawablePolygon
                     starterBeam = null;
             }
         }
+        System.out.println("");
 
         if(lowestBeamStart)
         {
