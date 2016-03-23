@@ -85,7 +85,7 @@ public class BeamList
         final Beam retVal = tail;
         tail = tail.getPrevBeam();
         tail.setNextBeam(null);
-        
+
         retVal.setNextBeam(null);
         retVal.setPrevBeam(null);
         return retVal;

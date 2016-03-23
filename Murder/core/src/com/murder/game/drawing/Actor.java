@@ -74,7 +74,7 @@ public class Actor extends Drawable
         this.move = move;
         this.position = position;
         // this.rotation = rotation;
-        this.rotation = 0;
+        this.rotation = 120;
         flashlight = new Flashlight();
         inventory = new HashSet<InventoryItem>();
         tilePosition = new MyVector2();
