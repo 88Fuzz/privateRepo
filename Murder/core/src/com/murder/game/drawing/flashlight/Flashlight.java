@@ -230,12 +230,10 @@ public class Flashlight implements DrawablePolygon
         // If the flashlight beam is lower than the position, around the x value
         // of the position. The flashlight will not render correctly so we need
         // to record it.
-        
-        this needs to be reworked somehow. If the lowestBeam is no longer in the range of position.x, it should no longer be the lowestBeam.
-        It should also not be written so that the angle is at 180 and then jumps to 0, the lowestBeam should not be the lowestBeam
-        if(beam.getEndPos().x - MIN_BEAM_THRESHOLD < position.x && beam.getEndPos().x + MIN_BEAM_THRESHOLD > position.x
-                && beam.getEndPos().y < lowestBeam.getEndPos().y)
+
+        if(isLowestBeam(beam.getEndPos(), position, lowestBeam.getEndPos().y))
         {
+            System.out.println("beam " + beam.getEndPos() + " lowestBeam y " + lowestBeam.getEndPos().y);
             lowestBeam = beam;
         }
     }
@@ -283,6 +281,7 @@ public class Flashlight implements DrawablePolygon
 
     private void setAllFlashlightBeams(final Level level, final Vector2 position, final float rotation)
     {
+        System.out.println("ALL");
         final float baseAngle = rotation - FLASHLIGHT_ANGLE / 2;
         Beam currBeam = beams.getHead();
         int counter = 0;
@@ -293,7 +292,7 @@ public class Flashlight implements DrawablePolygon
 
             // TODO This is 100% wrong. Based on the tile BEAM_ADDER or
             // BEAM_SUBBER should be used. Not hard coded to a single one
-            calculateBeamEnd(BEAM_ADDER, level, currBeam, angle, position);
+            calculateBeamEnd(level, currBeam, angle, position);
 
             currBeam = currBeam.getNextBeam();
             counter++;
@@ -311,6 +310,13 @@ public class Flashlight implements DrawablePolygon
 
         Beam starterBeam;
         final boolean lowestBeamStart;
+
+        if(!isLowestBeam(lowestBeam.getEndPos(), position, position.y))
+        {
+            System.out.println("BWAAAAAAAAH " + lowestBeam.getEndPos());
+            lowestBeam = new Beam();
+            lowestBeam.setEndPos(position.x, position.y);
+        }
 
         System.out.println("lowestBeam " + lowestBeam.getEndPos() + " position " + position);
         if(lowestBeam.getEndPos().y != position.y)
@@ -420,9 +426,9 @@ public class Flashlight implements DrawablePolygon
         return (float) (Math.ceil(x * 2) * 0.5);
     }
 
-    private boolean isBeamEndXNearPosition(final Vector2 beamEnd, final Vector2 position)
+    private boolean isLowestBeam(final Vector2 newPosition, final Vector2 basePosition, final float minValue)
     {
-        if(beamEnd.x - MIN_BEAM_THRESHOLD < position.x && beamEnd.x + MIN_BEAM_THRESHOLD > position.x)
+        if(newPosition.x - MIN_BEAM_THRESHOLD < basePosition.x && newPosition.x + MIN_BEAM_THRESHOLD > basePosition.x && newPosition.y < minValue)
             return true;
 
         return false;

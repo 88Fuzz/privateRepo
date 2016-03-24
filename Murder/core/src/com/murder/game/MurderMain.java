@@ -4,6 +4,7 @@ import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -115,6 +116,9 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean keyUp(final int keycode)
     {
+        if(Input.Keys.ESCAPE == keycode)
+            Gdx.app.exit();
+
         for(final State state: stateStack)
         {
             if(state.keyUp(keycode))
