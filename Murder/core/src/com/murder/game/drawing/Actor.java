@@ -230,7 +230,7 @@ public class Actor extends Drawable
 
     public void startMove(final boolean move)
     {
-        // this.move = move;
+        this.move = move;
     }
 
     public void setRotation(final float rotation)
