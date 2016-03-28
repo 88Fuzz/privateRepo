@@ -138,6 +138,7 @@ public class Flashlight implements DrawablePolygon
         updateVertices(level, position);
     }
 
+    this distanceTraveled shit breaks horribly when frame rate drops below 40 fps
     public void update(final Level level, final Vector2 position, final float rotation, final float distanceTraveled)
     {
         boolean updateVertices = false;
