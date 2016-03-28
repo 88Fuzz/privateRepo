@@ -106,10 +106,12 @@ public class Actor extends Drawable
     public void update(final float dt)
     {
         final MyVector2 directionalVelocity = new MyVector2();
+        float distanceTraveled = 0;
         if(move)
         {
             directionalVelocity.x = (float) (velocity * Math.sin(Math.toRadians(rotation)));
             directionalVelocity.y = (float) (velocity * Math.cos(Math.toRadians(rotation)));
+            distanceTraveled = velocity * dt;
         }
         else
         {
@@ -158,7 +160,7 @@ public class Actor extends Drawable
             }
         }
 
-        flashlight.update(level, position, rotation);
+        flashlight.update(level, position, rotation, distanceTraveled);
     }
 
     public void moveDirection(final MoveDirection direction)
