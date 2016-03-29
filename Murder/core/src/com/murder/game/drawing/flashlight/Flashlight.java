@@ -102,7 +102,7 @@ public class Flashlight implements DrawablePolygon
     private float prevRotation;
     private Vector2 prevPosition;
     private float playerSize;
-    private float maxbeamLength;
+    private float maxBeamLength;
     private PolygonSprite polySprite;
     private float[] vertices;
     private BeamList beams;
@@ -128,7 +128,7 @@ public class Flashlight implements DrawablePolygon
         lowestBeam.setEndPos(position.x, position.y);
 
         this.playerSize = spriteSize;
-        maxbeamLength = spriteSize * BEAM_LENGTH_MULTIPLIER;
+        maxBeamLength = spriteSize * BEAM_LENGTH_MULTIPLIER;
 
         prevRotation = rotation;
         prevPosition.x = position.x;
@@ -138,7 +138,7 @@ public class Flashlight implements DrawablePolygon
         updateVertices(level, position);
     }
 
-    this distanceTraveled shit breaks horribly when frame rate drops below 40 fps
+    //TODO this distanceTraveled shit breaks horribly when frame rate drops below 40 fps
     public void update(final Level level, final Vector2 position, final float rotation, final float distanceTraveled)
     {
         boolean updateVertices = false;
@@ -147,7 +147,6 @@ public class Flashlight implements DrawablePolygon
 
         if(!(prevPosition.x == position.x && prevPosition.y == position.y))
         {
-            System.out.println("POSITION CHANGED");
             positionUpdated = true;
             //TODO you can have some static Beam that will never be in the beams list instead of always declaring a new beam.
             lowestBeam = new Beam();
@@ -311,10 +310,10 @@ public class Flashlight implements DrawablePolygon
             localDistance = nextDistance;
             nextDistance = beamIncrementor.getNextDistance(localDistance);
 
-            if(nextDistance > maxbeamLength)
+            if(nextDistance > maxBeamLength)
             {
                 System.out.println("MAX DISTANCE with angle " + angle + " incrementor " + beamIncrementor.getName() + " local " + localDistance + " max " +
-                        maxbeamLength + " x " + tmpX + " y " + tmpY + " position " + position);
+                        maxBeamLength + " x " + tmpX + " y " + tmpY + " position " + position);
                 nextDistance = localDistance;
                 break;
             }
@@ -341,6 +340,7 @@ public class Flashlight implements DrawablePolygon
         return (float) (position.y + distance * Math.cos(Math.toRadians(angle)));
     }
 
+    this is somehow horribly broken at the start
     private void setAllFlashlightBeams(final Level level, final Vector2 position, final float rotation, final float distanceTraveled)
     {
 //        System.out.println("ALL");
@@ -350,6 +350,7 @@ public class Flashlight implements DrawablePolygon
 
         while(currBeam != null)
         {
+            currBeam.setDistance(playerSize);
             final float angle = baseAngle + DELTA_ANGLE * counter;
             calculateBeamEnd(level, currBeam, angle, position, distanceTraveled);
 
@@ -360,12 +361,18 @@ public class Flashlight implements DrawablePolygon
 
     private void updateVertices(final Level level, final Vector2 position)
     {
+        final Rectangle levelBounds = level.getLevelBounds();
+        levelBounds.x -= maxBeamLength;
+        levelBounds.y -= maxBeamLength;
+        levelBounds.width += maxBeamLength;
+        levelBounds.height += maxBeamLength;
+
         int offset = 0;
-        vertices[offset++] = 0;
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.x;
+        vertices[offset++] = levelBounds.y;
 
         vertices[offset++] = position.x;
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.y;
 
         Beam starterBeam;
         final boolean lowestBeamStart;
@@ -433,22 +440,19 @@ public class Flashlight implements DrawablePolygon
         }
 
         vertices[offset++] = position.x;
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.y;
 
-        final Rectangle levelBounds = level.getLevelBounds();
-        // levelBounds.width += beamLength;
-        // levelBounds.height += beamLength;
         vertices[offset++] = levelBounds.width;
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.y;
 
         vertices[offset++] = levelBounds.width;
         vertices[offset++] = levelBounds.height;
 
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.x;
         vertices[offset++] = levelBounds.height;
 
-        vertices[offset++] = 0;
-        vertices[offset++] = 0;
+        vertices[offset++] = levelBounds.x;
+        vertices[offset++] = levelBounds.y;
 
         updatePolySprite();
     }
