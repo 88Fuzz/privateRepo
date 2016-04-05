@@ -3,6 +3,7 @@ package com.murder.game.drawing;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
@@ -81,6 +82,11 @@ public abstract class Drawable
     public BodyType getBodyType()
     {
         return bodyType;
+    }
+
+    public Vector2 getBodyPosition()
+    {
+        return body.getPosition();
     }
 
     public MyVector2 getPosition()

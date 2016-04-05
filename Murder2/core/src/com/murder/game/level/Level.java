@@ -103,7 +103,11 @@ public class Level extends Drawable
     public Rectangle getLevelBounds()
     {
         final BodyType bodyType = tiles.get(0).get(0).getBodyType();
-        return new Rectangle(0, 0, tiles.size() * bodyType.getWidth(), tiles.get(0).size() * bodyType.getHeight());
+        final float halfWidth = bodyType.getWidth() / 2;
+        final float halfHeight = bodyType.getHeight() / 2;
+
+        return new Rectangle(0 - halfWidth, 0 - halfHeight, tiles.size() * bodyType.getWidth() - halfWidth,
+                tiles.get(0).size() * bodyType.getHeight() - halfHeight);
     }
 
     // public Tile getTile(final int x, final int y)

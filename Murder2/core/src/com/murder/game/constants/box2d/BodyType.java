@@ -6,14 +6,16 @@ import com.murder.game.constants.drawing.TextureType;
 
 public enum BodyType
 {
-    PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, new Color(1,1,1,0.2f),/*Color.WHITE,*/ 100f, 100f, 1f,
+    PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, new Color(1, 1, 1, 0.2f),
+            /* Color.WHITE, */ 100f, 100f, 1f,
             CollisionType.PLAYER.getCollisionValue(), (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue()
                     | CollisionType.WALL.getCollisionValue() | CollisionType.KEY.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.KinematicBody),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody),
     MONSTER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.FOREST, 100f, 100f, 1f, CollisionType.MONSTER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.WALL.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.KinematicBody),
-    WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, new Color(1,1,0,0.2f),/*Color.BROWN,*/ 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody),
+    WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, new Color(1, 1, 0, 0.2f),
+            /* Color.BROWN, */ 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody),
     DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),

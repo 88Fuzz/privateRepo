@@ -1,8 +1,5 @@
 package com.murder.game.drawing;
 
-import java.util.Collections;
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -30,16 +27,19 @@ public class WorldRenderer
     private Rectangle bounds;
     private Actor target;
     private BitmapFont font;
+    private Vector2 middlePosition;
 
     public WorldRenderer(final World physicsWorld)
     {
         this.physicsWorld = physicsWorld;
         this.debugRenderer = new Box2DDebugRenderer();
+        this.middlePosition = new Vector2();
 
         batch = new SpriteBatch();
         polyBatch = new PolygonSpriteBatch();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cameraGUI = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         clearColor = new Rectangle();
 
         // TODO remove the ARIAL_15 font
@@ -136,36 +136,53 @@ public class WorldRenderer
     {
         if(target != null)
         {
-            final Vector2 targetPosition = target.getCenterPosition();
-            final Vector2 middlePosition = new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
-            if(targetPosition.x - middlePosition.x < bounds.x)
+            final Vector2 bodyPosition = target.getBodyPosition().scl(DisplayConstants.PIXELS_PER_METER);
+            float xCamera = bodyPosition.x;
+            float yCamera = bodyPosition.y;
+            // final Vector2 targetPosition = target.getCenterPosition();
+            // final Vector2 middlePosition = new
+            // Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() /
+            // 2);
+            middlePosition.x = Gdx.graphics.getWidth() / 2;
+            middlePosition.y = Gdx.graphics.getHeight() / 2;
+            if(xCamera - middlePosition.x < bounds.x)
             {
-                camera.position.x = bounds.x + middlePosition.x;
+                xCamera = bounds.x + middlePosition.x;
             }
-            else if(targetPosition.x + middlePosition.x > bounds.width)
+            else if(xCamera + middlePosition.x > bounds.width)
             {
-                camera.position.x = bounds.width - middlePosition.x;
-            }
-            else
-            {
-                camera.position.x = targetPosition.x;
+                xCamera = bounds.width - middlePosition.x;
             }
 
-            if(targetPosition.y - middlePosition.y < bounds.y)
+            if(yCamera - middlePosition.y < bounds.y)
             {
-                camera.position.y = bounds.y + middlePosition.y;
+                yCamera = bounds.y + middlePosition.y;
             }
-            else if(targetPosition.y + middlePosition.y > bounds.height)
+            else if(yCamera + middlePosition.y > bounds.height)
             {
-                camera.position.y = bounds.height - middlePosition.y;
+                yCamera = bounds.height - middlePosition.y;
             }
-            else
-            {
-                camera.position.y = targetPosition.y;
-            }
+
+            camera.position.x = xCamera;
+            camera.position.y = yCamera;
             camera.update();
         }
     }
+    // private void cameraUpdate()
+    // {
+    // lockOnTarget(camera,
+    // player.getPosition().scl(DisplayConstants.PIXELS_PER_METER));
+    // }
+    //
+    // public static void lockOnTarget(final Camera camera, final Vector2
+    // target)
+    // {
+    // Vector3 position = camera.position;
+    // position.x = target.x;
+    // position.y = target.y;
+    // camera.position.set(position);
+    // camera.update();
+    // }
 
     public Vector2 getWorldCoordinates(final float screenX, final float screenY)
     {

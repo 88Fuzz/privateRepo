@@ -1,6 +1,7 @@
 package com.murder.game.state;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.MoveDirection;
@@ -189,7 +190,7 @@ public class GameState implements State
 
     private void adjustPlayerRotation(final int screenX, final int screenY)
     {
-        final MyVector2 position = player.getCenterPosition();
+        final Vector2 position = player.getBodyPosition();
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
 

@@ -2,6 +2,7 @@ package com.murder.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.murder.game.MurderMain;
 import com.murder.game.MurderMainMain;
 
 public class DesktopLauncher
@@ -15,7 +16,7 @@ public class DesktopLauncher
         config.height = 900;
 
         new LwjglApplication(new MurderMainMain(), config);
-        // new LwjglApplication(new MurderMain(), config);
+//         new LwjglApplication(new MurderMain(), config);
         // new LwjglApplication(new Application(), config);
     }
 }

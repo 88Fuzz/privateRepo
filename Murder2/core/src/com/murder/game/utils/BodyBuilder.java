@@ -73,9 +73,9 @@ public class BodyBuilder
         final FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = bodyType.getDensity();
-        fixtureDef.filter.categoryBits = bodyType.getCategoryBits();
-        fixtureDef.filter.maskBits = bodyType.getMaskBits();
-        fixtureDef.filter.groupIndex = bodyType.getGroupIndex();
+        fixtureDef.filter.categoryBits = 1;//bodyType.getCategoryBits();
+        fixtureDef.filter.maskBits = 1;//bodyType.getMaskBits();
+        fixtureDef.filter.groupIndex = 1;//bodyType.getGroupIndex();
 
         final Body body = world.createBody(bodyDef).createFixture(fixtureDef).getBody();
         body.setTransform(body.getPosition(), rotation);

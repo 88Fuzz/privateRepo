@@ -175,8 +175,8 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
             rayHandler.update();
 
             inputUpdate(TIMEPERFRAME);
-            cameraUpdate();
             adjustPlayerSpriteAndRotation();
+            cameraUpdate();
             // batch.setProjectionMatrix(camera.combined);
 
             timeSinceLastUpdate -= TIMEPERFRAME;

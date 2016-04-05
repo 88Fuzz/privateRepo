@@ -20,13 +20,14 @@ import com.murder.game.state.StateManager.StateId;
 
 public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 {
-    private static final boolean ALLOW_SLEEP = true;
+    private static final boolean ALLOW_SLEEP = false;
     private static final float TIMEPERFRAME = 1.0f / 30.0f;
 
     private Stack<State> stateStack;
     private TextureManager textureManager;
     private WorldRenderer worldRenderer;
-    // TODO the physicsWorld needs to be reset after each level change.
+    // TODO the physicsWorld needs to be reset after each level change. IE, move
+    // this shit to game state. WorldRenderer needs to be in GameState too?
     private World physicsWorld;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
@@ -219,13 +220,13 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             physicsWorld.step(TIMEPERFRAME, 6, 2);
 
-            timeSinceLastUpdate -= TIMEPERFRAME;
             for(final State state: stateStack)
             {
                 state.update(dt);
                 // state.render(worldRenderer);
             }
             // worldRenderer.renderGUI();
+            timeSinceLastUpdate -= TIMEPERFRAME;
         }
 
         worldRenderer.render();

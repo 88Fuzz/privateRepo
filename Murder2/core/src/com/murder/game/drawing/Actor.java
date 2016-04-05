@@ -20,7 +20,7 @@ public class Actor extends Drawable
     private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
     private static final int SPRITE_SIZE = 200;
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
-    private static final float MAX_VELOCITY = 460 / 2;
+    private static final float MAX_VELOCITY = 460 / 20;
     private static final float SQRT_TWO = 1.41421356237f;
     private static final float SPIN = 45;
 
@@ -93,24 +93,25 @@ public class Actor extends Drawable
     {
         // final MyVector2 directionalVelocity = new MyVector2();
         // float distanceTraveled = 0;
-        // if(move)
-        // {
-        // directionalVelocity.x = (float) (velocity *
-        // Math.sin(Math.toRadians(rotation)));
-        // directionalVelocity.y = (float) (velocity *
-        // Math.cos(Math.toRadians(rotation)));
-        // distanceTraveled = velocity * dt;
-        // }
-        // else
-        // {
-        // final float mag = velocityVector.len();
-        // if(mag != 0)
-        // {
-        // directionalVelocity.x = velocity * velocityVector.x / mag;
-        // directionalVelocity.y = velocity * velocityVector.y / mag;
-        // }
-        // }
-        //
+        float xVelocity = 0;
+        float yVelocity = 0;
+        if(move)
+        {
+            xVelocity = (float) (velocity * Math.sin(Math.toRadians(rotation)));
+            yVelocity = (float) (velocity * Math.cos(Math.toRadians(rotation)));
+            // distanceTraveled = velocity * dt;
+        }
+        else
+        {
+            final float mag = velocityVector.len();
+            if(mag != 0)
+            {
+                xVelocity = velocity * velocityVector.x / mag;
+                yVelocity = velocity * velocityVector.y / mag;
+            }
+        }
+        body.setLinearVelocity(xVelocity, yVelocity);
+
         // final MyVector2 newPos = position.cpy();
         // // Check x and y independently in case player is moving up against a
         // // wall and with a wall.
@@ -137,7 +138,7 @@ public class Actor extends Drawable
         //
         // setTilePosition();
         // centerSpritePosition();
-
+        //
         // final Tile tile = level.getTile((int) tilePosition.x, (int)
         // tilePosition.y);
         // if(tile != null)
@@ -241,16 +242,16 @@ public class Actor extends Drawable
     // return tilePosition.cpy();
     // }
 
-    public MyVector2 getPosition()
-    {
-        return new MyVector2(position.x - sprite.getWidth() / 2, position.y - sprite.getHeight() / 2);
-    }
-
-    @JsonIgnore
-    public MyVector2 getCenterPosition()
-    {
-        return position.cpy();
-    }
+//    public MyVector2 getPosition()
+//    {
+//        return new MyVector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
+//    }
+//
+//    @JsonIgnore
+//    public MyVector2 getCenterPosition()
+//    {
+//        return position;
+//    }
 
     // private boolean isTileValid(final MyVector2 tilePos)
     // {
