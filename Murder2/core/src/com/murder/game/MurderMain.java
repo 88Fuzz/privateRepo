@@ -82,7 +82,7 @@ public class MurderMain extends ApplicationAdapter implements InputProcessor
         rayHandler = new RayHandler(physicsWorld);
 //        rayHandler.setAmbientLight(.5f);
 
-        coneLight = LightBuilder.createConeLight(rayHandler, player, Color.WHITE, 30, player.getAngle(), 30);
+        coneLight = LightBuilder.createConeLight_old(rayHandler, player, Color.WHITE, 30, player.getAngle(), 30);
         coneLight.setColor(Color.WHITE);
         coneLight.setContactFilter((short) 1, (short) 0, (short) 1);
 

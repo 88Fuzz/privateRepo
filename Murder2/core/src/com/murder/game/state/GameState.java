@@ -11,6 +11,8 @@ import com.murder.game.level.Level;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
 
+import box2dLight.RayHandler;
+
 public class GameState implements State
 {
     private Actor player;
@@ -28,7 +30,7 @@ public class GameState implements State
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
     // levelSerialize, final TextureAtlas textureAtlas)
-    public void init(final World physicsWorld, final WorldRenderer worldRenderer, final TextureManager textureManager,
+    public void init(final World physicsWorld, final WorldRenderer worldRenderer, final RayHandler rayHandler, final TextureManager textureManager,
             final LevelSerialize levelSerialize)
     {
         level = levelSerialize.getLevel();
@@ -36,7 +38,7 @@ public class GameState implements State
         player = levelSerialize.getPlayer();
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
-        player.init(physicsWorld, textureManager);
+        player.init(physicsWorld, rayHandler, textureManager);
         // worldRenderer.init(player, level.getLevelBounds());
         worldRenderer.init(player, level.getLevelBounds());
     }
@@ -193,7 +195,6 @@ public class GameState implements State
         final Vector2 position = player.getBodyPosition();
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
-        System.out.println(position + " x " + screenX + " y " + screenY);
 
         player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
     }

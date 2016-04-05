@@ -32,8 +32,9 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     private WorldRenderer worldRenderer;
     // TODO the physicsWorld needs to be reset after each level change. IE, move
     // this shit to game state. WorldRenderer needs to be in GameState too?
+    // Yeah, this shit needs to move.
     private World physicsWorld;
-//    private RayHandler rayHandler;
+    private RayHandler rayHandler;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
     // private TextureAtlas textureAtlas;
@@ -49,8 +50,9 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // assMan.finishLoading();
         stateStack = new Stack<State>();
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
-//        rayHandler = new RayHandler(physicsWorld);
-        worldRenderer = new WorldRenderer(physicsWorld);
+        rayHandler = new RayHandler(physicsWorld);
+        rayHandler.setAmbientLight(.5f);
+        worldRenderer = new WorldRenderer(physicsWorld, rayHandler);
         // textureAtlas = assMan.get(TextureType.TILE_TEXTURES);
         stateManager = new StateManager(textureManager);
         levelGenerator = new LevelGenerator();
@@ -61,7 +63,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         final LevelSerialize levelSerialize = levelGenerator.getLevel("Level01");
 
         // gameState.init(worldRenderer, levelSerialize, textureAtlas);
-        gameState.init(physicsWorld, worldRenderer, textureManager, levelSerialize);
+        gameState.init(physicsWorld, worldRenderer, rayHandler, textureManager, levelSerialize);
         stateStack.push(gameState);
 
         // assMan.dispose();
@@ -225,6 +227,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {
             physicsWorld.step(TIMEPERFRAME, 6, 2);
+            rayHandler.update();
 
             for(final State state: stateStack)
             {
@@ -240,6 +243,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             state.render(worldRenderer);
         }
+        worldRenderer.renderLight();
         worldRenderer.renderGUI();
     }
 
@@ -272,7 +276,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             // ((GameState) state).init(worldRenderer,
             // levelGenerator.getLevel(stateConfig), textureAtlas);
-            ((GameState) state).init(physicsWorld, worldRenderer, textureManager, levelGenerator.getLevel(stateConfig));
+            ((GameState) state).init(physicsWorld, worldRenderer, rayHandler, textureManager, levelGenerator.getLevel(stateConfig));
         }
         // else if(state instanceof TextState)
         // {

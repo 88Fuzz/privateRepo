@@ -3,6 +3,7 @@ package com.murder.game.drawing;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
@@ -11,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.utils.LightBuilder;
+
+import box2dLight.RayHandler;
 
 public class Actor extends Drawable
 {
@@ -71,9 +75,10 @@ public class Actor extends Drawable
         // this.position.y = 800;
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager)
+    public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager)
     {
         super.init(physicsWorld, textureManager);
+        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle(), 30);
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         // sprite = new

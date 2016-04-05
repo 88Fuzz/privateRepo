@@ -15,10 +15,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.constants.drawing.DisplayConstants;
 import com.murder.game.constants.drawing.FontConstants;
 
+import box2dLight.RayHandler;
+
 public class WorldRenderer
 {
     private Box2DDebugRenderer debugRenderer;
     private World physicsWorld;
+    private RayHandler rayHandler;
     private OrthographicCamera camera;
     private OrthographicCamera cameraGUI;
     private SpriteBatch batch;
@@ -29,9 +32,10 @@ public class WorldRenderer
     private BitmapFont font;
     private Vector2 middlePosition;
 
-    public WorldRenderer(final World physicsWorld)
+    public WorldRenderer(final World physicsWorld, final RayHandler rayHandler)
     {
         this.physicsWorld = physicsWorld;
+        this.rayHandler = rayHandler;
         this.debugRenderer = new Box2DDebugRenderer();
         this.middlePosition = new Vector2();
 
@@ -80,8 +84,15 @@ public class WorldRenderer
     {
         clearScreen();
 
-        // TODO, cpy the combined camera may be costly to do every update loop
+        // TODO do something better here and not call cpy everytime;
         debugRenderer.render(physicsWorld, camera.combined.cpy().scl(DisplayConstants.PIXELS_PER_METER));
+    }
+
+    public void renderLight()
+    {
+        // TODO do something better here and not call cpy everytime;
+        rayHandler.setCombinedMatrix(camera.combined.cpy().scl(DisplayConstants.PIXELS_PER_METER));
+        rayHandler.render();
     }
 
     /**
@@ -188,7 +199,7 @@ public class WorldRenderer
     {
         final Vector3 unprojected = new Vector3(screenX, screenY, 0);
         camera.unproject(unprojected);
-        return unprojected.scl(1/DisplayConstants.PIXELS_PER_METER);
+        return unprojected.scl(1 / DisplayConstants.PIXELS_PER_METER);
     }
 
     public void dispose()
