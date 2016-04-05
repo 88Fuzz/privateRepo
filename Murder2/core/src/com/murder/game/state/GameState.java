@@ -193,6 +193,7 @@ public class GameState implements State
         final Vector2 position = player.getBodyPosition();
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
+        System.out.println(position + " x " + screenX + " y " + screenY);
 
         player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
     }

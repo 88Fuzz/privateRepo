@@ -184,10 +184,11 @@ public class WorldRenderer
     // camera.update();
     // }
 
-    public Vector2 getWorldCoordinates(final float screenX, final float screenY)
+    public Vector3 getWorldCoordinates(final float screenX, final float screenY)
     {
-        final Vector3 unprojected = camera.unproject(new Vector3(screenX, screenY, 0));
-        return new Vector2(unprojected.x, unprojected.y);
+        final Vector3 unprojected = new Vector3(screenX, screenY, 0);
+        camera.unproject(unprojected);
+        return unprojected.scl(1/DisplayConstants.PIXELS_PER_METER);
     }
 
     public void dispose()

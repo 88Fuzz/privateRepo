@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -223,18 +224,16 @@ public class Actor extends Drawable
         this.move = move;
     }
 
+    // TODO this should be moved to Drawable, but it doesn't work for some
+    // stupid ass reason
     public void setRotation(final float rotation)
     {
         // final float tmpRotation =
         // RotationUtils.adjustAngleAbout360(rotation);
 
         // this.rotation = tmpRotation;
+        body.setTransform(body.getPosition().x, body.getPosition().y, rotation * MathUtils.degreesToRadians);
         this.rotation = rotation;
-    }
-
-    public float getRotation()
-    {
-        return rotation;
     }
 
     // public MyVector2 getTilePosition()
@@ -242,16 +241,17 @@ public class Actor extends Drawable
     // return tilePosition.cpy();
     // }
 
-//    public MyVector2 getPosition()
-//    {
-//        return new MyVector2(position.x + sprite.getWidth() / 2, position.y + sprite.getHeight() / 2);
-//    }
-//
-//    @JsonIgnore
-//    public MyVector2 getCenterPosition()
-//    {
-//        return position;
-//    }
+    // public MyVector2 getPosition()
+    // {
+    // return new MyVector2(position.x + sprite.getWidth() / 2, position.y +
+    // sprite.getHeight() / 2);
+    // }
+    //
+    // @JsonIgnore
+    // public MyVector2 getCenterPosition()
+    // {
+    // return position;
+    // }
 
     // private boolean isTileValid(final MyVector2 tilePos)
     // {

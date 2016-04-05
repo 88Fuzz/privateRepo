@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.drawing.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
@@ -18,6 +19,9 @@ import com.murder.game.state.StateManager;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateId;
 
+import box2dLight.RayHandler;
+
+//TODO something is getting disposed too much and throwing an error when closing the app
 public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 {
     private static final boolean ALLOW_SLEEP = false;
@@ -29,6 +33,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     // TODO the physicsWorld needs to be reset after each level change. IE, move
     // this shit to game state. WorldRenderer needs to be in GameState too?
     private World physicsWorld;
+//    private RayHandler rayHandler;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
     // private TextureAtlas textureAtlas;
@@ -44,6 +49,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // assMan.finishLoading();
         stateStack = new Stack<State>();
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
+//        rayHandler = new RayHandler(physicsWorld);
         worldRenderer = new WorldRenderer(physicsWorld);
         // textureAtlas = assMan.get(TextureType.TILE_TEXTURES);
         stateManager = new StateManager(textureManager);
@@ -148,7 +154,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button)
     {
-        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+        final Vector3 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
 
         for(final State state: stateStack)
         {
@@ -161,7 +167,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button)
     {
-        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+        final Vector3 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
 
         for(final State state: stateStack)
         {
@@ -174,7 +180,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDragged(final int screenX, final int screenY, final int pointer)
     {
-        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+        final Vector3 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
 
         for(final State state: stateStack)
         {
@@ -187,7 +193,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean mouseMoved(final int screenX, final int screenY)
     {
-        final Vector2 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
+        final Vector3 touchPosition = worldRenderer.getWorldCoordinates(screenX, screenY);
 
         for(final State state: stateStack)
         {
