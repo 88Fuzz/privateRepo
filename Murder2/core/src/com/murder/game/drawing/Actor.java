@@ -27,7 +27,6 @@ public class Actor extends Drawable
     private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
     private static final float MAX_VELOCITY = 460 / 20;
     private static final float SQRT_TWO = 1.41421356237f;
-    private static final float SPIN = 45;
 
     static
     {
@@ -49,7 +48,6 @@ public class Actor extends Drawable
         RIGHT;
     }
 
-    private float rotation;
     @JsonIgnore
     private boolean move;
     // @JsonIgnore
@@ -66,11 +64,11 @@ public class Actor extends Drawable
         super(bodyType, position, rotation);
         this.move = false;
         this.position = position;
-        this.rotation = rotation;
         // inventory = new HashSet<InventoryItem>();
         // tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
+        this.rotation =0;
         // this.position.x = 800;
         // this.position.y = 800;
     }
@@ -117,6 +115,8 @@ public class Actor extends Drawable
             }
         }
         body.setLinearVelocity(xVelocity, yVelocity);
+        
+//        rotate(.3f);
 
         // final MyVector2 newPos = position.cpy();
         // // Check x and y independently in case player is moving up against a
@@ -199,11 +199,6 @@ public class Actor extends Drawable
         }
     }
 
-    public void rotate(final int direction)
-    {
-        setRotation(rotation + direction * SPIN);
-    }
-
     // private boolean checkNewPosition(final MyVector2 newPosition)
     // {
     // final MyVector2 testPos = new MyVector2();
@@ -227,18 +222,6 @@ public class Actor extends Drawable
     public void startMove(final boolean move)
     {
         this.move = move;
-    }
-
-    // TODO this should be moved to Drawable, but it doesn't work for some
-    // stupid ass reason
-    public void setRotation(final float rotation)
-    {
-        // final float tmpRotation =
-        // RotationUtils.adjustAngleAbout360(rotation);
-
-        // this.rotation = tmpRotation;
-        body.setTransform(body.getPosition().x, body.getPosition().y, rotation * MathUtils.degreesToRadians);
-        this.rotation = rotation;
     }
 
     // public MyVector2 getTilePosition()

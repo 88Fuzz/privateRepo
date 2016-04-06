@@ -1,5 +1,6 @@
 package com.murder.game.utils;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -73,12 +74,17 @@ public class BodyBuilder
         final FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = bodyType.getDensity();
-        fixtureDef.filter.categoryBits = 1;//bodyType.getCategoryBits();
-        fixtureDef.filter.maskBits = 1;//bodyType.getMaskBits();
-        fixtureDef.filter.groupIndex = 1;//bodyType.getGroupIndex();
+        fixtureDef.filter.categoryBits = bodyType.getCategoryBits();
+        fixtureDef.filter.maskBits = bodyType.getMaskBits();
+        fixtureDef.filter.groupIndex = bodyType.getGroupIndex();
 
         final Body body = world.createBody(bodyDef).createFixture(fixtureDef).getBody();
-        body.setTransform(body.getPosition(), rotation);
+        /*
+         * Box2d angles have a rotational original pointed to the right. And
+         * positive angles move counter-clockwise.
+         */
+        body.setTransform(body.getPosition(), (rotation + 90) * MathUtils.degreesToRadians);
+//        body.setTransform(body.getPosition(), rotation * MathUtils.degreesToRadians);
 
         return body;
     }

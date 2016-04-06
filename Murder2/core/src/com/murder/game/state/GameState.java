@@ -196,7 +196,8 @@ public class GameState implements State
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
 
-        player.setRotation((float) Math.toDegrees(Math.atan2(deltaX, deltaY)));
+//        player.setRotation((float) (-1*Math.toDegrees(Math.atan2(deltaX, deltaY))));
+        player.setRotation((float)Math.atan2(deltaX, deltaY));
     }
 
     private void adjustPlayerMove()

@@ -15,13 +15,16 @@ import com.murder.game.utils.BodyBuilder;
 
 public abstract class Drawable
 {
+    private static final float SPIN = 45;
+    private static final float ROTATION_OFFSET = MathUtils.PI / 2;
+
     @JsonIgnore
     protected Sprite sprite;
     @JsonIgnore
     protected Body body;
     protected MyVector2 position;
     // protected MyVector2 tilePosition;
-    private float rotation;
+    protected float rotation;
     private BodyType bodyType;
 
     protected Drawable()
@@ -98,6 +101,18 @@ public abstract class Drawable
     {
         return rotation;
     }
+
+    public void rotate(final float direction)
+    {
+        setRotation(rotation + direction * SPIN);
+    }
+
+    public void setRotation(final float rotation)
+    {
+        body.setTransform(body.getPosition().x, body.getPosition().y, ROTATION_OFFSET - rotation);
+        this.rotation = rotation * MathUtils.radiansToDegrees;
+    }
+
     // protected void setTilePosition()
     // {
     // tilePosition.x = (int) (position.x / sprite.getWidth());
