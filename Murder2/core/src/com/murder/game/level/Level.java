@@ -80,20 +80,6 @@ public class Level extends Drawable
         }
     }
 
-    @Override
-    public void dispose()
-    {
-        for(final List<Tile> tileList: tiles)
-        {
-            for(final Tile tile: tileList)
-            {
-                if(tile != null)
-                    tile.dispose();
-            }
-        }
-        super.dispose();
-    }
-
     public List<List<Tile>> getTiles()
     {
         return tiles;
