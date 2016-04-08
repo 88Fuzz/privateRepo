@@ -44,7 +44,6 @@ public class BodyBuilder
         fd.filter.maskBits = maskBits;
         fd.filter.groupIndex = groupIndex;
         pBody.createFixture(fd);
-        shape.dispose();
         return pBody;
     }
 
@@ -86,6 +85,7 @@ public class BodyBuilder
         body.setTransform(body.getPosition(), (rotation + 90) * MathUtils.degreesToRadians);
 //        body.setTransform(body.getPosition(), rotation * MathUtils.degreesToRadians);
 
+        shape.dispose();
         return body;
     }
 }

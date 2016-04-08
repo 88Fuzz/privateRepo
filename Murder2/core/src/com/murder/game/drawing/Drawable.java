@@ -74,14 +74,6 @@ public abstract class Drawable
         sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
     }
 
-    public void dispose()
-    {
-        for(final Fixture fixture: body.getFixtureList())
-        {
-            fixture.getShape().dispose();
-        }
-    }
-
     public BodyType getBodyType()
     {
         return bodyType;
