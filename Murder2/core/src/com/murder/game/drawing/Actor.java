@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,6 +55,8 @@ public class Actor extends Drawable
     private float velocity;
     @JsonIgnore
     private MyVector2 velocityVector;
+    @JsonIgnore
+    private boolean onExit;
 
     @JsonCreator
     public Actor(@JsonProperty(BODY_TYPE) BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
@@ -68,7 +69,8 @@ public class Actor extends Drawable
         // tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
-        this.rotation =0;
+        this.rotation = 0;
+        this.onExit = false;
         // this.position.x = 800;
         // this.position.y = 800;
     }
@@ -115,8 +117,8 @@ public class Actor extends Drawable
             }
         }
         body.setLinearVelocity(xVelocity, yVelocity);
-        
-//        rotate(.3f);
+
+        // rotate(.3f);
 
         // final MyVector2 newPos = position.cpy();
         // // Check x and y independently in case player is moving up against a
@@ -222,6 +224,16 @@ public class Actor extends Drawable
     public void startMove(final boolean move)
     {
         this.move = move;
+    }
+
+    public boolean isOnExit()
+    {
+        return onExit;
+    }
+
+    public void setOnExit(final boolean onExit)
+    {
+        this.onExit = onExit;
     }
 
     // public MyVector2 getTilePosition()

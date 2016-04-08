@@ -76,6 +76,7 @@ public class BodyBuilder
         fixtureDef.filter.categoryBits = bodyType.getCategoryBits();
         fixtureDef.filter.maskBits = bodyType.getMaskBits();
         fixtureDef.filter.groupIndex = bodyType.getGroupIndex();
+        fixtureDef.isSensor = bodyType.isSensor();
 
         final Body body = world.createBody(bodyDef).createFixture(fixtureDef).getBody();
         /*
@@ -83,7 +84,8 @@ public class BodyBuilder
          * positive angles move counter-clockwise.
          */
         body.setTransform(body.getPosition(), (rotation + 90) * MathUtils.degreesToRadians);
-//        body.setTransform(body.getPosition(), rotation * MathUtils.degreesToRadians);
+        // body.setTransform(body.getPosition(), rotation *
+        // MathUtils.degreesToRadians);
 
         shape.dispose();
         return body;

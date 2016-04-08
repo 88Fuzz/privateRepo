@@ -10,7 +10,7 @@ public enum CollisionType
     EXIT((short) (1 << 5)),
     KEY((short) (1 << 6));
 
-    public static final short DEFAULT_GROUP_INDEX = 1;
+    public static final short DEFAULT_GROUP_INDEX = 0;
 
     private final short collisionValue;
 

@@ -22,32 +22,32 @@ public class StateManager
     public enum StateAction
     {
         PUSH,
-        POP;
+        POP,
+        NONE;
     }
 
-    // TODO change this to use .with<paramater> and not have multiple
-    // constructors
-    public class PendingAction
+    public static class PendingAction
     {
-        private final StateAction action;
-        private final StateId id;
-        private final String stateConfig;
+        private StateAction action = StateAction.NONE;
+        private StateId id = StateId.NONE;
+        private String stateConfig;
 
-        public PendingAction(final StateAction action)
-        {
-            this(action, StateId.NONE);
-        }
-
-        public PendingAction(final StateAction action, final StateId id)
-        {
-            this(action, id, "");
-        }
-
-        public PendingAction(final StateAction action, final StateId id, final String stateConfig)
+        public PendingAction withAction(final StateAction action)
         {
             this.action = action;
+            return this;
+        }
+
+        public PendingAction withStatId(final StateId id)
+        {
             this.id = id;
+            return this;
+        }
+
+        public PendingAction withStateConfig(final String stateConfig)
+        {
             this.stateConfig = stateConfig;
+            return this;
         }
 
         public StateAction getAction()
@@ -73,24 +73,25 @@ public class StateManager
         pendingActions = new LinkedList<PendingAction>();
 
         STATE_MAP.put(StateId.GAME_STATE, new GameState(this));
-//        STATE_MAP.put(StateId.TEXT_STATE, new TextState(this));
+        // STATE_MAP.put(StateId.TEXT_STATE, new TextState(this));
         // STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
     }
 
-    public void addAction(final StateAction action)
-    {
-        pendingActions.add(new PendingAction(action));
-    }
-
-    public void addAction(final StateAction action, final StateId id)
-    {
-        pendingActions.add(new PendingAction(action, id));
-    }
-
-    public void addAction(final StateAction action, final StateId id, final String stateConfig)
-    {
-        pendingActions.add(new PendingAction(action, id, stateConfig));
-    }
+    // public void addAction(final StateAction action)
+    // {
+    // pendingActions.add(new PendingAction(action));
+    // }
+    //
+    // public void addAction(final StateAction action, final StateId id)
+    // {
+    // pendingActions.add(new PendingAction(action, id));
+    // }
+    //
+    // public void addAction(final StateAction action, final StateId id, final
+    // String stateConfig)
+    // {
+    // pendingActions.add(new PendingAction(action, id, stateConfig));
+    // }
 
     public void addAction(final PendingAction action)
     {

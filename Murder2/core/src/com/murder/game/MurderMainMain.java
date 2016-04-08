@@ -9,6 +9,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
+import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.generator.LevelGenerator;
@@ -50,6 +51,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // assMan.finishLoading();
         stateStack = new Stack<State>();
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
+        physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
         rayHandler.setAmbientLight(.5f);
         worldRenderer = new WorldRenderer(physicsWorld, rayHandler);

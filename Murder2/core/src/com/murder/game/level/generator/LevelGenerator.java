@@ -41,8 +41,16 @@ public class LevelGenerator
             {
                 if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
                 {
-                    //TODO the positions of the bodies are in the middle, that may fuck some things up.
-                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * tileSize, j * tileSize), 0));
+                    // TODO the positions of the bodies are in the middle, that
+                    // may fuck some things up.
+                    if(i == xLevelSize - 1 && j == 2)
+                    {
+                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * tileSize, j * tileSize), 0));
+                    }
+                    else
+                    {
+                        innerList.add(new Tile(BodyType.WALL, new MyVector2(i * tileSize, j * tileSize), 0));
+                    }
                     continue;
                 }
                 innerList.add(null);
@@ -64,18 +72,19 @@ public class LevelGenerator
                 // }
                 // else
                 // {
-//                innerList.add(new Tile(TileType.FLOOR, new MyVector2(i * tileSize, j * tileSize), item));
+                // innerList.add(new Tile(TileType.FLOOR, new MyVector2(i *
+                // tileSize, j * tileSize), item));
                 // }
             }
 
             tiles.add(innerList);
         }
 
-//        tiles.get(xLevelSize - 1).get(2).setTileType(TileType.EXIT);
-//         final Actor player = new Actor(
-//         new MyVector2(tileSize * 7 + 100 - tileSize / 2, tileSize * 3
-//         - 50 - tileSize / 2), 90);
-        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(tileSize * 7 + 100 - tileSize/2, tileSize * 3 - 50 - tileSize /2), 90);
+        // tiles.get(xLevelSize - 1).get(2).setTileType(TileType.EXIT);
+        // final Actor player = new Actor(
+        // new MyVector2(tileSize * 7 + 100 - tileSize / 2, tileSize * 3
+        // - 50 - tileSize / 2), 90);
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(tileSize * 7 + 100 - tileSize / 2, tileSize * 3 - 50 - tileSize / 2), 90);
 
         // addWalls(tiles);
         return writeLevel(new LevelSerialize(new Level(tiles, levelId, levelId, StateId.GAME_STATE), player), levelId);
@@ -110,15 +119,16 @@ public class LevelGenerator
 
     private LevelSerialize writeLevel(final LevelSerialize level, final String levelId)
     {
-        //TODO actually write the level
-//        try
-//        {
-//            SERIALIZER.writeValue(Gdx.files.internal(DIRECTORY + levelId + FILE_EXTENSION).file(), level);
-//        }
-//        catch(final IOException e)
-//        {
-//            e.printStackTrace();
-//        }
+        // TODO actually write the level
+        // try
+        // {
+        // SERIALIZER.writeValue(Gdx.files.internal(DIRECTORY + levelId +
+        // FILE_EXTENSION).file(), level);
+        // }
+        // catch(final IOException e)
+        // {
+        // e.printStackTrace();
+        // }
         return level;
     }
 

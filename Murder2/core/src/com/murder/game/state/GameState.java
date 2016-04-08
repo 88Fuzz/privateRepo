@@ -10,6 +10,9 @@ import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.state.StateManager.PendingAction;
+import com.murder.game.state.StateManager.StateAction;
+import com.murder.game.state.StateManager.StateId;
 
 import box2dLight.RayHandler;
 
@@ -66,6 +69,12 @@ public class GameState implements State
     {
         level.update(dt);
         player.update(dt);
+        if(player.isOnExit())
+        {
+            stateManager.addAction(new PendingAction().withAction(StateAction.POP));
+            stateManager.addAction(
+                    new PendingAction().withAction(StateAction.PUSH).withStatId(StateId.GAME_STATE).withStateConfig(level.getNextLevelId()));
+        }
         // final Vector2 playerPos = player.getTilePosition();
         // final Tile tile = level.getTile((int) playerPos.x, (int)
         // playerPos.y);
@@ -194,8 +203,9 @@ public class GameState implements State
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
 
-//        player.setRotation((float) (-1*Math.toDegrees(Math.atan2(deltaX, deltaY))));
-        player.setRotation((float)Math.atan2(deltaX, deltaY));
+        // player.setRotation((float) (-1*Math.toDegrees(Math.atan2(deltaX,
+        // deltaY))));
+        player.setRotation((float) Math.atan2(deltaX, deltaY));
     }
 
     private void adjustPlayerMove()

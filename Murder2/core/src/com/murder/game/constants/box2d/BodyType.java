@@ -7,24 +7,24 @@ import com.murder.game.constants.drawing.TextureType;
 public enum BodyType
 {
     PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, new Color(1, 1, 1, 0.2f),
-            /* Color.WHITE, */ 100f, 100f, 1f,
-            CollisionType.PLAYER.getCollisionValue(), (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue()
-                    | CollisionType.WALL.getCollisionValue() | CollisionType.KEY.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody),
+            /* Color.WHITE, */ 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
+            (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue() | CollisionType.WALL.getCollisionValue()
+                    | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false),
     MONSTER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.FOREST, 100f, 100f, 1f, CollisionType.MONSTER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.WALL.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false),
     WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, new Color(1, 1, 0, 0.2f),
             /* Color.BROWN, */ 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody),
+            BodyDef.BodyType.StaticBody, false),
     DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody),
-    EXIT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.CLEAR, 200f, 200f, 1f, CollisionType.EXIT.getCollisionValue(), (short) 0,
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody),
+            BodyDef.BodyType.StaticBody, false),
+    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true),
     KEY(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.CLEAR, 100f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody);
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false);
 
     private final BodyShape bodyShape;
     private final TextureType textureType;
@@ -58,9 +58,11 @@ public enum BodyType
      */
     private final short groupIndex;
     private final BodyDef.BodyType box2dBodyType;
+    private final boolean sensor;
 
     private BodyType(final BodyShape bodyShape, final TextureType textureType, final Color color, final float width, final float height,
-            final float density, final short categoryBits, final short maskBits, final short groupIndex, final BodyDef.BodyType box2dBodyType)
+            final float density, final short categoryBits, final short maskBits, final short groupIndex, final BodyDef.BodyType box2dBodyType,
+            final boolean sensor)
     {
         this.bodyShape = bodyShape;
         this.textureType = textureType;
@@ -72,6 +74,7 @@ public enum BodyType
         this.maskBits = maskBits;
         this.groupIndex = groupIndex;
         this.box2dBodyType = box2dBodyType;
+        this.sensor = sensor;
     }
 
     public BodyShape getBodyShape()
@@ -122,5 +125,10 @@ public enum BodyType
     public TextureType getTextureType()
     {
         return textureType;
+    }
+
+    public boolean isSensor()
+    {
+        return sensor;
     }
 }
