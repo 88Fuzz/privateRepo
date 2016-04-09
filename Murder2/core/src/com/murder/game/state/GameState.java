@@ -3,13 +3,14 @@ package com.murder.game.state;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.MoveDirection;
 import com.murder.game.drawing.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
+import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.LevelSerialize;
-import com.murder.game.serialize.MyVector2;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateAction;
 import com.murder.game.state.StateManager.StateId;
@@ -18,6 +19,13 @@ import box2dLight.RayHandler;
 
 public class GameState implements State
 {
+    // TODO what happens when this is true?
+    private static final boolean ALLOW_SLEEP = true;
+
+    private World physicsWorld;
+    private RayHandler rayHandler;
+    private LevelGenerator levelGenerator;
+
     private Actor player;
     private Level level;
     private StateManager stateManager;
@@ -28,14 +36,20 @@ public class GameState implements State
     public GameState(final StateManager stateManager)
     {
         this.stateManager = stateManager;
+        this.levelGenerator = new LevelGenerator();
         buttonsPressed = 0;
     }
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
     // levelSerialize, final TextureAtlas textureAtlas)
-    public void init(final World physicsWorld, final WorldRenderer worldRenderer, final RayHandler rayHandler, final TextureManager textureManager,
-            final LevelSerialize levelSerialize)
+    public void init(final WorldRenderer worldRenderer, final TextureManager textureManager, final String levelKey)
     {
+        physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
+        physicsWorld.setContactListener(new WorldContactListener());
+        rayHandler = new RayHandler(physicsWorld);
+        rayHandler.setAmbientLight(.5f);
+
+        final LevelSerialize levelSerialize = levelGenerator.getLevel(levelKey);
         level = levelSerialize.getLevel();
         level.init(physicsWorld, textureManager);
         player = levelSerialize.getPlayer();
@@ -67,6 +81,9 @@ public class GameState implements State
     @Override
     public void update(final float dt)
     {
+        physicsWorld.step(dt, 6, 2);
+        rayHandler.update();
+
         level.update(dt);
         player.update(dt);
         if(player.isOnExit())
@@ -91,8 +108,11 @@ public class GameState implements State
     public void render(final WorldRenderer worldRenderer)
     {
         worldRenderer.adjustCamera();
+        worldRenderer.render(physicsWorld);
         worldRenderer.render(level);
         worldRenderer.render(player);
+        worldRenderer.render(rayHandler);
+        worldRenderer.renderGUI();
     }
 
     @Override

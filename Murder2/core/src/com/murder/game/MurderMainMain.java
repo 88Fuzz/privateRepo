@@ -6,40 +6,25 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.World;
-import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
-import com.murder.game.level.generator.LevelGenerator;
-import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.StateManager;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateId;
 
-import box2dLight.RayHandler;
-
-//TODO something is getting disposed too much and throwing an error when closing the app
 public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 {
-    private static final boolean ALLOW_SLEEP = false;
     private static final float TIMEPERFRAME = 1.0f / 30.0f;
 
     private Stack<State> stateStack;
     private TextureManager textureManager;
     private WorldRenderer worldRenderer;
-    // TODO the physicsWorld needs to be reset after each level change. IE, move
-    // this shit to game state. WorldRenderer needs to be in GameState too?
-    // Yeah, this shit needs to move.
-    private World physicsWorld;
-    private RayHandler rayHandler;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
     // private TextureAtlas textureAtlas;
-    private LevelGenerator levelGenerator;
     // private FontGenerator fontGenerator;
 
     @Override
@@ -50,22 +35,16 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // assMan.load(TextureType.TILE_TEXTURES, TextureAtlas.class);
         // assMan.finishLoading();
         stateStack = new Stack<State>();
-        physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
-        physicsWorld.setContactListener(new WorldContactListener());
-        rayHandler = new RayHandler(physicsWorld);
-        rayHandler.setAmbientLight(.5f);
-        worldRenderer = new WorldRenderer(physicsWorld, rayHandler);
+        worldRenderer = new WorldRenderer();
         // textureAtlas = assMan.get(TextureType.TILE_TEXTURES);
         stateManager = new StateManager(textureManager);
-        levelGenerator = new LevelGenerator();
         // fontGenerator = new FontGenerator();
         timeSinceLastUpdate = 0;
 
         final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
-        final LevelSerialize levelSerialize = levelGenerator.getLevel("Level01");
 
         // gameState.init(worldRenderer, levelSerialize, textureAtlas);
-        gameState.init(physicsWorld, worldRenderer, rayHandler, textureManager, levelSerialize);
+        gameState.init(worldRenderer, textureManager, "Level01");
         stateStack.push(gameState);
 
         // assMan.dispose();
@@ -228,8 +207,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         timeSinceLastUpdate += dt;
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {
-            physicsWorld.step(TIMEPERFRAME, 6, 2);
-            rayHandler.update();
 
             for(final State state: stateStack)
             {
@@ -240,13 +217,11 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             timeSinceLastUpdate -= TIMEPERFRAME;
         }
 
-        worldRenderer.render();
+        worldRenderer.clearScreen();
         for(final State state: stateStack)
         {
             state.render(worldRenderer);
         }
-        worldRenderer.renderLight();
-        worldRenderer.renderGUI();
     }
 
     private void processStateActions()
@@ -278,7 +253,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             // ((GameState) state).init(worldRenderer,
             // levelGenerator.getLevel(stateConfig), textureAtlas);
-            ((GameState) state).init(physicsWorld, worldRenderer, rayHandler, textureManager, levelGenerator.getLevel(stateConfig));
+            ((GameState) state).init(worldRenderer, textureManager, stateConfig);
         }
         // else if(state instanceof TextState)
         // {

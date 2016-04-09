@@ -20,8 +20,6 @@ import box2dLight.RayHandler;
 public class WorldRenderer
 {
     private Box2DDebugRenderer debugRenderer;
-    private World physicsWorld;
-    private RayHandler rayHandler;
     private OrthographicCamera camera;
     private OrthographicCamera cameraGUI;
     private SpriteBatch batch;
@@ -32,10 +30,8 @@ public class WorldRenderer
     private BitmapFont font;
     private Vector2 middlePosition;
 
-    public WorldRenderer(final World physicsWorld, final RayHandler rayHandler)
+    public WorldRenderer()
     {
-        this.physicsWorld = physicsWorld;
-        this.rayHandler = rayHandler;
         this.debugRenderer = new Box2DDebugRenderer();
         this.middlePosition = new Vector2();
 
@@ -80,15 +76,13 @@ public class WorldRenderer
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
-    public void render()
+    public void render(final World physicsWorld)
     {
-        clearScreen();
-
         // TODO do something better here and not call cpy everytime;
         debugRenderer.render(physicsWorld, camera.combined.cpy().scl(DisplayConstants.PIXELS_PER_METER));
     }
 
-    public void renderLight()
+    public void render(final RayHandler rayHandler)
     {
         // TODO do something better here and not call cpy everytime;
         rayHandler.setCombinedMatrix(camera.combined.cpy().scl(DisplayConstants.PIXELS_PER_METER));
