@@ -1,5 +1,7 @@
 package com.murder.game.state;
 
+import java.util.LinkedList;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -20,7 +22,6 @@ import box2dLight.RayHandler;
 
 public class GameState implements State
 {
-    // TODO what happens when this is true?
     private static final boolean ALLOW_SLEEP = true;
 
     private World physicsWorld;
@@ -31,12 +32,12 @@ public class GameState implements State
     private StateManager stateManager;
     // TODO when the app is suspended and brought back, buttonsPressed should be
     // set back to 0
-    private int buttonsPressed;
+    private LinkedList<Integer> touches;
 
     public GameState(final StateManager stateManager)
     {
+        this.touches = new LinkedList<Integer>();
         this.stateManager = stateManager;
-        buttonsPressed = 0;
     }
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
@@ -57,6 +58,8 @@ public class GameState implements State
         player.init(physicsWorld, rayHandler, textureManager);
         // worldRenderer.init(player, level.getLevelBounds());
         worldRenderer.init(player, level.getLevelBounds());
+
+        touches.clear();
     }
 
     @Override
@@ -123,6 +126,7 @@ public class GameState implements State
     @Override
     public boolean keyDown(final int keyCode)
     {
+        // TODO remove these for release
         switch(keyCode)
         {
         case Input.Keys.W:
@@ -148,8 +152,9 @@ public class GameState implements State
     }
 
     @Override
-    public boolean keyUp(int keyCode)
+    public boolean keyUp(final int keyCode)
     {
+        // TODO remove these for release
         switch(keyCode)
         {
         case Input.Keys.W:
@@ -165,21 +170,20 @@ public class GameState implements State
             player.stopMoveDirection(MoveDirection.RIGHT);
             return true;
         }
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean unicodeEntered(char character)
+    public boolean unicodeEntered(final char character)
     {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button)
+    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button)
     {
-        buttonsPressed++;
+        touches.addLast(new Integer(pointer));
 
         // TODO Should this be controlled by the player?
         adjustPlayerRotation(screenX, screenY);
@@ -188,29 +192,34 @@ public class GameState implements State
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button)
+    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button)
     {
-        buttonsPressed--;
+        if(!touches.isEmpty())
+            touches.remove(new Integer(pointer));
+
         adjustPlayerMove();
         return true;
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer)
+    public boolean touchDragged(final int screenX, final int screenY, final int pointer)
     {
-        adjustPlayerRotation(screenX, screenY);
+        // Only follow the last button/finger pressed when rotating
+        if(!touches.isEmpty() && pointer == touches.getLast().intValue())
+            adjustPlayerRotation(screenX, screenY);
+
         return true;
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY)
+    public boolean mouseMoved(final int screenX, final int screenY)
     {
         // TODO Auto-generated method stub
         return false;
     }
 
     @Override
-    public boolean mouseScrolled(int amount)
+    public boolean mouseScrolled(final int amount)
     {
         // TODO Auto-generated method stub
         return false;
@@ -229,7 +238,7 @@ public class GameState implements State
 
     private void adjustPlayerMove()
     {
-        if(buttonsPressed == 1)
+        if(touches.size() == 1)
             player.startMove(true);
         else
             player.startMove(false);

@@ -98,7 +98,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         }
         worldRenderer.dispose();
         textureManager.dispose();
-        // fontGenerator.dispose();
+        fontManager.dispose();
     }
 
     @Override
