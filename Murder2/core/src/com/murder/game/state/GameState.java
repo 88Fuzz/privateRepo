@@ -6,7 +6,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.MoveDirection;
-import com.murder.game.drawing.TextureManager;
+import com.murder.game.drawing.manager.FontManager;
+import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
@@ -24,7 +25,6 @@ public class GameState implements State
 
     private World physicsWorld;
     private RayHandler rayHandler;
-    private LevelGenerator levelGenerator;
 
     private Actor player;
     private Level level;
@@ -36,22 +36,21 @@ public class GameState implements State
     public GameState(final StateManager stateManager)
     {
         this.stateManager = stateManager;
-        this.levelGenerator = new LevelGenerator();
         buttonsPressed = 0;
     }
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
     // levelSerialize, final TextureAtlas textureAtlas)
-    public void init(final WorldRenderer worldRenderer, final TextureManager textureManager, final String levelKey)
+    public void init(final WorldRenderer worldRenderer, final TextureManager textureManager, final FontManager fontManager, final String levelKey)
     {
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
         rayHandler.setAmbientLight(.5f);
 
-        final LevelSerialize levelSerialize = levelGenerator.getLevel(levelKey);
+        final LevelSerialize levelSerialize = LevelGenerator.getLevel(levelKey);
         level = levelSerialize.getLevel();
-        level.init(physicsWorld, textureManager);
+        level.init(physicsWorld, textureManager, fontManager);
         player = levelSerialize.getPlayer();
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);

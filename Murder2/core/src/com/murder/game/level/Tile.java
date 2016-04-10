@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
-import com.murder.game.drawing.TextureManager;
+import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 
 public class Tile extends Drawable

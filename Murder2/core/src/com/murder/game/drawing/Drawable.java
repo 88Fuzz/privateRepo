@@ -2,7 +2,6 @@ package com.murder.game.drawing;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -10,30 +9,27 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.drawing.DisplayConstants;
+import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.BodyBuilder;
 
-public abstract class Drawable
+public abstract class Drawable extends NonBodyDrawable
 {
-    private static final float SPIN = 45;
     private static final float ROTATION_OFFSET = MathUtils.PI / 2;
 
     @JsonIgnore
-    protected Sprite sprite;
-    @JsonIgnore
     protected Body body;
-    protected MyVector2 position;
     // protected MyVector2 tilePosition;
-    protected float rotation;
     private BodyType bodyType;
 
-    protected Drawable()
-    {}
+    public Drawable()
+    {
+        super(new MyVector2(), 0);
+    }
 
     protected Drawable(final BodyType bodyType, final MyVector2 position, final float rotation)
     {
-        this.position = position;
-        this.rotation = rotation;
+        super(position, rotation);
         // this.tilePosition = new MyVector2();
         this.bodyType = bodyType;
     }
@@ -59,23 +55,10 @@ public abstract class Drawable
         adjustSprite();
     }
 
-    /**
-     * Method called when the object should be drawn on the screen.
-     * 
-     * @param batch
-     */
-    public abstract void draw(final SpriteBatch batch);
-
-    /**
-     * Method called with the time since the last call to update.
-     * 
-     * @param dt
-     */
-    protected abstract void updateCurrent(final float dt);
-
+    @Override
     public void update(final float dt)
     {
-        updateCurrent(dt);
+        super.update(dt);
         adjustSprite();
     }
 
@@ -105,27 +88,12 @@ public abstract class Drawable
         return body.getPosition();
     }
 
-    public MyVector2 getPosition()
-    {
-        return position;
-    }
-
-    public float getRotation()
-    {
-        return rotation;
-    }
-
-    public void rotate(final float direction)
-    {
-        setRotation(rotation + direction * SPIN);
-    }
-
     public void setRotation(final float rotation)
     {
         if(body != null)
             body.setTransform(body.getPosition().x, body.getPosition().y, ROTATION_OFFSET - rotation);
 
-        this.rotation = rotation * MathUtils.radiansToDegrees;
+        super.setRotation(rotation);
     }
 
     // protected void setTilePosition()

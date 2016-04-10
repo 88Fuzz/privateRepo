@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.constants.drawing.DisplayConstants;
-import com.murder.game.constants.drawing.FontConstants;
+import com.murder.game.constants.drawing.FontType;
 
 import box2dLight.RayHandler;
 
@@ -43,7 +43,7 @@ public class WorldRenderer
         clearColor = new Rectangle();
 
         // TODO remove the ARIAL_15 font
-        font = new BitmapFont(Gdx.files.internal(FontConstants.ARIAL_15), false);
+        font = new BitmapFont(Gdx.files.internal(FontType.ARIAL_15), false);
         font.setColor(Color.CYAN);
 
         init(null, new Rectangle());
@@ -92,7 +92,7 @@ public class WorldRenderer
     /**
      * Renders a drawable object on the screen.
      */
-    public <T extends Drawable> void render(final T drawable)
+    public <T extends NonBodyDrawable> void render(final T drawable)
     {
         // TODO setting the projectionMatrix probably isn't necessary for every
         // loop?

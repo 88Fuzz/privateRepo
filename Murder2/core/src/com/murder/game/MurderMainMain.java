@@ -7,8 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
-import com.murder.game.drawing.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
+import com.murder.game.drawing.manager.FontManager;
+import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.StateManager;
@@ -21,6 +22,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 
     private Stack<State> stateStack;
     private TextureManager textureManager;
+    private FontManager fontManager;
     private WorldRenderer worldRenderer;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
@@ -32,6 +34,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     {
         // final AssetManager assMan = new AssetManager();
         textureManager = new TextureManager();
+        fontManager = new FontManager();
         // assMan.load(TextureType.TILE_TEXTURES, TextureAtlas.class);
         // assMan.finishLoading();
         stateStack = new Stack<State>();
@@ -44,7 +47,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
 
         // gameState.init(worldRenderer, levelSerialize, textureAtlas);
-        gameState.init(worldRenderer, textureManager, "Level01");
+        gameState.init(worldRenderer, textureManager, fontManager, "Level01");
         stateStack.push(gameState);
 
         // assMan.dispose();
@@ -253,7 +256,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             // ((GameState) state).init(worldRenderer,
             // levelGenerator.getLevel(stateConfig), textureAtlas);
-            ((GameState) state).init(worldRenderer, textureManager, stateConfig);
+            ((GameState) state).init(worldRenderer, textureManager, fontManager, stateConfig);
         }
         // else if(state instanceof TextState)
         // {

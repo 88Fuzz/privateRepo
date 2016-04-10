@@ -10,12 +10,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
-import com.murder.game.drawing.TextureManager;
+import com.murder.game.drawing.Text;
+import com.murder.game.drawing.manager.FontManager;
+import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.state.StateManager.StateId;
 
 public class Level extends Drawable
 {
     private static final String TILES = "tiles";
+    private static final String TEXTS = "texts";
     private static final String LEVEL_ID = "levelId";
     private static final String NEXT_LEVEL_ID = "nextLevelId";
     private static final String NEXT_STATE_ID = "nextStateId";
@@ -24,40 +27,59 @@ public class Level extends Drawable
     private StateId nextStateId;
     private String nextLevelId;
     private List<List<Tile>> tiles;
+    private List<Text> texts;
 
     @JsonCreator
-    public Level(@JsonProperty(TILES) final List<List<Tile>> tiles, @JsonProperty(LEVEL_ID) final String levelId,
-            @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId, @JsonProperty(NEXT_STATE_ID) final StateId nextStateId)
+    public Level(@JsonProperty(TILES) final List<List<Tile>> tiles, @JsonProperty(TEXTS) final List<Text> texts,
+            @JsonProperty(LEVEL_ID) final String levelId, @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId,
+            @JsonProperty(NEXT_STATE_ID) final StateId nextStateId)
     {
         this.tiles = tiles;
+        this.texts = texts;
         this.levelId = levelId;
         this.nextLevelId = nextLevelId;
         this.nextStateId = nextStateId;
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager)
+    public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager)
     {
         for(final List<Tile> tileList: tiles)
         {
             for(final Tile tile: tileList)
             {
-                // TODO this null check might not be needed in the end
-                if(tile != null)
-                    tile.init(physicsWorld, textureManager);
+                tile.init(physicsWorld, textureManager);
             }
+        }
+
+        for(final Text text: texts)
+        {
+            text.init(fontManager);
         }
     }
 
     @Override
     public void draw(final SpriteBatch batch)
     {
+        drawTiles(batch);
+        drawTexts(batch);
+    }
+
+    private void drawTiles(final SpriteBatch batch)
+    {
         for(final List<Tile> tileList: tiles)
         {
             for(final Tile tile: tileList)
             {
-                if(tile != null)
-                    tile.draw(batch);
+                tile.draw(batch);
             }
+        }
+    }
+
+    private void drawTexts(final SpriteBatch batch)
+    {
+        for(final Text text: texts)
+        {
+            text.draw(batch);
         }
     }
 
@@ -70,19 +92,27 @@ public class Level extends Drawable
     @Override
     public void updateCurrent(final float dt)
     {
+        updateTiles(dt);
+        updateTexts(dt);
+    }
+
+    private void updateTiles(final float dt)
+    {
         for(final List<Tile> tileList: tiles)
         {
             for(final Tile tile: tileList)
             {
-                if(tile != null)
-                    tile.update(dt);
+                tile.update(dt);
             }
         }
     }
 
-    public List<List<Tile>> getTiles()
+    private void updateTexts(final float dt)
     {
-        return tiles;
+        for(final Text text: texts)
+        {
+            text.update(dt);
+        }
     }
 
     @JsonIgnore
@@ -107,6 +137,16 @@ public class Level extends Drawable
     //
     // return list.get(y);
     // }
+
+    public List<List<Tile>> getTiles()
+    {
+        return tiles;
+    }
+
+    public List<Text> getTexts()
+    {
+        return texts;
+    }
 
     public String getLevelId()
     {

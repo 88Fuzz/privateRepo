@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.murder.game.drawing.TextureManager;
+import com.murder.game.drawing.manager.TextureManager;
 
 public class StateManager
 {
