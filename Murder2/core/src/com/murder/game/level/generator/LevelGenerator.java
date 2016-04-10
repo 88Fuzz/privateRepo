@@ -24,74 +24,74 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-        // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-        // if(loadedLevel != null)
-        // return loadedLevel;
-        //
-        // throw new RuntimeException("File Not Found");
+         final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+         if(loadedLevel != null)
+         return loadedLevel;
+        
+         throw new RuntimeException("File Not Found");
 
-        final int tileSize = 200;
-        final int xLevelSize = 10;
-        final int yLevelSize = 5;
-
-        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
-        for(int i = 0; i < xLevelSize; i++)
-        {
-            final List<Tile> innerList = new ArrayList<Tile>();
-
-            for(int j = 0; j < yLevelSize; j++)
-            {
-                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
-                {
-                    // TODO the positions of the bodies are in the middle, that
-                    // may fuck some things up.
-                    if(i == xLevelSize - 1 && j == 2)
-                    {
-                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * tileSize, j * tileSize), -90));
-                    }
-                    else
-                    {
-                        innerList.add(new Tile(BodyType.WALL, new MyVector2(i * tileSize, j * tileSize), 0));
-                    }
-                    continue;
-                }
-                innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * tileSize, j * tileSize), 0));
-                // if(i == 2 && j == 6)
-                // {
-                // item = new Item(InventoryItem.GREEN_KEY, new MyVector2(i *
-                // tileSize, j * tileSize));
-                // }
-                // else
-                // {
-                // item = null;
-                // }
-
-                // if(i == 4 && j == 1)
-                // {
-                // tiles.get(i - 1).get(j).setTileType(TileType.DOOR_MAT);
-                // innerList.add(new Tile(TileType.DOOR, new MyVector2(i *
-                // tileSize, j * tileSize), item));
-                // }
-                // else
-                // {
-                // innerList.add(new Tile(TileType.FLOOR, new MyVector2(i *
-                // tileSize, j * tileSize), item));
-                // }
-            }
-
-            tiles.add(innerList);
-        }
-
-        // tiles.get(xLevelSize - 1).get(2).setTileType(TileType.EXIT);
-        // final Actor player = new Actor(
-        // new MyVector2(tileSize * 7 + 100 - tileSize / 2, tileSize * 3
-        // - 50 - tileSize / 2), 90);
-        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(200, 400), -90);
-
-        // addWalls(tiles);
-        final List<Text> texts = new ArrayList<Text>();
-        texts.add(new Text(new MyVector2(400, 400), FontType.BLUEBIRD_48, "Tap to move", 0));
-        return writeLevel(new LevelSerialize(new Level(tiles, texts, levelId, levelId, StateId.GAME_STATE), player), levelId);
+//        final int tileSize = 200;
+//        final int xLevelSize = 10;
+//        final int yLevelSize = 5;
+//
+//        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+//        for(int i = 0; i < xLevelSize; i++)
+//        {
+//            final List<Tile> innerList = new ArrayList<Tile>();
+//
+//            for(int j = 0; j < yLevelSize; j++)
+//            {
+//                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+//                {
+//                    // TODO the positions of the bodies are in the middle, that
+//                    // may fuck some things up.
+//                    if(i == xLevelSize - 1 && j == 2)
+//                    {
+//                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * tileSize, j * tileSize), -90));
+//                    }
+//                    else
+//                    {
+//                        innerList.add(new Tile(BodyType.WALL, new MyVector2(i * tileSize, j * tileSize), 0));
+//                    }
+//                    continue;
+//                }
+//                innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * tileSize, j * tileSize), 0));
+//                // if(i == 2 && j == 6)
+//                // {
+//                // item = new Item(InventoryItem.GREEN_KEY, new MyVector2(i *
+//                // tileSize, j * tileSize));
+//                // }
+//                // else
+//                // {
+//                // item = null;
+//                // }
+//
+//                // if(i == 4 && j == 1)
+//                // {
+//                // tiles.get(i - 1).get(j).setTileType(TileType.DOOR_MAT);
+//                // innerList.add(new Tile(TileType.DOOR, new MyVector2(i *
+//                // tileSize, j * tileSize), item));
+//                // }
+//                // else
+//                // {
+//                // innerList.add(new Tile(TileType.FLOOR, new MyVector2(i *
+//                // tileSize, j * tileSize), item));
+//                // }
+//            }
+//
+//            tiles.add(innerList);
+//        }
+//
+//        // tiles.get(xLevelSize - 1).get(2).setTileType(TileType.EXIT);
+//        // final Actor player = new Actor(
+//        // new MyVector2(tileSize * 7 + 100 - tileSize / 2, tileSize * 3
+//        // - 50 - tileSize / 2), 90);
+//        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(200, 400), -90);
+//
+//        // addWalls(tiles);
+//        final List<Text> texts = new ArrayList<Text>();
+//        texts.add(new Text(new MyVector2(400, 400), FontType.BLUEBIRD_48, "Tap to move", 0));
+//        return writeLevel(new LevelSerialize(new Level(tiles, texts, levelId, levelId, StateId.GAME_STATE), player), levelId);
     }
 
     // private void addWalls(final List<List<Tile>> tiles)
