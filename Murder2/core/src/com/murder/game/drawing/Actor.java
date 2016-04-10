@@ -69,10 +69,7 @@ public class Actor extends Drawable
         // tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
-        this.rotation = 0;
         this.onExit = false;
-        // this.position.x = 800;
-        // this.position.y = 800;
     }
 
     public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager)

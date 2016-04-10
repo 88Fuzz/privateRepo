@@ -99,6 +99,7 @@ public abstract class Drawable
         return bodyType;
     }
 
+    @JsonIgnore
     public Vector2 getBodyPosition()
     {
         return body.getPosition();
@@ -121,7 +122,9 @@ public abstract class Drawable
 
     public void setRotation(final float rotation)
     {
-        body.setTransform(body.getPosition().x, body.getPosition().y, ROTATION_OFFSET - rotation);
+        if(body != null)
+            body.setTransform(body.getPosition().x, body.getPosition().y, ROTATION_OFFSET - rotation);
+
         this.rotation = rotation * MathUtils.radiansToDegrees;
     }
 

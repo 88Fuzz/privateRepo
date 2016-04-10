@@ -18,6 +18,8 @@ public enum BodyType
             /* Color.BROWN, */ 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false),
+    FLOOR(BodyShape.SQUARE, TextureType.FLOOR_TEXTURE, Color.CLEAR, 200f, 200f, 1f, CollisionType.FLOOR.getCollisionValue(), (short) 0,
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false),
     DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false),
