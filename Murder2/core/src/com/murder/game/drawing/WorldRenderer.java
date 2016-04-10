@@ -148,25 +148,25 @@ public class WorldRenderer
             // final Vector2 middlePosition = new
             // Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() /
             // 2);
-            middlePosition.x = Gdx.graphics.getWidth() / 2;
-            middlePosition.y = Gdx.graphics.getHeight() / 2;
-            if(xCamera - middlePosition.x < bounds.x)
-            {
-                xCamera = bounds.x + middlePosition.x;
-            }
-            else if(xCamera + middlePosition.x > bounds.width)
-            {
-                xCamera = bounds.width - middlePosition.x;
-            }
-
-            if(yCamera - middlePosition.y < bounds.y)
-            {
-                yCamera = bounds.y + middlePosition.y;
-            }
-            else if(yCamera + middlePosition.y > bounds.height)
-            {
-                yCamera = bounds.height - middlePosition.y;
-            }
+//            middlePosition.x = Gdx.graphics.getWidth() / 2;
+//            middlePosition.y = Gdx.graphics.getHeight() / 2;
+//            if(xCamera - middlePosition.x < bounds.x)
+//            {
+//                xCamera = bounds.x + middlePosition.x;
+//            }
+//            else if(xCamera + middlePosition.x > bounds.width)
+//            {
+//                xCamera = bounds.width - middlePosition.x;
+//            }
+//
+//            if(yCamera - middlePosition.y < bounds.y)
+//            {
+//                yCamera = bounds.y + middlePosition.y;
+//            }
+//            else if(yCamera + middlePosition.y > bounds.height)
+//            {
+//                yCamera = bounds.height - middlePosition.y;
+//            }
 
             camera.position.x = xCamera;
             camera.position.y = yCamera;
