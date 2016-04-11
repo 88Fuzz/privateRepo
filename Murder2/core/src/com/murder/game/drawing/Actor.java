@@ -1,7 +1,7 @@
 package com.murder.game.drawing;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
+import com.murder.game.constants.level.ItemType;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.LightBuilder;
@@ -22,23 +23,7 @@ public class Actor extends Drawable
     private static final String ROTATION = "rotation";
     private static final String BODY_TYPE = "bodyType";
 
-    private static final List<MyVector2> TESTING_EDGES = new LinkedList<MyVector2>();
-    private static final int SPRITE_SIZE = 200;
-    private static final int CIRCLE_RADIUS = (int) (SPRITE_SIZE / 2.1);
     private static final float MAX_VELOCITY = 460 / 20;
-    private static final float SQRT_TWO = 1.41421356237f;
-
-    static
-    {
-        TESTING_EDGES.add(new MyVector2(0, CIRCLE_RADIUS));
-        TESTING_EDGES.add(new MyVector2(0, -1 * CIRCLE_RADIUS));
-        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS, 0));
-        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS, 0));
-        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS / SQRT_TWO, CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new MyVector2(CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
-        TESTING_EDGES.add(new MyVector2(-1 * CIRCLE_RADIUS / SQRT_TWO, -1 * CIRCLE_RADIUS / SQRT_TWO));
-    }
 
     public enum MoveDirection
     {
@@ -50,8 +35,8 @@ public class Actor extends Drawable
 
     @JsonIgnore
     private boolean move;
-    // @JsonIgnore
-    // private Set<InventoryItem> inventory;
+    @JsonIgnore
+    private Set<ItemType> inventory;
     @JsonIgnore
     private float velocity;
     @JsonIgnore
@@ -66,7 +51,7 @@ public class Actor extends Drawable
         super(bodyType, position, rotation);
         this.move = false;
         this.position = position;
-        // inventory = new HashSet<InventoryItem>();
+        this.inventory = new HashSet<ItemType>();
         // tilePosition = new MyVector2();
         velocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
@@ -77,6 +62,7 @@ public class Actor extends Drawable
     {
         super.init(physicsWorld, textureManager);
         LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle(), 30);
+        inventory.clear();
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         // sprite = new
@@ -218,6 +204,11 @@ public class Actor extends Drawable
     // }
     // return true;
     // }
+
+    public void addItem(final ItemType item)
+    {
+        inventory.add(item);
+    }
 
     public void startMove(final boolean move)
     {

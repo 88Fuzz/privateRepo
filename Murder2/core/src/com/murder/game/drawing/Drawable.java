@@ -22,11 +22,6 @@ public abstract class Drawable extends NonBodyDrawable
     // protected MyVector2 tilePosition;
     private BodyType bodyType;
 
-    public Drawable()
-    {
-        super(new MyVector2(), 0);
-    }
-
     protected Drawable(final BodyType bodyType, final MyVector2 position, final float rotation)
     {
         super(position, rotation);
@@ -36,17 +31,8 @@ public abstract class Drawable extends NonBodyDrawable
 
     protected void init(final World world, final TextureManager textureManager)
     {
-        int sizeMultiplier = 1;
-
-        /*
-         * Sensors are 4 times smaller to make it seem like the player has moved
-         * into the tile before the sensor is triggered.
-         */
-        if(bodyType.isSensor())
-            sizeMultiplier = 4;
-
-        this.sprite = new Sprite(textureManager.getTexture(bodyType.getTextureType()), (int) bodyType.getWidth() * sizeMultiplier,
-                (int) bodyType.getHeight() * sizeMultiplier);
+        this.sprite = new Sprite(textureManager.getTexture(bodyType.getTextureType()), (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x),
+                (int) (bodyType.getHeight() * bodyType.getSizeMultiplier().y));
         if(bodyType.getColor() != Color.CLEAR)
             this.sprite.setColor(bodyType.getColor());
         this.sprite.setOriginCenter();
@@ -64,16 +50,8 @@ public abstract class Drawable extends NonBodyDrawable
 
     private void adjustSprite()
     {
-        int sizeMultiplier = 1;
-
-        /*
-         * Sensors are 4 times smaller to make it seem like the player has moved
-         * into the tile before the sensor is triggered.
-         */
-        if(bodyType.isSensor())
-            sizeMultiplier = 4;
-        sprite.setPosition(body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() * sizeMultiplier / 2,
-                body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyType.getHeight() * sizeMultiplier / 2);
+        sprite.setPosition(body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() * bodyType.getSizeMultiplier().x / 2,
+                body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyType.getHeight() * bodyType.getSizeMultiplier().y / 2);
         sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
     }
 

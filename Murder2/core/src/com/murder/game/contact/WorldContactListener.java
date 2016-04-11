@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
+import com.murder.game.level.Item;
 import com.murder.game.drawing.Actor;
 
 public class WorldContactListener implements ContactListener
@@ -34,7 +35,16 @@ public class WorldContactListener implements ContactListener
             return;
 
         // TODO This can be structured much better
-        if(userDataA instanceof Drawable && userDataB instanceof Drawable)
+        if(userDataA instanceof Drawable && userDataB instanceof Item)
+        {
+            final Drawable drawable = (Drawable) userDataA;
+            final Item item = (Item) userDataB;
+
+            // Player has picked up an item
+            if(drawable.getBodyType() == BodyType.PLAYER)
+                ((Actor) drawable).addItem(item.pickUpItem());
+        }
+        else if(userDataA instanceof Drawable && userDataB instanceof Drawable)
         {
             final Drawable drawableA = (Drawable) userDataA;
             final Drawable drawableB = (Drawable) userDataB;

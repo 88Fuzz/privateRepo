@@ -14,7 +14,6 @@ public class Tile extends Drawable
     private static final String BODY_TYPE = "bodyType";
     private static final String POSITION = "position";
     private static final String ROTATION = "rotation";
-    // private static final String ITEM = "item";
 
     // public enum TileType
     // {
@@ -54,7 +53,6 @@ public class Tile extends Drawable
     // }
 
     // private TileType tileType;
-    // private Item item;
     // @JsonIgnore
     // private TextureAtlas textureAtlas;
     // @JsonIgnore
@@ -63,10 +61,8 @@ public class Tile extends Drawable
     @JsonCreator
     public Tile(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
             @JsonProperty(ROTATION) final float rotation)
-    // , @JsonProperty(ITEM) final Item item)
     {
         super(bodyType, position, rotation);
-        // this.item = item;
         // this.locked = tileType.getDefaultLocking();
         // this.tileType = tileType;
         // sprite.setPosition(position.x, position.y);
@@ -77,11 +73,6 @@ public class Tile extends Drawable
         super.init(physicsWorld, textureManager);
         // this.textureAtlas = textureAtlas;
         // setTileType(tileType);
-        //
-        // if(item != null)
-        // {
-        // item.init(textureAtlas);
-        // }
     }
 
     @Override
@@ -90,9 +81,6 @@ public class Tile extends Drawable
         sprite.draw(batch);
         // if(tileType != TileType.NONE)
         // sprite.draw(batch);
-        //
-        // if(item != null)
-        // item.draw(batch);
     }
 
     @Override
