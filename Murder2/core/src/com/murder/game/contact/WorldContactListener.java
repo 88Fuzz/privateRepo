@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.murder.game.constants.box2d.BodyType;
+import com.murder.game.constants.level.ItemType;
 import com.murder.game.drawing.Drawable;
+import com.murder.game.level.Door;
 import com.murder.game.level.Item;
 import com.murder.game.drawing.Actor;
 
@@ -43,6 +45,27 @@ public class WorldContactListener implements ContactListener
             // Player has picked up an item
             if(drawable.getBodyType() == BodyType.PLAYER)
                 ((Actor) drawable).addItem(item.pickUpItem());
+        }
+        else if(userDataA instanceof Drawable && userDataB instanceof Door)
+        {
+            final Drawable drawable = (Drawable) userDataA;
+            final Door door = (Door) userDataB;
+
+            // Player is trying to unlock a door
+            if(drawable.getBodyType() == BodyType.PLAYER)
+            {
+                final Actor player = (Actor) drawable;
+                // TODO figure out if this will cause concurrent modification
+                // exception
+                for(final ItemType item: player.getItems())
+                {
+                    if(door.unlockDoor(item))
+                    {
+                        player.removeItem(item);
+                        break;
+                    }
+                }
+            }
         }
         else if(userDataA instanceof Drawable && userDataB instanceof Drawable)
         {

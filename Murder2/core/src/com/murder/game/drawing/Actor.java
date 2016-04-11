@@ -61,7 +61,7 @@ public class Actor extends Drawable
     public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager)
     {
         super.init(physicsWorld, textureManager);
-        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle(), 30);
+        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle(), 40);
         inventory.clear();
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
@@ -208,6 +208,16 @@ public class Actor extends Drawable
     public void addItem(final ItemType item)
     {
         inventory.add(item);
+    }
+
+    public void removeItem(final ItemType item)
+    {
+        inventory.remove(item);
+    }
+
+    public Set<ItemType> getItems()
+    {
+        return inventory;
     }
 
     public void startMove(final boolean move)

@@ -29,26 +29,40 @@ public abstract class Drawable extends NonBodyDrawable
         this.bodyType = bodyType;
     }
 
-    protected void init(final World world, final TextureManager textureManager)
+    protected void init(final World physicsWorld, final TextureManager textureManager)
     {
-        this.sprite = new Sprite(textureManager.getTexture(bodyType.getTextureType()), (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x),
-                (int) (bodyType.getHeight() * bodyType.getSizeMultiplier().y));
+        this.sprite = getSprite(textureManager, bodyType);
+        this.body = getBody(physicsWorld, bodyType, sprite);
+    }
+
+    protected Sprite getSprite(final TextureManager textureManager, final BodyType bodyType)
+    {
+        final Sprite sprite = new Sprite(textureManager.getTexture(bodyType.getTextureType()),
+                (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x), (int) (bodyType.getHeight() * bodyType.getSizeMultiplier().y));
         if(bodyType.getColor() != Color.CLEAR)
-            this.sprite.setColor(bodyType.getColor());
-        this.sprite.setOriginCenter();
-        this.body = BodyBuilder.createBody(world, bodyType, position, rotation);
-        this.body.setUserData(this);
-        adjustSprite();
+            sprite.setColor(bodyType.getColor());
+        sprite.setOriginCenter();
+
+        return sprite;
+    }
+
+    protected Body getBody(final World physicsWorld, final BodyType bodyType, final Sprite sprite)
+    {
+        final Body body = BodyBuilder.createBody(physicsWorld, bodyType, position, rotation);
+        body.setUserData(this);
+        adjustSprite(body, sprite);
+
+        return body;
     }
 
     @Override
     public void update(final float dt)
     {
         super.update(dt);
-        adjustSprite();
+        adjustSprite(body, sprite);
     }
 
-    private void adjustSprite()
+    private void adjustSprite(final Body body, final Sprite sprite)
     {
         sprite.setPosition(body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() * bodyType.getSizeMultiplier().x / 2,
                 body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyType.getHeight() * bodyType.getSizeMultiplier().y / 2);

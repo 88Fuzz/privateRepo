@@ -12,6 +12,7 @@ import com.murder.game.constants.drawing.FontType;
 import com.murder.game.constants.level.ItemType;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Text;
+import com.murder.game.level.Door;
 import com.murder.game.level.Item;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
@@ -59,14 +60,14 @@ public class LevelGenerator
                     innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     continue;
                 }
-                else if(j == 1 && i == 1)
+                else if(j == 6 && i == 7)
                 {
                     innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }
                 else if(j == 3 && i == 2)
                 {
-                    innerList.add(new Tile(BodyType.GREEN_DOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                 }
                 else if(j == 3 && i <= 4)
                 {
