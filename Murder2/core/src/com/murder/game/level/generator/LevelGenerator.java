@@ -2,6 +2,7 @@ package com.murder.game.level.generator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
@@ -25,14 +26,118 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-         final LevelSerialize loadedLevel = loadLevelFromFile("Level02");
-//         final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-         if(loadedLevel != null)
-         return loadedLevel;
-        
-         throw new RuntimeException("File Not Found");
+//         final LevelSerialize loadedLevel = loadLevelFromFile("Level05");
+//         //final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+//         if(loadedLevel != null)
+//         return loadedLevel;
+//        
+//         throw new RuntimeException("File Not Found");
 
-//        return generateLevel2();
+        return generateLevel4();
+    }
+    
+    public static LevelSerialize generateLevel4()
+    {
+        final int xLevelSize = 12;
+        final int yLevelSize = 12;
+        final int xPlayerStart = 1;
+        final int yPlayerStart = 4;
+
+        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+        for(int i = 0; i < xLevelSize; i++)
+        {
+            final List<Tile> innerList = new ArrayList<Tile>();
+
+            for(int j = 0; j < yLevelSize; j++)
+            {
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    continue;
+                }
+                else if(j == 8 && i >= 4 && i <= 8)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j <= 8 && i == 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j >= 3 && j <= 8 && i == 8)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j >= 3 && j <= 5 && i == 6)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j >= 3 && j <= 6 && i == 5)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(i == 6 && j == 6)
+                {
+                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+            }
+
+            tiles.add(innerList);
+        }
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), 180);
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), "Level04", "Level04", StateId.GAME_STATE), player), "Level04");
+    }
+
+    public static LevelSerialize generateLevel3()
+    {
+        final int xLevelSize = 8;
+        final int yLevelSize = 12;
+        final int xPlayerStart = 1;
+        final int yPlayerStart = yLevelSize - 2;
+
+        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+        for(int i = 0; i < xLevelSize; i++)
+        {
+            final List<Tile> innerList = new ArrayList<Tile>();
+
+            for(int j = 0; j < yLevelSize; j++)
+            {
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    continue;
+                }
+                else if(j == 8 && i <= 4)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 5 && i >= 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 2 && i <= 4)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(i == 1 && j == 1)
+                {
+                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+            }
+
+            tiles.add(innerList);
+        }
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), -90);
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), "Level03", "Level03", StateId.GAME_STATE), player), "Level03");
     }
 
     public static LevelSerialize generateLevel2()
@@ -51,8 +156,6 @@ public class LevelGenerator
             {
                 if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
                 {
-                    // TODO the positions of the bodies are in the middle, that
-                    // may fuck some things up.
                     if(i == xLevelSize - 2 && j == 0)
                     {
                         innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
@@ -64,36 +167,14 @@ public class LevelGenerator
                     continue;
                 }
                 innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                // if(i == 2 && j == 6)
-                // {
-                // item = new Item(InventoryItem.GREEN_KEY, new MyVector2(i *
-                // tileSize, j * tileSize));
-                // }
-                // else
-                // {
-                // item = null;
-                // }
-
-                // if(i == 4 && j == 1)
-                // {
-                // tiles.get(i - 1).get(j).setTileType(TileType.DOOR_MAT);
-                // innerList.add(new Tile(TileType.DOOR, new MyVector2(i *
-                // tileSize, j * tileSize), item));
-                // }
-                // else
-                // {
-                // innerList.add(new Tile(TileType.FLOOR, new MyVector2(i *
-                // tileSize, j * tileSize), item));
-                // }
             }
 
             tiles.add(innerList);
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), -90);
 
-        // addWalls(tiles);
         final List<Text> texts = new ArrayList<Text>();
-        texts.add(new Text(new MyVector2((float)(xPlayerStart * TILE_SIZE + TILE_SIZE/1.5), yPlayerStart * TILE_SIZE), FontType.BLUEBIRD_48,
+        texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.BLUEBIRD_48,
                 "Two fingers to rotate", 0));
         return writeLevel(new LevelSerialize(new Level(tiles, texts, "Level02", "Level02", StateId.GAME_STATE), player), "Level02");
     }
@@ -112,8 +193,6 @@ public class LevelGenerator
             {
                 if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
                 {
-                    // TODO the positions of the bodies are in the middle, that
-                    // may fuck some things up.
                     if(i == xLevelSize - 1 && j == 2)
                     {
                         innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
