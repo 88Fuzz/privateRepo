@@ -36,11 +36,12 @@ public class LevelGenerator
 
         throw new RuntimeException("File Not Found");
 
-//         generateLevel5();
-//         generateLevel4();
-//         generateLevel3();
-//         generateLevel2();
-//         return generateLevel1();
+        // TODO feedback: it looks like the hallway always get narrow close to the exit. Don't do this
+        // generateLevel5();
+        // generateLevel4();
+        // generateLevel3();
+        // generateLevel2();
+        // return generateLevel1();
     }
 
     public static LevelSerialize generateLevel5()
