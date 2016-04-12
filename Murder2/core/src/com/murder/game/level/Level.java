@@ -138,7 +138,7 @@ public class Level extends Drawable
 
     private void updateItems(final float dt)
     {
-        for(Iterator<Item>it = items.iterator();it.hasNext();)
+        for(Iterator<Item> it = items.iterator(); it.hasNext();)
         {
             final Item item = it.next();
             item.update(dt);
@@ -179,6 +179,11 @@ public class Level extends Drawable
     public List<Text> getTexts()
     {
         return texts;
+    }
+
+    public List<Item> getItems()
+    {
+        return items;
     }
 
     public String getLevelId()

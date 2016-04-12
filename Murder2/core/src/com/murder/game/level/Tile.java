@@ -4,11 +4,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ @Type(value = Tile.class, name = "Tile"), @Type(value = Door.class, name = "Door") })
 public class Tile extends Drawable
 {
     private static final String BODY_TYPE = "bodyType";

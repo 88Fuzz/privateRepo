@@ -29,14 +29,18 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-        // final LevelSerialize loadedLevel = loadLevelFromFile("Level05");
-        // //final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-        // if(loadedLevel != null)
-        // return loadedLevel;
-        //
-        // throw new RuntimeException("File Not Found");
+        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+        // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+        if(loadedLevel != null)
+            return loadedLevel;
 
-        return generateLevel5();
+        throw new RuntimeException("File Not Found");
+
+//         generateLevel5();
+//         generateLevel4();
+//         generateLevel3();
+//         generateLevel2();
+//         return generateLevel1();
     }
 
     public static LevelSerialize generateLevel5()
@@ -153,7 +157,7 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), 180);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level04", "Level04", StateId.GAME_STATE), player),
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level04", "Level05", StateId.GAME_STATE), player),
                 "Level04");
     }
 
@@ -203,7 +207,7 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), -90);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level03", "Level03", StateId.GAME_STATE), player),
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level03", "Level04", StateId.GAME_STATE), player),
                 "Level03");
     }
 
@@ -244,7 +248,7 @@ public class LevelGenerator
         final List<Text> texts = new ArrayList<Text>();
         texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.BLUEBIRD_48,
                 "Two fingers to rotate", 0));
-        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02", "Level02", StateId.GAME_STATE), player), "Level02");
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02", "Level03", StateId.GAME_STATE), player), "Level02");
     }
 
     public static LevelSerialize generateLevel1()
@@ -308,7 +312,7 @@ public class LevelGenerator
         // addWalls(tiles);
         final List<Text> texts = new ArrayList<Text>();
         texts.add(new Text(new MyVector2(400, 400), FontType.BLUEBIRD_48, "Tap to move", 0));
-        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01", "Level01", StateId.GAME_STATE), player), "Level01");
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01", "Level02", StateId.GAME_STATE), player), "Level01");
     }
 
     // private void addWalls(final List<List<Tile>> tiles)

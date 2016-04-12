@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
@@ -29,7 +30,9 @@ public class Door extends Tile
     }
 
     private ItemType itemUnlock;
+    @JsonIgnore
     private Body floorBody;
+    @JsonIgnore
     private Sprite floorSprite;
 
     @JsonCreator
@@ -67,5 +70,10 @@ public class Door extends Tile
 
         body = floorBody;
         sprite = floorSprite;
+    }
+
+    public ItemType getItemUnlock()
+    {
+        return itemUnlock;
     }
 }
