@@ -29,17 +29,18 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
         // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-        if(loadedLevel != null)
-            return loadedLevel;
+        // // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+        // if(loadedLevel != null)
+        // return loadedLevel;
+        //
+        // throw new RuntimeException("File Not Found");
 
-        throw new RuntimeException("File Not Found");
-
-        // TODO feedback: it looks like the hallway always get narrow close to the exit. Don't do this
-        // generateLevel5();
+        // TODO some levels don't have a wall behind the exit, causing the light
+        // to shine past the space
+        return generateLevel5();
         // generateLevel4();
-        // generateLevel3();
+        // return generateLevel3();
         // generateLevel2();
         // return generateLevel1();
     }
@@ -73,6 +74,9 @@ public class LevelGenerator
                 else if(j == 3 && i == 2)
                 {
                     innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    // +90 is a magic number that should be given value, like
+                    // TILE_SIZE/2 - TILE_SIZE/10
+                    items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i * TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
                 }
                 else if(j == 3 && i <= 4)
                 {
@@ -165,7 +169,7 @@ public class LevelGenerator
     public static LevelSerialize generateLevel3()
     {
         final int xLevelSize = 8;
-        final int yLevelSize = 12;
+        final int yLevelSize = 13;
         final int xPlayerStart = 1;
         final int yPlayerStart = yLevelSize - 2;
 
@@ -182,19 +186,19 @@ public class LevelGenerator
                     innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     continue;
                 }
-                else if(j == 8 && i <= 4)
+                else if(j == 9 && i <= 4)
                 {
                     innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                 }
-                else if(j == 5 && i >= 3)
+                else if(j == 6 && i >= 3)
                 {
                     innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                 }
-                else if(j == 2 && i <= 4)
+                else if(j == 3 && i <= 4)
                 {
                     innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                 }
-                else if(i == 1 && j == 1)
+                else if(j == 1 && i == 1)
                 {
                     innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }

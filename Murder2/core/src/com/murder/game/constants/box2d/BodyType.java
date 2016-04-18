@@ -7,6 +7,8 @@ import com.murder.game.constants.drawing.TextureType;
 
 public enum BodyType
 {
+    // TODO this shit needs to be reworked so that each color variant is not a
+    // different body type, green door vs red door vs yellow door
     PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.WHITE, 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue() | CollisionType.WALL.getCollisionValue()
                     | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
@@ -22,10 +24,12 @@ public enum BodyType
     GREEN_DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1)),
-    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4)),
     GREEN_KEY(BodyShape.SQUARE, TextureType.KEY_TEXTURE, Color.GREEN, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+    GREEN_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 20f, 1f, (short) 0, (short) 0,
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4)),
     NONE(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1));
 
