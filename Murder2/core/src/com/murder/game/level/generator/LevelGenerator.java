@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.drawing.FontType;
@@ -38,11 +39,92 @@ public class LevelGenerator
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-        return generateLevel5();
+        return generateLevel6();
+        // return generateLevel5();
         // generateLevel4();
         // return generateLevel3();
         // generateLevel2();
         // return generateLevel1();
+    }
+
+    public static LevelSerialize generateLevel6()
+    {
+        final int xLevelSize = 8;
+        final int yLevelSize = 13;
+        final int xPlayerStart = 5;
+        final int yPlayerStart = 1;
+        final int playerStartRotation = 0;
+
+        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+        final List<Item> items = new ArrayList<Item>();
+        for(int i = 0; i < xLevelSize; i++)
+        {
+            final List<Tile> innerList = new ArrayList<Tile>();
+
+            for(int j = 0; j < yLevelSize; j++)
+            {
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 6 && i == 2)
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    items.add(new Item(ItemType.YELLOW_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else if(j == 7 && i == 5)
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else if(j == 3 && i == 5)
+                {
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    // +90 is a magic number that should be given value, like
+                    // TILE_SIZE/2 - TILE_SIZE/10
+                    items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i * TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
+                }
+                else if(j == 9 && i == 5)
+                {
+                    innerList.add(new Door(BodyType.YELLOW_DOOR, ItemType.YELLOW_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    // +90 is a magic number that should be given value, like
+                    // TILE_SIZE/2 - TILE_SIZE/10
+                    final Vector2 butts = new Vector2(0, 90);
+                    butts.rotate(180);
+                    items.add(new Item(ItemType.YELLOW_MAT, new MyVector2(i * TILE_SIZE, (j + 1) * TILE_SIZE + butts.y), -90));
+                }
+                else if(j <= 9 && j >= 3 && i == 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 9 && i >= 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 6 && i >= 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 3 && i >= 3)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 5 && i == 5)
+                {
+                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+            }
+
+            tiles.add(innerList);
+        }
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), playerStartRotation);
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level06", "Level07", StateId.GAME_STATE), player),
+                "Level06");
     }
 
     public static LevelSerialize generateLevel5()
@@ -104,7 +186,7 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), playerStartRotation);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level05", "Level05", StateId.GAME_STATE), player),
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level05", "Level06", StateId.GAME_STATE), player),
                 "Level05");
     }
 
