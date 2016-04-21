@@ -15,12 +15,16 @@ import com.murder.game.utils.BodyBuilder;
 
 public abstract class Drawable extends NonBodyDrawable
 {
+    protected static final String POSITION = "position";
+    protected static final String ROTATION = "rotation";
+    protected static final String BODY_TYPE = "bodyType";
+
     private static final float ROTATION_OFFSET = MathUtils.PI / 2;
 
     @JsonIgnore
     protected Body body;
     // protected MyVector2 tilePosition;
-    private BodyType bodyType;
+    protected BodyType bodyType;
 
     protected Drawable(final BodyType bodyType, final MyVector2 position, final float rotation)
     {
@@ -67,6 +71,8 @@ public abstract class Drawable extends NonBodyDrawable
         sprite.setPosition(body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() * bodyType.getSizeMultiplier().x / 2,
                 body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyType.getHeight() * bodyType.getSizeMultiplier().y / 2);
         sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        position.x = sprite.getX() + bodyType.getWidth() / 2;
+        position.y = sprite.getY() + bodyType.getHeight() / 2;
     }
 
     public BodyType getBodyType()
@@ -86,6 +92,16 @@ public abstract class Drawable extends NonBodyDrawable
             body.setTransform(body.getPosition().x, body.getPosition().y, ROTATION_OFFSET - rotation);
 
         super.setRotation(rotation);
+    }
+
+    public int getTilePositionX()
+    {
+        return (int) (position.x + DisplayConstants.HALF_TILE_SIZE) / DisplayConstants.TILE_SIZE;
+    }
+
+    public int getTilePositionY()
+    {
+        return (int) (position.y + DisplayConstants.HALF_TILE_SIZE) / DisplayConstants.TILE_SIZE;
     }
 
     // protected void setTilePosition()

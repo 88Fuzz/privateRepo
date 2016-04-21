@@ -1,5 +1,9 @@
 package com.murder.game.level;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -10,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.drawing.manager.TextureManager;
+import com.murder.game.level.pathfinder.PathFinderState;
 import com.murder.game.serialize.MyVector2;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
@@ -62,12 +67,22 @@ public class Tile extends Drawable
     // private TextureAtlas textureAtlas;
     // @JsonIgnore
     // private boolean locked;
+    private Map<String, Float> distanceToStart;
+    private Map<String, Float> distanceToEnd;
+    private Map<String, PathFinderState> pathFinderState;
+    private Map<String, Tile> parentTile;
+    private Map<String, Tile> childTile;
 
     @JsonCreator
     public Tile(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
             @JsonProperty(ROTATION) final float rotation)
     {
         super(bodyType, position, rotation);
+        distanceToStart = new HashMap<String, Float>();
+        distanceToEnd = new HashMap<String, Float>();
+        pathFinderState = new HashMap<String, PathFinderState>();
+        parentTile = new HashMap<String, Tile>();
+        childTile = new HashMap<String, Tile>();
         // this.locked = tileType.getDefaultLocking();
         // this.tileType = tileType;
         // sprite.setPosition(position.x, position.y);
@@ -76,6 +91,11 @@ public class Tile extends Drawable
     public void init(final World physicsWorld, final TextureManager textureManager)
     {
         super.init(physicsWorld, textureManager);
+        distanceToStart.clear();
+        distanceToEnd.clear();
+        pathFinderState.clear();
+        parentTile.clear();
+        childTile.clear();
         // this.textureAtlas = textureAtlas;
         // setTileType(tileType);
     }
@@ -91,6 +111,146 @@ public class Tile extends Drawable
     @Override
     public void updateCurrent(final float dt)
     {}
+
+    /**
+     * Set the G value for a tile's key. The key allows for multiple paths to be
+     * calculated on a single level (ie multiple enemies finding a path to the
+     * player)
+     * 
+     * @param pathKey
+     * @param value
+     */
+    public void setDistanceToStart(final String pathKey, final float value)
+    {
+        distanceToStart.put(pathKey, value);
+    }
+
+    public float getDistanceToStart(final String pathKey)
+    {
+        final Float value = distanceToStart.get(pathKey);
+        return (value == null) ? Float.MAX_VALUE : value;
+    }
+
+    /**
+     * Set the H value for a tile's key. The key allows for multiple paths to be
+     * calculated on a single level (ie multiple enemies finding a path to the
+     * player)
+     * 
+     * @param pathKey
+     * @param value
+     */
+    public void setDistanceToEnd(final String pathKey, final float value)
+    {
+        distanceToEnd.put(pathKey, value);
+    }
+
+    public float getDistanceToEnd(final String pathKey)
+    {
+        final Float value = distanceToEnd.get(pathKey);
+        return (value == null) ? Float.MAX_VALUE : value;
+    }
+
+    /**
+     * Set the F value (typically H + G) for a tile's key. The key allows for
+     * multiple paths to be calculated on a single level (ie multiple enemies
+     * finding a path to the player)
+     * 
+     * @param pathKey
+     * @return
+     */
+    public float getFValue(final String pathKey)
+    {
+        // TODO, constantly creating floats bad??
+        final Float startValue = distanceToStart.get(pathKey);
+        if(startValue == null)
+            return Float.MAX_VALUE;
+
+        final Float endValue = distanceToEnd.get(pathKey);
+        if(endValue == null)
+            return Float.MAX_VALUE;
+
+        return startValue + endValue;
+    }
+
+    /**
+     * Sets the state value for a tile for a given pathfinding key. The key
+     * allows for multiple paths to be calculated on a single level (ie multiple
+     * enemies finding a path to the player)
+     * 
+     * @param pathKey
+     * @param state
+     */
+    public void setPathFinderState(final String pathKey, final PathFinderState state)
+    {
+        if(state == PathFinderState.OPEN)
+        {
+            sprite.setColor(Color.BLUE);
+        }
+        else if(state == PathFinderState.CLOSED)
+        {
+            sprite.setColor(Color.RED);
+        }
+        else
+        {
+            sprite.setColor(Color.VIOLET);
+
+        }
+        pathFinderState.put(pathKey, state);
+    }
+
+    public PathFinderState getPathFinderState(final String pathKey)
+    {
+        final PathFinderState value = pathFinderState.get(pathKey);
+
+        return (value == null) ? PathFinderState.NONE : value;
+    }
+
+    public boolean isTraversable()
+    {
+        return bodyType.isTraversable();
+    }
+
+    /**
+     * Sets the parent Tile for for a given pathfinding key. The key allows for
+     * multiple paths to be calculated on a single level (ie multiple enemies
+     * finding a path to the player)
+     * 
+     * @param pathKey
+     * @param tile
+     */
+    public void setParentTile(final String pathKey, final Tile tile)
+    {
+        parentTile.put(pathKey, tile);
+    }
+
+    public Tile getParentTile(final String pathKey)
+    {
+        return parentTile.get(pathKey);
+    }
+
+    /**
+     * Sets the child Tile for for a given pathfinding key. The key allows for
+     * multiple paths to be calculated on a single level (ie multiple enemies
+     * finding a path to the player)
+     * 
+     * @param pathKey
+     * @param tile
+     */
+    public void setChildTile(final String pathKey, final Tile tile)
+    {
+        childTile.put(pathKey, tile);
+    }
+
+    public Tile getChildTile(final String pathKey)
+    {
+        return childTile.get(pathKey);
+    }
+
+    // TODO this is stupid and should be deleted.
+    public void setColor()
+    {
+        sprite.setColor(Color.CHARTREUSE);
+    }
 
     // public void setTileType(final TileType tileType)
     // {

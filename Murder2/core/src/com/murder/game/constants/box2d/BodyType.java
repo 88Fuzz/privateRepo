@@ -8,37 +8,37 @@ import com.murder.game.constants.drawing.TextureType;
 public enum BodyType
 {
     // TODO this shit needs to be reworked so that each color variant is not a
-    // different body type, green door vs red door vs yellow door
+    // different body type, green door vs red door vs yellow door.
     PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.WHITE, 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue() | CollisionType.WALL.getCollisionValue()
                     | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1)),
-    MONSTER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.FOREST, 100f, 100f, 1f, CollisionType.MONSTER.getCollisionValue(),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), false),
+    MOB(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.FOREST, 100f, 100f, 1f, CollisionType.MONSTER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.WALL.getCollisionValue()),
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1)),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), false),
     WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BROWN, 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1)),
+            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
     FLOOR(BodyShape.SQUARE, TextureType.FLOOR_TEXTURE, Color.CLEAR, 200f, 200f, 1f, CollisionType.FLOOR.getCollisionValue(), (short) 0,
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false, new Vector2(1, 1)),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), true),
     GREEN_DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1)),
+            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
     YELLOW_DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.YELLOW, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1)),
+            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
     GREEN_KEY(BodyShape.SQUARE, TextureType.KEY_TEXTURE, Color.GREEN, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     YELLOW_KEY(BodyShape.SQUARE, TextureType.KEY_TEXTURE, Color.YELLOW, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     GREEN_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 20f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+            BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     YELLOW_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.YELLOW, 200f, 20f, 1f, (short) 0, (short) 0,
-            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1)),
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4)),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4), true),
     NONE(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1));
+            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false);
 
     private final BodyShape bodyShape;
     private final TextureType textureType;
@@ -77,10 +77,11 @@ public enum BodyType
      * Size multiplier is used to create the floor tile under a sensor.
      */
     private final Vector2 sizeMultiplier;
+    private final boolean traversable;
 
     private BodyType(final BodyShape bodyShape, final TextureType textureType, final Color color, final float width, final float height,
             final float density, final short categoryBits, final short maskBits, final short groupIndex, final BodyDef.BodyType box2dBodyType,
-            final boolean sensor, final Vector2 sizeMultiplier)
+            final boolean sensor, final Vector2 sizeMultiplier, final boolean traversable)
     {
         this.bodyShape = bodyShape;
         this.textureType = textureType;
@@ -94,6 +95,7 @@ public enum BodyType
         this.box2dBodyType = box2dBodyType;
         this.sensor = sensor;
         this.sizeMultiplier = sizeMultiplier;
+        this.traversable = traversable;
     }
 
     public BodyShape getBodyShape()
@@ -154,5 +156,10 @@ public enum BodyType
     public Vector2 getSizeMultiplier()
     {
         return sizeMultiplier;
+    }
+
+    public boolean isTraversable()
+    {
+        return traversable;
     }
 }

@@ -1,6 +1,7 @@
 package com.murder.game.state;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
@@ -8,11 +9,13 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.MoveDirection;
+import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
+import com.murder.game.level.pathfinder.PathFinder;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateAction;
@@ -28,6 +31,7 @@ public class GameState implements State
     private RayHandler rayHandler;
 
     private Actor player;
+    private List<Mob> mobs;
     private Level level;
     private StateManager stateManager;
     // TODO when the app is suspended and brought back, buttonsPressed should be
@@ -56,6 +60,11 @@ public class GameState implements State
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
         player.init(physicsWorld, rayHandler, textureManager);
+        mobs = levelSerialize.getMobs();
+        for(final Mob mob: mobs)
+        {
+            mob.init(physicsWorld, rayHandler, textureManager, level, player);
+        }
         // worldRenderer.init(player, level.getLevelBounds());
         worldRenderer.init(player, level.getLevelBounds());
 
@@ -88,6 +97,8 @@ public class GameState implements State
 
         level.update(dt);
         player.update(dt);
+        updateMobs(dt);
+
         if(player.isOnExit())
         {
             stateManager.addAction(new PendingAction().withAction(StateAction.POP));
@@ -106,6 +117,14 @@ public class GameState implements State
         // }
     }
 
+    private void updateMobs(final float dt)
+    {
+        for(final Mob mob: mobs)
+        {
+            mob.update(dt);
+        }
+    }
+
     @Override
     public void render(final WorldRenderer worldRenderer)
     {
@@ -113,8 +132,17 @@ public class GameState implements State
         worldRenderer.render(physicsWorld);
         worldRenderer.render(level);
         worldRenderer.render(player);
+        renderMobs(worldRenderer);
         worldRenderer.render(rayHandler);
         worldRenderer.renderGUI();
+    }
+
+    private void renderMobs(final WorldRenderer worldRenderer)
+    {
+        for(final Mob mob: mobs)
+        {
+            worldRenderer.render(mob);
+        }
     }
 
     @Override

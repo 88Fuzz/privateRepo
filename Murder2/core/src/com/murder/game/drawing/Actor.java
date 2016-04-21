@@ -19,10 +19,6 @@ import box2dLight.RayHandler;
 
 public class Actor extends Drawable
 {
-    private static final String POSITION = "position";
-    private static final String ROTATION = "rotation";
-    private static final String BODY_TYPE = "bodyType";
-
     private static final float MAX_VELOCITY = 460 / 20;
 
     public enum MoveDirection
@@ -38,7 +34,7 @@ public class Actor extends Drawable
     @JsonIgnore
     private Set<ItemType> inventory;
     @JsonIgnore
-    private float velocity;
+    protected float velocity;
     @JsonIgnore
     private MyVector2 velocityVector;
     @JsonIgnore

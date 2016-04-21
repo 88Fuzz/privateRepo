@@ -26,6 +26,8 @@ public class Level extends Drawable
     private static final String NEXT_LEVEL_ID = "nextLevelId";
     private static final String NEXT_STATE_ID = "nextStateId";
 
+    @JsonIgnore
+    private int numberOfTiles;
     private String levelId;
     private StateId nextStateId;
     private String nextLevelId;
@@ -49,8 +51,10 @@ public class Level extends Drawable
 
     public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager)
     {
+        numberOfTiles = 0;
         for(final List<Tile> tileList: tiles)
         {
+            numberOfTiles += tileList.size();
             for(final Tile tile: tileList)
             {
                 tile.init(physicsWorld, textureManager);
@@ -159,17 +163,22 @@ public class Level extends Drawable
                 tiles.get(0).size() * bodyType.getHeight() - halfHeight);
     }
 
-    // public Tile getTile(final int x, final int y)
-    // {
-    // if(x >= tiles.size() || x < 0 || y < 0)
-    // return null;
-    //
-    // final List<Tile> list = tiles.get(x);
-    // if(y >= list.size())
-    // return null;
-    //
-    // return list.get(y);
-    // }
+    public Tile getTile(final int x, final int y)
+    {
+        if(x >= tiles.size() || x < 0 || y < 0)
+            return null;
+
+        final List<Tile> list = tiles.get(x);
+        if(y >= list.size())
+            return null;
+
+        return list.get(y);
+    }
+
+    public int getNumberOfTiles()
+    {
+        return numberOfTiles;
+    }
 
     public List<List<Tile>> getTiles()
     {
