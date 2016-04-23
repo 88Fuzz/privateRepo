@@ -1,6 +1,7 @@
 package com.murder.game.level;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
+import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.level.pathfinder.PathFinderState;
 import com.murder.game.serialize.MyVector2;
@@ -72,6 +74,7 @@ public class Tile extends Drawable
     private Map<String, PathFinderState> pathFinderState;
     private Map<String, Tile> parentTile;
     private Map<String, Tile> childTile;
+    private List<Mob> mobs;
 
     @JsonCreator
     public Tile(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
@@ -88,9 +91,10 @@ public class Tile extends Drawable
         // sprite.setPosition(position.x, position.y);
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager)
+    public void init(final World physicsWorld, final TextureManager textureManager, final List<Mob> mobs)
     {
         super.init(physicsWorld, textureManager);
+        this.mobs = mobs;
         distanceToStart.clear();
         distanceToEnd.clear();
         pathFinderState.clear();
@@ -252,6 +256,23 @@ public class Tile extends Drawable
         sprite.setColor(Color.CHARTREUSE);
     }
 
+    public void clearPathInformation(final String pathKey)
+    {
+        childTile.remove(pathKey);
+        parentTile.remove(pathKey);
+
+        distanceToStart.remove(pathKey);
+        distanceToEnd.remove(pathKey);
+        pathFinderState.remove(pathKey);
+    }
+
+    protected void updateMobs()
+    {
+        for(final Mob mob: mobs)
+        {
+            mob.findPath();
+        }
+    }
     // public void setTileType(final TileType tileType)
     // {
     // this.tileType = tileType;

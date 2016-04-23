@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
+import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
@@ -49,7 +50,7 @@ public class Level extends Drawable
         this.nextStateId = nextStateId;
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager)
+    public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager, final List<Mob> mobs)
     {
         numberOfTiles = 0;
         for(final List<Tile> tileList: tiles)
@@ -57,7 +58,7 @@ public class Level extends Drawable
             numberOfTiles += tileList.size();
             for(final Tile tile: tileList)
             {
-                tile.init(physicsWorld, textureManager);
+                tile.init(physicsWorld, textureManager, mobs);
             }
         }
 

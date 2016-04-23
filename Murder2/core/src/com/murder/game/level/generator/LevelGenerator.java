@@ -73,16 +73,32 @@ public class LevelGenerator
                     {
                         innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     }
-                    continue;
                 }
-                innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                else if(i == 4 && j == 3)
+                {
+//                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(i == 4)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(i == 3 && j == 3)
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
             }
 
             tiles.add(innerList);
         }
 
-        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(200, 400), -90);
-        final Mob mob = new Mob(BodyType.MOB, new MyVector2(800, 400), 0);
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(600, 600), -90);
+        final Mob mob = new Mob(BodyType.MOB, new MyVector2(1200, 400), 0);
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07", "Level08", StateId.GAME_STATE), player,
                 Collections.singletonList(mob)), "Level01");
     }

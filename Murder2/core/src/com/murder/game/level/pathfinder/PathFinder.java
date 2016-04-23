@@ -1,7 +1,9 @@
 package com.murder.game.level.pathfinder;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
@@ -65,6 +67,10 @@ public class PathFinder
      * @param endPositionY
      * @return
      */
+    // FUCK ME, this path finding shit isn't going to work because when a mob is
+    // locked in a room it will not regenerate a path correctly.
+    // One possible option is to keep a list of all modified tile state and if a
+    // path is not found, set all the states back to PathFinderState.NONE
     public boolean findPath(final String pathKey, final int startPositionX, final int startPositionY, final int endPositionX, final int endPositionY)
     {
         System.out.println("\nFINDING PATH " + pathKey);
@@ -72,6 +78,8 @@ public class PathFinder
         ((TileComparator) comparator).pathKey = pathKey;
         final Tile startTile = level.getTile(startPositionX, startPositionY);
         final Tile endTile = level.getTile(endPositionX, endPositionY);
+        final Set<Tile> touchedTiles = new HashSet<Tile>();
+
         if(startTile == null || endTile == null)
             return false;
 
@@ -89,6 +97,7 @@ public class PathFinder
         while(!openList.isEmpty())
         {
             final Tile currentTile = openList.poll();
+            touchedTiles.add(currentTile);
             System.out.println("\nPulled");
             printTile(currentTile);
             System.out.println("");
@@ -108,14 +117,33 @@ public class PathFinder
             // values for A*
             for(int i = tileX - 1; i <= tileX + 1; i++)
             {
+                System.out.println("I " + i);
                 for(int j = tileY - 1; j <= tileY + 1; j++)
                 {
+                    System.out.println("J " + j);
                     if(i == tileX && j == tileY)
                         continue;
 
                     final Tile adjacentTile = level.getTile(i, j);
-                    if(adjacentTile == null || !adjacentTile.isTraversable() || adjacentTile.getPathFinderState(pathKey) == PathFinderState.CLOSED)
+
+                    if(adjacentTile != null)
+                        touchedTiles.add(currentTile);
+
+                    if(adjacentTile == null)
+                    {
+                        System.out.println(" " + i + " " + j + " null");
                         continue;
+                    }
+                    else if(!adjacentTile.isTraversable())
+                    {
+                        System.out.println(" " + i + " " + j + " not traversable");
+                        continue;
+                    }
+                    else if(adjacentTile.getPathFinderState(pathKey) == PathFinderState.CLOSED)
+                    {
+                        System.out.println(" " + i + " " + j + " closed");
+                        continue;
+                    }
 
                     // If adjacent tile is not closed or open, it has not been
                     // traveled to yet. Mark it as traveled.
@@ -149,8 +177,10 @@ public class PathFinder
             printOpenList();
         }
 
-        return false;
+        for(final Tile tile: touchedTiles)
+            tile.clearPathInformation(pathKey);
 
+        return false;
     }
 
     private void placeTileInOpenList(final String pathKey, final Tile currentTile, final Tile adjacentTile, final int endPositionX,

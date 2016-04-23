@@ -32,7 +32,7 @@ public class Mob extends Actor
         super.init(physicsWorld, rayHandler, textureManager);
         this.player = player;
 
-        this.previousPathKey = getPathKey(player);
+        this.previousPathKey = getPathKey();
 
         pathFinder = new PathFinder();
         pathFinder.init(level);
@@ -43,20 +43,30 @@ public class Mob extends Actor
     @Override
     public void updateCurrent(final float dt)
     {
-        final String newPathKey = getPathKey(player);
+        final String newPathKey = getPathKey();
 
         if(!newPathKey.equals(previousPathKey))
         {
-            playerFound = pathFinder.findPath(newPathKey, getTilePositionX(), getTilePositionY(), player.getTilePositionX(),
-                    player.getTilePositionY());
-            previousPathKey = newPathKey;
+            findPath(newPathKey);
         }
 
         super.updateCurrent(dt);
     }
 
-    private String getPathKey(final Actor actor)
+    public void findPath()
     {
-        return "" + getTilePositionX() + ":" + getTilePositionY() + "," + actor.getTilePositionX() + ":" + actor.getTilePositionY();
+        final String pathKey = getPathKey();
+        findPath(pathKey);
+    }
+
+    private void findPath(final String pathKey)
+    {
+        playerFound = pathFinder.findPath(pathKey, getTilePositionX(), getTilePositionY(), player.getTilePositionX(), player.getTilePositionY());
+        previousPathKey = pathKey;
+    }
+
+    private String getPathKey()
+    {
+        return "" + getTilePositionX() + ":" + getTilePositionY() + "," + player.getTilePositionX() + ":" + player.getTilePositionY();
     }
 }

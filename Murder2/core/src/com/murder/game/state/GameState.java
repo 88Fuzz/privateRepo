@@ -54,13 +54,13 @@ public class GameState implements State
         rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(levelKey);
+        mobs = levelSerialize.getMobs();
         level = levelSerialize.getLevel();
-        level.init(physicsWorld, textureManager, fontManager);
+        level.init(physicsWorld, textureManager, fontManager, mobs);
         player = levelSerialize.getPlayer();
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
         player.init(physicsWorld, rayHandler, textureManager);
-        mobs = levelSerialize.getMobs();
         for(final Mob mob: mobs)
         {
             mob.init(physicsWorld, rayHandler, textureManager, level, player);
@@ -95,8 +95,8 @@ public class GameState implements State
         physicsWorld.step(dt, 6, 2);
         rayHandler.update();
 
-        level.update(dt);
-        player.update(dt);
+        updateLevel(dt);
+        updatePlayer(dt);
         updateMobs(dt);
 
         if(player.isOnExit())
@@ -115,6 +115,16 @@ public class GameState implements State
         // stateManager.addAction(StateAction.PUSH, level.getNextStateId(),
         // level.getNextLevelId());
         // }
+    }
+
+    private void updateLevel(final float dt)
+    {
+        level.update(dt);
+    }
+
+    private void updatePlayer(final float dt)
+    {
+        player.update(dt);
     }
 
     private void updateMobs(final float dt)
