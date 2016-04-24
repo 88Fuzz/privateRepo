@@ -19,7 +19,8 @@ import box2dLight.RayHandler;
 
 public class Actor extends Drawable
 {
-    private static final float MAX_VELOCITY = 460 / 20;
+//    private static final float MAX_VELOCITY = 460 / 20;
+    private static final float MAX_VELOCITY = 1260;
 
     public enum MoveDirection
     {
@@ -36,7 +37,7 @@ public class Actor extends Drawable
     @JsonIgnore
     protected float velocity;
     @JsonIgnore
-    private MyVector2 velocityVector;
+    protected MyVector2 unitVelocityVector;
     @JsonIgnore
     private boolean onExit;
 
@@ -49,7 +50,7 @@ public class Actor extends Drawable
         this.position = position;
         this.inventory = new HashSet<ItemType>();
         // tilePosition = new MyVector2();
-        velocityVector = new MyVector2();
+        unitVelocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
         this.onExit = false;
     }
@@ -85,17 +86,19 @@ public class Actor extends Drawable
         {
             xVelocity = (float) (velocity * Math.sin(Math.toRadians(rotation)));
             yVelocity = (float) (velocity * Math.cos(Math.toRadians(rotation)));
-            // distanceTraveled = velocity * dt;
+//             distanceTraveled = velocity * dt;
         }
         else
         {
-            final float mag = velocityVector.len();
+            final float mag = unitVelocityVector.len();
             if(mag != 0)
             {
-                xVelocity = velocity * velocityVector.x / mag;
-                yVelocity = velocity * velocityVector.y / mag;
+                xVelocity = velocity * unitVelocityVector.x / mag;
+                yVelocity = velocity * unitVelocityVector.y / mag;
             }
         }
+        xVelocity *= dt;
+        yVelocity *= dt;
         body.setLinearVelocity(xVelocity, yVelocity);
 
         // rotate(.3f);
@@ -144,16 +147,16 @@ public class Actor extends Drawable
         switch(direction)
         {
         case UP:
-            velocityVector.y = 1;
+            unitVelocityVector.y = 1;
             break;
         case DOWN:
-            velocityVector.y = -1;
+            unitVelocityVector.y = -1;
             break;
         case LEFT:
-            velocityVector.x = -1;
+            unitVelocityVector.x = -1;
             break;
         case RIGHT:
-            velocityVector.x = 1;
+            unitVelocityVector.x = 1;
             break;
         }
     }
@@ -163,20 +166,20 @@ public class Actor extends Drawable
         switch(direction)
         {
         case UP:
-            if(velocityVector.y > 0)
-                velocityVector.y = 0;
+            if(unitVelocityVector.y > 0)
+                unitVelocityVector.y = 0;
             break;
         case DOWN:
-            if(velocityVector.y < 0)
-                velocityVector.y = 0;
+            if(unitVelocityVector.y < 0)
+                unitVelocityVector.y = 0;
             break;
         case LEFT:
-            if(velocityVector.x < 0)
-                velocityVector.x = 0;
+            if(unitVelocityVector.x < 0)
+                unitVelocityVector.x = 0;
             break;
         case RIGHT:
-            if(velocityVector.x > 0)
-                velocityVector.x = 0;
+            if(unitVelocityVector.x > 0)
+                unitVelocityVector.x = 0;
             break;
         }
     }

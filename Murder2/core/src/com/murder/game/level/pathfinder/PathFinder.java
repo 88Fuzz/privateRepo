@@ -67,10 +67,6 @@ public class PathFinder
      * @param endPositionY
      * @return
      */
-    // FUCK ME, this path finding shit isn't going to work because when a mob is
-    // locked in a room it will not regenerate a path correctly.
-    // One possible option is to keep a list of all modified tile state and if a
-    // path is not found, set all the states back to PathFinderState.NONE
     public boolean findPath(final String pathKey, final int startPositionX, final int startPositionY, final int endPositionX, final int endPositionY)
     {
         System.out.println("\nFINDING PATH " + pathKey);
@@ -143,6 +139,24 @@ public class PathFinder
                     {
                         System.out.println(" " + i + " " + j + " closed");
                         continue;
+                    }
+                    else if(i != tileX && j != tileY)
+                    {
+                        // If checking a diagonal, make sure it is possible to
+                        // get there
+                        Tile diagonalTile = level.getTile(i, tileY);
+                        if(diagonalTile == null || !diagonalTile.isTraversable())
+                        {
+                            System.out.println(" " + i + " " + j + " diagonal");
+                            continue;
+                        }
+
+                        diagonalTile = level.getTile(tileX, j);
+                        if(diagonalTile == null || !diagonalTile.isTraversable())
+                        {
+                            System.out.println(" " + i + " " + j + " diagonal");
+                            continue;
+                        }
                     }
 
                     // If adjacent tile is not closed or open, it has not been
