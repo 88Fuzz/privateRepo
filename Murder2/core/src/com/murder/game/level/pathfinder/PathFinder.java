@@ -69,7 +69,7 @@ public class PathFinder
      */
     public boolean findPath(final String pathKey, final int startPositionX, final int startPositionY, final int endPositionX, final int endPositionY)
     {
-        System.out.println("\nFINDING PATH " + pathKey);
+//        System.out.println("\nFINDING PATH " + pathKey);
         openList.clear();
         ((TileComparator) comparator).pathKey = pathKey;
         final Tile startTile = level.getTile(startPositionX, startPositionY);
@@ -94,9 +94,9 @@ public class PathFinder
         {
             final Tile currentTile = openList.poll();
             touchedTiles.add(currentTile);
-            System.out.println("\nPulled");
-            printTile(currentTile);
-            System.out.println("");
+//            System.out.println("\nPulled");
+//            printTile(currentTile);
+//            System.out.println("");
             currentTile.setPathFinderState(pathKey, PathFinderState.CLOSED);
 
             // Path found!
@@ -113,10 +113,10 @@ public class PathFinder
             // values for A*
             for(int i = tileX - 1; i <= tileX + 1; i++)
             {
-                System.out.println("I " + i);
+//                System.out.println("I " + i);
                 for(int j = tileY - 1; j <= tileY + 1; j++)
                 {
-                    System.out.println("J " + j);
+//                    System.out.println("J " + j);
                     if(i == tileX && j == tileY)
                         continue;
 
@@ -127,17 +127,17 @@ public class PathFinder
 
                     if(adjacentTile == null)
                     {
-                        System.out.println(" " + i + " " + j + " null");
+//                        System.out.println(" " + i + " " + j + " null");
                         continue;
                     }
                     else if(!adjacentTile.isTraversable())
                     {
-                        System.out.println(" " + i + " " + j + " not traversable");
+//                        System.out.println(" " + i + " " + j + " not traversable");
                         continue;
                     }
                     else if(adjacentTile.getPathFinderState(pathKey) == PathFinderState.CLOSED)
                     {
-                        System.out.println(" " + i + " " + j + " closed");
+//                        System.out.println(" " + i + " " + j + " closed");
                         continue;
                     }
                     else if(i != tileX && j != tileY)
@@ -147,14 +147,14 @@ public class PathFinder
                         Tile diagonalTile = level.getTile(i, tileY);
                         if(diagonalTile == null || !diagonalTile.isTraversable())
                         {
-                            System.out.println(" " + i + " " + j + " diagonal");
+//                            System.out.println(" " + i + " " + j + " diagonal");
                             continue;
                         }
 
                         diagonalTile = level.getTile(tileX, j);
                         if(diagonalTile == null || !diagonalTile.isTraversable())
                         {
-                            System.out.println(" " + i + " " + j + " diagonal");
+//                            System.out.println(" " + i + " " + j + " diagonal");
                             continue;
                         }
                     }
@@ -187,8 +187,8 @@ public class PathFinder
                     }
                 }
             }
-            System.out.println("OpenList");
-            printOpenList();
+//            System.out.println("OpenList");
+//            printOpenList();
         }
 
         for(final Tile tile: touchedTiles)
@@ -205,11 +205,11 @@ public class PathFinder
         adjacentTile.setPathFinderState(pathKey, PathFinderState.OPEN);
         openList.add(adjacentTile);
 
-        System.out.print("    ");
-        printTile(adjacentTile);
-        System.out.print(" to start " + adjacentTile.getDistanceToStart(pathKey) + " to end " + adjacentTile.getDistanceToEnd(pathKey) + " F value "
-                + adjacentTile.getFValue(pathKey));
-        System.out.println("");
+//        System.out.print("    ");
+//        printTile(adjacentTile);
+//        System.out.print(" to start " + adjacentTile.getDistanceToStart(pathKey) + " to end " + adjacentTile.getDistanceToEnd(pathKey) + " F value "
+//                + adjacentTile.getFValue(pathKey));
+//        System.out.println("");
     }
 
     private float getStartDistanceValue(final String pathKey, final Tile currentTile, final Tile adjacentTile)
@@ -252,18 +252,18 @@ public class PathFinder
         }
     }
 
-    private void printOpenList()
-    {
-        for(final Tile tile: openList)
-        {
-            System.out.print("  ");
-            printTile(tile);
-            System.out.println("");
-        }
-    }
+//    private void printOpenList()
+//    {
+//        for(final Tile tile: openList)
+//        {
+//            System.out.print("  ");
+//            printTile(tile);
+//            System.out.println("");
+//        }
+//    }
 
     private void printTile(final Tile tile)
     {
-        System.out.print("[" + tile.getTilePositionX() + ", " + tile.getTilePositionY() + "]");
+//        System.out.print("[" + tile.getTilePositionX() + ", " + tile.getTilePositionY() + "]");
     }
 }

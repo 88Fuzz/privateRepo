@@ -74,7 +74,7 @@ public abstract class Drawable extends NonBodyDrawable
         position.x = sprite.getX() + bodyType.getWidth() / 2;
         position.y = sprite.getY() + bodyType.getHeight() / 2;
     }
-
+    
     public BodyType getBodyType()
     {
         return bodyType;

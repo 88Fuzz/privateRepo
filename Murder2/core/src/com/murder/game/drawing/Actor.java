@@ -19,7 +19,7 @@ import box2dLight.RayHandler;
 
 public class Actor extends Drawable
 {
-//    private static final float MAX_VELOCITY = 460 / 20;
+    // private static final float MAX_VELOCITY = 460 / 20;
     private static final float MAX_VELOCITY = 1260;
 
     public enum MoveDirection
@@ -86,7 +86,7 @@ public class Actor extends Drawable
         {
             xVelocity = (float) (velocity * Math.sin(Math.toRadians(rotation)));
             yVelocity = (float) (velocity * Math.cos(Math.toRadians(rotation)));
-//             distanceTraveled = velocity * dt;
+            // distanceTraveled = velocity * dt;
         }
         else
         {
@@ -99,6 +99,7 @@ public class Actor extends Drawable
         }
         xVelocity *= dt;
         yVelocity *= dt;
+
         body.setLinearVelocity(xVelocity, yVelocity);
 
         // rotate(.3f);
