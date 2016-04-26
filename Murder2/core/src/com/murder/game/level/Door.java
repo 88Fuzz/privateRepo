@@ -52,7 +52,7 @@ public class Door extends Tile
     {
         super.init(physicsWorld, textureManager, mobs);
         floorSprite = getSprite(textureManager, UNLOCKED_BODY_TYPE);
-        floorBody = getBody(physicsWorld, UNLOCKED_BODY_TYPE, floorSprite);
+        floorBody = generateBody(physicsWorld, UNLOCKED_BODY_TYPE, floorSprite);
         locked = true;
     }
 

@@ -1,6 +1,9 @@
 package com.murder.game.drawing;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,21 +21,39 @@ import box2dLight.RayHandler;
 public class Mob extends Actor
 {
     private static final float MAX_MOB_VELOCITY = 1060;
+    private World physicsWorld;
     private String previousPathKey;
     private PathFinder pathFinder;
     private Actor player;
     private boolean playerFound;
     private Level level;
     private float distanceToTravel;
-    private boolean farts = false;
+    private boolean directPath;
     private Vector2 previousPosition;
+
+    final RayCastCallback rayCastCallback = new RayCastCallback()
+    {
+        @Override
+        public float reportRayFixture(final Fixture fixture, final Vector2 point, final Vector2 normal, final float fraction)
+        {
+            final Object fixtureUserData = fixture.getBody().getUserData();
+            if(fixtureUserData instanceof Drawable)
+            {
+                if(!((Drawable) fixtureUserData).isTraversable())
+                {
+                    directPath = false;
+                    return 0;
+                }
+            }
+            return -1;
+        }
+    };
 
     @JsonCreator
     public Mob(@JsonProperty(BODY_TYPE) BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
             @JsonProperty(ROTATION) final float rotation)
     {
         super(bodyType, position, rotation);
-//        System.out.println("fff" + position);
         velocity = MAX_MOB_VELOCITY;
     }
 
@@ -40,6 +61,7 @@ public class Mob extends Actor
             final Actor player)
     {
         super.init(physicsWorld, rayHandler, textureManager);
+        this.physicsWorld = physicsWorld;
         this.player = player;
         this.level = level;
         this.distanceToTravel = 0;
@@ -57,6 +79,17 @@ public class Mob extends Actor
     @Override
     public void updateCurrent(final float dt)
     {
+        // TODO, don't do the directPath check every frame. yo
+        directPath = true;
+        physicsWorld.rayCast(rayCastCallback, getBodyPosition(), player.getBodyPosition());
+
+        if(directPath)
+        {
+            setUnitVelocity(getPosition(), player.getPosition());
+            super.updateCurrent(dt);
+            return;
+        }
+
         final String newPathKey = getPathKey();
 
         if(!newPathKey.equals(previousPathKey))
@@ -80,14 +113,12 @@ public class Mob extends Actor
         final Vector2 spritePosition = getPosition();
         previousPosition.x = spritePosition.x;
         previousPosition.y = spritePosition.y;
-//        System.out.println("original fuck " + previousPosition);
     }
 
     private void modifyDistanceToTravel()
     {
         final Vector2 currentPosition = getPosition();
 
-//        System.out.println("fuck " + currentPosition + " " + previousPosition);
         distanceToTravel -= MathUtils.getDistance(currentPosition, previousPosition);
         // final float mag = unitVelocityVector.len();
         // if(mag != 0)
@@ -97,15 +128,12 @@ public class Mob extends Actor
         // float distance = velocityX * velocityX + velocityY * velocityY;
         // distance = (float) Math.sqrt(distance);
         //
-        // System.out.println("distance " + distance);
         // distanceToTravel -= distance;
         // }
-//        System.out.println("distance traveled " + distanceToTravel);
     }
 
     private void calculateVelocity()
     {
-//        System.out.println("FUCK ME");
         final Tile currentTile = level.getTile(getTilePositionX(), getTilePositionY());
         if(currentTile == null)
         {
@@ -117,7 +145,6 @@ public class Mob extends Actor
         Tile nextTile = currentTile.getChildTile(previousPathKey);
         if(nextTile == null)
         {
-            // TODO this may possibly need to be reworked.
             nextTile = level.getTile(player.getTilePositionX(), player.getTilePositionY());
 
             // This is an error state, if there is no nextTile along the path,
@@ -130,19 +157,17 @@ public class Mob extends Actor
             }
         }
 
-        // if(farts)
-        // throw new RuntimeException("ASS");
-        farts = true;
-
         setUnitVelocity(currentTile, nextTile);
     }
 
     private void setUnitVelocity(final Tile currentTile, final Tile nextTile)
     {
-        final Vector2 currentBodyTilePos = currentTile.getPosition();
-        final Vector2 nextBodyTilePos = nextTile.getPosition();
+        setUnitVelocity(currentTile.getPosition(), nextTile.getPosition());
+    }
 
-        float diff = nextBodyTilePos.x - currentBodyTilePos.x;
+    private void setUnitVelocity(final Vector2 currentPosition, final Vector2 nextPosition)
+    {
+        float diff = nextPosition.x - currentPosition.x;
         if(diff < 0)
             unitVelocityVector.x = -1;
         else if(diff > 0)
@@ -150,7 +175,7 @@ public class Mob extends Actor
         else
             unitVelocityVector.x = 0;
 
-        diff = nextBodyTilePos.y - currentBodyTilePos.y;
+        diff = nextPosition.y - currentPosition.y;
         if(diff < 0)
             unitVelocityVector.y = -1;
         else if(diff > 0)
@@ -158,13 +183,13 @@ public class Mob extends Actor
         else
             unitVelocityVector.y = 0;
 
-        calculateDistanceToTravel(currentBodyTilePos, nextBodyTilePos);
+        System.out.println(unitVelocityVector);
+        calculateDistanceToTravel(currentPosition, nextPosition);
     }
 
     private void calculateDistanceToTravel(final Vector2 currentTilePos, final Vector2 nextTilePos)
     {
         distanceToTravel = MathUtils.getDistance(currentTilePos.x, currentTilePos.y, nextTilePos.x, nextTilePos.y);
-//        System.out.println("distance to travel: " + distanceToTravel);
     }
 
     public void findPath()

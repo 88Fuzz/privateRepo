@@ -209,11 +209,6 @@ public class Tile extends Drawable
         return (value == null) ? PathFinderState.NONE : value;
     }
 
-    public boolean isTraversable()
-    {
-        return bodyType.isTraversable();
-    }
-
     /**
      * Sets the parent Tile for for a given pathfinding key. The key allows for
      * multiple paths to be calculated on a single level (ie multiple enemies

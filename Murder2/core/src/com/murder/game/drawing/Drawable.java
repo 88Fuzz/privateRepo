@@ -1,11 +1,15 @@
 package com.murder.game.drawing;
 
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.drawing.DisplayConstants;
@@ -36,7 +40,7 @@ public abstract class Drawable extends NonBodyDrawable
     protected void init(final World physicsWorld, final TextureManager textureManager)
     {
         this.sprite = getSprite(textureManager, bodyType);
-        this.body = getBody(physicsWorld, bodyType, sprite);
+        this.body = generateBody(physicsWorld, bodyType, sprite);
     }
 
     protected Sprite getSprite(final TextureManager textureManager, final BodyType bodyType)
@@ -50,7 +54,7 @@ public abstract class Drawable extends NonBodyDrawable
         return sprite;
     }
 
-    protected Body getBody(final World physicsWorld, final BodyType bodyType, final Sprite sprite)
+    protected Body generateBody(final World physicsWorld, final BodyType bodyType, final Sprite sprite)
     {
         final Body body = BodyBuilder.createBody(physicsWorld, bodyType, position, rotation);
         body.setUserData(this);
@@ -74,10 +78,15 @@ public abstract class Drawable extends NonBodyDrawable
         position.x = sprite.getX() + bodyType.getWidth() / 2;
         position.y = sprite.getY() + bodyType.getHeight() / 2;
     }
-    
+
     public BodyType getBodyType()
     {
         return bodyType;
+    }
+
+    public boolean isTraversable()
+    {
+        return bodyType.isTraversable();
     }
 
     @JsonIgnore
@@ -104,6 +113,11 @@ public abstract class Drawable extends NonBodyDrawable
         return (int) (position.y + DisplayConstants.HALF_TILE_SIZE) / DisplayConstants.TILE_SIZE;
     }
 
+    @JsonIgnore
+    public Array<Fixture> getFixtures()
+    {
+        return body.getFixtureList();
+    }
     // protected void setTilePosition()
     // {
     // tilePosition.x = (int) (position.x / sprite.getWidth());

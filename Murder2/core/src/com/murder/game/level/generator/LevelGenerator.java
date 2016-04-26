@@ -74,20 +74,20 @@ public class LevelGenerator
                         innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     }
                 }
-                else if(i == 4 && j == 3)
-                {
+//                else if(i == 4 && j == 3)
+//                {
+////                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+//                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+//                }
+//                else if(i == 4)
+//                {
+//                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+//                }
+//                else if(i == 3 && j == 3)
+//                {
 //                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                }
-                else if(i == 4)
-                {
-                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                }
-                else if(i == 3 && j == 3)
-                {
-                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                    items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
-                }
+//                    items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+//                }
                 else
                 {
                     innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));

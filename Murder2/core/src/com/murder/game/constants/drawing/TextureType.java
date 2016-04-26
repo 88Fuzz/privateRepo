@@ -6,7 +6,8 @@ public enum TextureType
     FLOOR_TEXTURE("images/FloorTexture.png"),
     SINGLE_PIXEL_TEXTURE("images/SinglePixel.png"),
     KEY_TEXTURE("images/KeyTexture.png"),
-    CIRCLE_TEXTURE("images/CircleTexture.png");
+    CIRCLE_TEXTURE("images/CircleTexture.png"),
+    MOB_TEXTURE("images/MobTexture.png");
 
     private final String fileName;
 
