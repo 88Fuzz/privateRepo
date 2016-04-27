@@ -162,29 +162,33 @@ public class Mob extends Actor
 
     private void setUnitVelocity(final Tile currentTile, final Tile nextTile)
     {
-        setUnitVelocity(currentTile.getPosition(), nextTile.getPosition());
+        final Vector2 currentPosition = currentTile.getPosition();
+        final Vector2 nextPosition = nextTile.getPosition();
+        setUnitVelocity(currentPosition, nextPosition);
+        calculateDistanceToTravel(currentPosition, nextPosition);
     }
 
     private void setUnitVelocity(final Vector2 currentPosition, final Vector2 nextPosition)
     {
-        float diff = nextPosition.x - currentPosition.x;
-        if(diff < 0)
-            unitVelocityVector.x = -1;
-        else if(diff > 0)
-            unitVelocityVector.x = 1;
-        else
-            unitVelocityVector.x = 0;
-
-        diff = nextPosition.y - currentPosition.y;
-        if(diff < 0)
-            unitVelocityVector.y = -1;
-        else if(diff > 0)
-            unitVelocityVector.y = 1;
-        else
-            unitVelocityVector.y = 0;
-
-        System.out.println(unitVelocityVector);
-        calculateDistanceToTravel(currentPosition, nextPosition);
+        unitVelocityVector.set(nextPosition);
+        unitVelocityVector.sub(currentPosition);
+        unitVelocityVector.nor();
+        // float diff = nextPosition.x - currentPosition.x;
+        // if(diff < 0)
+        // unitVelocityVector.x = -1;
+        // else if(diff > 0)
+        // unitVelocityVector.x = 1;
+        // else
+        // unitVelocityVector.x = 0;
+        //
+        // diff = nextPosition.y - currentPosition.y;
+        // if(diff < 0)
+        // unitVelocityVector.y = -1;
+        // else if(diff > 0)
+        // unitVelocityVector.y = 1;
+        // else
+        // unitVelocityVector.y = 0;
+        //
     }
 
     private void calculateDistanceToTravel(final Vector2 currentTilePos, final Vector2 nextTilePos)
