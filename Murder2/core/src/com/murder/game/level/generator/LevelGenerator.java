@@ -99,9 +99,11 @@ public class LevelGenerator
         }
 
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(600, 200), -90);
-        final Mob mob = new Mob(BodyType.MOB, new MyVector2(1200, 200), 0);
+        final List<Mob> mobs = new LinkedList<Mob>();
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(1200, 200), 0));
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(1400, 200), 0));
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07", "Level08", StateId.GAME_STATE), player,
-                Collections.singletonList(mob)), "Level01");
+                mobs), "Level01");
     }
 
     public static LevelSerialize generateLevel6()

@@ -14,7 +14,8 @@ public enum BodyType
                     | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), true),
     MOB(BodyShape.CIRCLE, TextureType.MOB_TEXTURE, Color.FOREST, 180f, 180f, 1f, CollisionType.MONSTER.getCollisionValue(),
-            (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.WALL.getCollisionValue()),
+            (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.MONSTER.getCollisionValue()
+                    | CollisionType.WALL.getCollisionValue()),
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), true),
     WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BROWN, 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,

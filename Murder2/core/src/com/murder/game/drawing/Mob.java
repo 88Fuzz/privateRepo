@@ -111,7 +111,6 @@ public class Mob extends Actor
 
         if(directPath)
         {
-            System.out.println("YEEEES");
             setUnitVelocity(getPosition(), player.getPosition());
             super.updateCurrent(dt);
             return;
