@@ -1,5 +1,8 @@
 package com.murder.game.drawing;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -21,6 +24,7 @@ import box2dLight.RayHandler;
 public class Mob extends Actor
 {
     private static final float MAX_MOB_VELOCITY = 1060;
+
     private World physicsWorld;
     private String previousPathKey;
     private PathFinder pathFinder;
@@ -30,6 +34,8 @@ public class Mob extends Actor
     private float distanceToTravel;
     private boolean directPath;
     private Vector2 previousPosition;
+    private Vector2 edgeCheckPosition;
+    private List<Vector2> edgeCheckPositions;
 
     final RayCastCallback rayCastCallback = new RayCastCallback()
     {
@@ -54,6 +60,16 @@ public class Mob extends Actor
             @JsonProperty(ROTATION) final float rotation)
     {
         super(bodyType, position, rotation);
+
+        previousPosition = new Vector2();
+        edgeCheckPosition = new Vector2();
+
+        edgeCheckPositions = new LinkedList<Vector2>();
+        edgeCheckPositions.add(new Vector2(0, bodyType.getHeight() / 2 / DisplayConstants.PIXELS_PER_METER));
+        edgeCheckPositions.add(new Vector2(bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER, 0));
+        edgeCheckPositions.add(new Vector2(0, -1 * bodyType.getHeight() / 2 / DisplayConstants.PIXELS_PER_METER));
+        edgeCheckPositions.add(new Vector2(-1 * bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER, 0));
+
         velocity = MAX_MOB_VELOCITY;
     }
 
@@ -65,7 +81,6 @@ public class Mob extends Actor
         this.player = player;
         this.level = level;
         this.distanceToTravel = 0;
-        this.previousPosition = new Vector2();
 
         this.previousPathKey = getPathKey();
 
@@ -79,12 +94,24 @@ public class Mob extends Actor
     @Override
     public void updateCurrent(final float dt)
     {
-        // TODO, don't do the directPath check every frame. yo
+        // TODO, don't do the directPath check every frame. yo. And it should
+        // check 4 points on the edge of the circle and not the center
         directPath = true;
-        physicsWorld.rayCast(rayCastCallback, getBodyPosition(), player.getBodyPosition());
+
+        for(final Vector2 offset: edgeCheckPositions)
+        {
+            if(!directPath)
+                break;
+
+            edgeCheckPosition.x = getBodyPosition().x + offset.x;
+            edgeCheckPosition.y = getBodyPosition().y + offset.y;
+
+            physicsWorld.rayCast(rayCastCallback, edgeCheckPosition, player.getBodyPosition());
+        }
 
         if(directPath)
         {
+            System.out.println("YEEEES");
             setUnitVelocity(getPosition(), player.getPosition());
             super.updateCurrent(dt);
             return;
