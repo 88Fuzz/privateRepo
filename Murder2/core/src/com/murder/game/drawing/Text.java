@@ -11,9 +11,9 @@ import com.murder.game.serialize.MyVector2;
 public class Text extends NonBodyDrawable
 {
     private static final String POSITION = "position";
-    private static final String FONT_TYPE = "fontType";
-    private static final String TEXT = "text";
-    private static final String ROTATION = "rotation";
+    protected static final String FONT_TYPE = "fontType";
+    protected static final String TEXT = "text";
+    protected static final String ROTATION = "rotation";
 
     @JsonIgnore
     private BitmapFont font;

@@ -7,6 +7,7 @@ import java.util.List;
 import com.badlogic.gdx.Gdx;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.murder.game.constants.drawing.FontType;
+import com.murder.game.drawing.PercentageText;
 import com.murder.game.drawing.Text;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.serialize.TextStateSerialize;
@@ -27,13 +28,13 @@ public class TextStateGenerator
     private static TextStateSerialize generateTextState1(final String textStateId)
     {
         final List<Text> texts = new LinkedList<Text>();
-        texts.add(new Text(new MyVector2(0, 0), FontType.HAND_48, "Where am I?", 0));
 
         final List<TextStateModifier> textStateModifiers = new LinkedList<TextStateModifier>();
         final List<Text> addedTexts = new LinkedList<Text>();
-        // TODO This should be a new type of text that takes a % as a position of the screen
-        addedTexts.add(new Text(new MyVector2(-52, 300), FontType.HAND_48, "How did I get here?", 0));
-        addedTexts.add(new Text(new MyVector2(-800, -35), FontType.HAND_48, "God damn it's dark.", 0));
+//        addedTexts.add(new PercentageText(0, 0, FontType.HAND_48, "Where am I?", 0));
+        addedTexts.add(new Text(new MyVector2(1280/2, 0), FontType.HAND_48, "Where am I?", 0));
+        addedTexts.add(new PercentageText(-.52f, .78f, FontType.HAND_48, "How did I get here?", 0));
+        addedTexts.add(new PercentageText(-.80f, -.35f, FontType.HAND_48, "Goddamn it's dark.", 0));
         textStateModifiers.add(new TextStateAdder(addedTexts));
 
         return writeTextState(new TextStateSerialize(texts, textStateModifiers), textStateId);
