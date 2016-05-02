@@ -1,5 +1,7 @@
 package com.murder.game;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -7,14 +9,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
+import com.murder.game.constants.drawing.FontType;
+import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
+import com.murder.game.serialize.MyVector2;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.StateManager;
 import com.murder.game.state.StateManager.PendingAction;
 import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.TextState;
 
 public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 {
@@ -44,11 +50,38 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // fontGenerator = new FontGenerator();
         timeSinceLastUpdate = 0;
 
-        final GameState gameState = (GameState) stateManager.getState(StateId.GAME_STATE);
+        // final GameState gameState = (GameState)
+        // stateManager.getState(StateId.GAME_STATE);
+        //
+        // gameState.init(worldRenderer, textureManager, fontManager,
+        // "Level01");
+        // stateStack.push(gameState);
 
-        // gameState.init(worldRenderer, levelSerialize, textureAtlas);
-        gameState.init(worldRenderer, textureManager, fontManager, "Level01");
-        stateStack.push(gameState);
+        final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
+        textState.init(fontManager, "Text1");
+        stateStack.push(textState);
+
+        // final List<Text> drawableTexts = new LinkedList<Text>();
+        // drawableTexts.add(new Text(new MyVector2(100,100),
+        // FontType.BLOODSUCKERS_48, "BLOODSUCKERS", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,50),
+        // FontType.COLDNIGHT_48, "COLDNIGHT", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,10), FontType.EDOSZ_48,
+        // "EDOSZ", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,-10),
+        // FontType.GHASTLYPANIC_48, "GHASTLYPANIC", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,-70),
+        // FontType.GYPSYCURSE_48, "GYPSYCURSE", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,-130),
+        // FontType.SUBTLE_48, "SUBTLE", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,-180),
+        // FontType.SUNSET_48, "SUNSET", 0));
+        // drawableTexts.add(new Text(new MyVector2(100,-280),
+        // FontType.TEQUILA_48, "TEQUILA", 0));
+        // final TextState textState = (TextState)
+        // stateManager.getState(StateId.TEXT_STATE);
+        // textState.init(fontManager, drawableTexts);
+        // stateStack.push(textState);
 
         // assMan.dispose();
         Gdx.input.setInputProcessor(this);

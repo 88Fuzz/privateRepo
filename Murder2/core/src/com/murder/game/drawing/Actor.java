@@ -58,7 +58,7 @@ public class Actor extends Drawable
     public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager)
     {
         super.init(physicsWorld, textureManager);
-        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle(), 40);
+        createLight(rayHandler);
         inventory.clear();
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
@@ -67,6 +67,11 @@ public class Actor extends Drawable
         // sprite.setOriginCenter();
         // centerSpritePosition();
         // setTilePosition();
+    }
+
+    protected void createLight(final RayHandler rayHandler)
+    {
+        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle());
     }
 
     @Override

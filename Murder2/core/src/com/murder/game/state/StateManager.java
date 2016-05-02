@@ -73,7 +73,7 @@ public class StateManager
         pendingActions = new LinkedList<PendingAction>();
 
         STATE_MAP.put(StateId.GAME_STATE, new GameState(this));
-        // STATE_MAP.put(StateId.TEXT_STATE, new TextState(this));
+        STATE_MAP.put(StateId.TEXT_STATE, new TextState(this));
         // STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
     }
 

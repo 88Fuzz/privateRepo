@@ -41,13 +41,13 @@ public class LevelGenerator
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-        return generateLevel7();
+        // return generateLevel7();
         // return generateLevel6();
         // return generateLevel5();
         // generateLevel4();
         // return generateLevel3();
-        // generateLevel2();
-        // return generateLevel1();
+//         return generateLevel2();
+        return generateLevel1();
     }
 
     public static LevelSerialize generateLevel7()
@@ -76,9 +76,11 @@ public class LevelGenerator
                 }
                 else if(i == 4 && j == 3)
                 {
-////                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-//                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
-                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    // innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i *
+                    // TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    // innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i *
+                    // TILE_SIZE, j * TILE_SIZE), 0));
                 }
                 else if(i == 4)
                 {
@@ -102,8 +104,8 @@ public class LevelGenerator
         final List<Mob> mobs = new LinkedList<Mob>();
         mobs.add(new Mob(BodyType.MOB, new MyVector2(1200, 200), 0));
         mobs.add(new Mob(BodyType.MOB, new MyVector2(1400, 200), 0));
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07", "Level08", StateId.GAME_STATE), player,
-                mobs), "Level01");
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07", "Level08", StateId.GAME_STATE), player, mobs),
+                "Level01");
     }
 
     public static LevelSerialize generateLevel6()
@@ -392,8 +394,8 @@ public class LevelGenerator
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), -90);
 
         final List<Text> texts = new ArrayList<Text>();
-        texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.BLUEBIRD_48,
-                "Two fingers to rotate", 0));
+        texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.AVOCADO_56,
+                "two fingers to rotate", 0));
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02", "Level03", StateId.GAME_STATE), player, new LinkedList<Mob>()),
                 "Level02");
     }
@@ -458,7 +460,7 @@ public class LevelGenerator
 
         // addWalls(tiles);
         final List<Text> texts = new ArrayList<Text>();
-        texts.add(new Text(new MyVector2(400, 400), FontType.BLUEBIRD_48, "Tap to move", 0));
+        texts.add(new Text(new MyVector2(400, 400), FontType.AVOCADO_56, "tap to move", 0));
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01", "Level02", StateId.GAME_STATE), player, new LinkedList<Mob>()),
                 "Level01");
     }
@@ -492,7 +494,6 @@ public class LevelGenerator
 
     private static LevelSerialize writeLevel(final LevelSerialize level, final String levelId)
     {
-        // TODO actually write the level
         try
         {
             SERIALIZER.writeValue(Gdx.files.internal(DIRECTORY + levelId + FILE_EXTENSION).file(), level);

@@ -3,8 +3,8 @@ package com.murder.game.drawing;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.physics.box2d.World;
@@ -17,8 +17,10 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.level.pathfinder.PathFinder;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.utils.LightBuilder;
 import com.murder.game.utils.MathUtils;
 
+import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 public class Mob extends Actor
@@ -36,6 +38,8 @@ public class Mob extends Actor
     private Vector2 previousPosition;
     private Vector2 edgeCheckPosition;
     private List<Vector2> edgeCheckPositions;
+    private PointLight light;
+    private float lightTimer;
 
     final RayCastCallback rayCastCallback = new RayCastCallback()
     {
@@ -71,6 +75,7 @@ public class Mob extends Actor
         edgeCheckPositions.add(new Vector2(-1 * bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER, 0));
 
         velocity = MAX_MOB_VELOCITY;
+        lightTimer = 0;
     }
 
     public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager, final Level level,
@@ -92,10 +97,17 @@ public class Mob extends Actor
     }
 
     @Override
+    protected void createLight(final RayHandler rayHandler)
+    {
+        light = LightBuilder.createPointLight(rayHandler, body, Color.PINK, 15);
+        light.setActive(false);
+    }
+
+    @Override
     public void updateCurrent(final float dt)
     {
         // TODO, don't do the directPath check every frame. yo. And it should
-        // check 4 points on the edge of the circle and not the center
+        // check 4 points of the mob to 4 points of the player. I think.
         directPath = true;
 
         for(final Vector2 offset: edgeCheckPositions)
@@ -113,25 +125,50 @@ public class Mob extends Actor
         {
             setUnitVelocity(getPosition(), player.getPosition());
             super.updateCurrent(dt);
-            return;
         }
-
-        final String newPathKey = getPathKey();
-
-        if(!newPathKey.equals(previousPathKey))
+        else
         {
-            findPath(newPathKey);
+            final String newPathKey = getPathKey();
+
+            if(!newPathKey.equals(previousPathKey))
+            {
+                findPath(newPathKey);
+            }
+
+            if(playerFound)
+            {
+                if(distanceToTravel <= 0)
+                    calculateVelocity();
+
+                super.updateCurrent(dt);
+                modifyDistanceToTravel();
+            }
+
+            setPreviousPosition();
         }
 
-        if(playerFound)
+        updateLight(dt);
+    }
+
+    private void updateLight(final float dt)
+    {
+        lightTimer += dt;
+        if(directPath)
         {
-            if(distanceToTravel <= 0)
-                calculateVelocity();
-
-            super.updateCurrent(dt);
-            modifyDistanceToTravel();
+            if(lightTimer > 0.35)
+                flipLight();
         }
-        setPreviousPosition();
+        else if(playerFound)
+        {
+            if(lightTimer > 0.8)
+                flipLight();
+        }
+    }
+
+    private void flipLight()
+    {
+        lightTimer = 0;
+        light.setActive(!light.isActive());
     }
 
     private void setPreviousPosition()
