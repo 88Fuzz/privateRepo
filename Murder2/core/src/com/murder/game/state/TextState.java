@@ -5,14 +5,16 @@ import java.util.List;
 import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.manager.FontManager;
-import com.murder.game.level.generator.TextStateGenerator;
-import com.murder.game.serialize.TextStateSerialize;
+import com.murder.game.level.generator.TextLevelGenerator;
+import com.murder.game.serialize.TextLevelSerialize;
+import com.murder.game.state.StateManager.PendingAction;
+import com.murder.game.state.StateManager.StateAction;
 import com.murder.game.state.modifier.TextStateModifier;
 
 public class TextState implements State
 {
     private final StateManager stateManager;
-    private TextStateSerialize textState;
+    private TextLevelSerialize textState;
     private List<Text> drawableTexts;
     private List<TextStateModifier> textStateModifiers;
 
@@ -23,7 +25,7 @@ public class TextState implements State
 
     public void init(final FontManager fontManager, final String levelKey)
     {
-        textState = TextStateGenerator.getTextState(levelKey);
+        textState = TextLevelGenerator.getTextState(levelKey);
         drawableTexts = textState.getDrawableTexts();
         textStateModifiers = textState.getTextStateModifiers();
         for(final Text text: drawableTexts)
@@ -74,9 +76,19 @@ public class TextState implements State
             text.update(dt);
         }
 
+        boolean finished = true;
         for(final TextStateModifier modifier: textStateModifiers)
         {
             modifier.update(this, dt);
+            if(!modifier.isFinished(this))
+                finished = false;
+        }
+
+        if(finished)
+        {
+            stateManager.addAction(new PendingAction().withAction(StateAction.POP));
+            stateManager.addAction(new PendingAction().withAction(StateAction.PUSH).withStatId(textState.getStateId())
+                    .withStateConfig(textState.getNextStateName()));
         }
     }
 

@@ -4,10 +4,15 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.drawing.FontType;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.serialize.MyVector2;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({ @Type(value = Text.class, name = "Text"), @Type(value = PercentageText.class, name = "PercentageText") })
 public class Text extends NonBodyDrawable
 {
     private static final String POSITION = "position";

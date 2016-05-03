@@ -291,6 +291,14 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             // levelGenerator.getLevel(stateConfig), textureAtlas);
             ((GameState) state).init(worldRenderer, textureManager, fontManager, stateConfig);
         }
+        else if(state instanceof TextState)
+        {
+            ((TextState) state).init(fontManager, stateConfig);
+        }
+        else
+        {
+            throw new RuntimeException("Unknown state to init " + state.getClass());
+        }
         // else if(state instanceof TextState)
         // {
         // ((TextState) state).init(fontGenerator,

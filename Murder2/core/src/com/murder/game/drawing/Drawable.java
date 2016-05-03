@@ -1,7 +1,5 @@
 package com.murder.game.drawing;
 
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
@@ -84,6 +82,7 @@ public abstract class Drawable extends NonBodyDrawable
         return bodyType;
     }
 
+    @JsonIgnore
     public boolean isTraversable()
     {
         return bodyType.isTraversable();
@@ -103,11 +102,13 @@ public abstract class Drawable extends NonBodyDrawable
         super.setRotation(rotation);
     }
 
+    @JsonIgnore
     public int getTilePositionX()
     {
         return (int) (position.x + DisplayConstants.HALF_TILE_SIZE) / DisplayConstants.TILE_SIZE;
     }
 
+    @JsonIgnore
     public int getTilePositionY()
     {
         return (int) (position.y + DisplayConstants.HALF_TILE_SIZE) / DisplayConstants.TILE_SIZE;

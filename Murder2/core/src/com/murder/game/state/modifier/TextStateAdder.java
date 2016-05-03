@@ -12,6 +12,7 @@ public class TextStateAdder implements TextStateModifier
 {
     private static final String STATE_ADDER_TEXTS = "stateAdderTexts";
     private List<Text> texts;
+    private boolean finished;
 
     @JsonCreator
     public TextStateAdder(@JsonProperty(STATE_ADDER_TEXTS) final List<Text> texts)
@@ -22,6 +23,7 @@ public class TextStateAdder implements TextStateModifier
     @Override
     public void init(final TextState textState, final FontManager fontManager)
     {
+        finished = false;
         for(final Text text: texts)
         {
             text.init(fontManager);
@@ -45,12 +47,21 @@ public class TextStateAdder implements TextStateModifier
     public boolean touchUp(final TextState textState, final int screenX, final int screenY, final int pointer, final int button)
     {
         if(texts.isEmpty())
+        {
+            finished = true;
             return false;
+        }
 
         textState.addText(texts.get(0));
         texts.remove(0);
 
         return true;
+    }
+
+    @Override
+    public boolean isFinished(final TextState textState)
+    {
+        return finished;
     }
 
     public List<Text> getTexts()

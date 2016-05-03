@@ -19,6 +19,8 @@ import box2dLight.RayHandler;
 
 public class WorldRenderer
 {
+    private static final int DEFAULT_SIZE = 1920 * 1080;
+
     private Box2DDebugRenderer debugRenderer;
     private OrthographicCamera camera;
     private OrthographicCamera cameraGUI;
@@ -54,6 +56,15 @@ public class WorldRenderer
         // camera.position.set(Gdx.graphics.getWidth() / 2,
         // Gdx.graphics.getHeight() / 2, 0);
         camera.position.set(-100, -100, 0);
+        // If the screen is smaller than the default size, zoom out so that the
+        // screen can make a bit more sense
+        final float cameraZoom = DEFAULT_SIZE / (Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
+        if(cameraZoom > 1)
+        {
+            camera.zoom = 1 + cameraZoom * .1f;
+            System.out.println("ZOOM " + camera.zoom + " cameraZoom " + cameraZoom);
+        }
+        // camera.zoom = 2f;
         camera.update();
 
         cameraGUI.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
@@ -148,25 +159,25 @@ public class WorldRenderer
             // final Vector2 middlePosition = new
             // Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() /
             // 2);
-//            middlePosition.x = Gdx.graphics.getWidth() / 2;
-//            middlePosition.y = Gdx.graphics.getHeight() / 2;
-//            if(xCamera - middlePosition.x < bounds.x)
-//            {
-//                xCamera = bounds.x + middlePosition.x;
-//            }
-//            else if(xCamera + middlePosition.x > bounds.width)
-//            {
-//                xCamera = bounds.width - middlePosition.x;
-//            }
-//
-//            if(yCamera - middlePosition.y < bounds.y)
-//            {
-//                yCamera = bounds.y + middlePosition.y;
-//            }
-//            else if(yCamera + middlePosition.y > bounds.height)
-//            {
-//                yCamera = bounds.height - middlePosition.y;
-//            }
+            // middlePosition.x = Gdx.graphics.getWidth() / 2;
+            // middlePosition.y = Gdx.graphics.getHeight() / 2;
+            // if(xCamera - middlePosition.x < bounds.x)
+            // {
+            // xCamera = bounds.x + middlePosition.x;
+            // }
+            // else if(xCamera + middlePosition.x > bounds.width)
+            // {
+            // xCamera = bounds.width - middlePosition.x;
+            // }
+            //
+            // if(yCamera - middlePosition.y < bounds.y)
+            // {
+            // yCamera = bounds.y + middlePosition.y;
+            // }
+            // else if(yCamera + middlePosition.y > bounds.height)
+            // {
+            // yCamera = bounds.height - middlePosition.y;
+            // }
 
             camera.position.x = xCamera;
             camera.position.y = yCamera;

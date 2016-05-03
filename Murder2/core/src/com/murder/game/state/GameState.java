@@ -51,7 +51,7 @@ public class GameState implements State
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
-//        rayHandler.setAmbientLight(.5f);
+        // rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(levelKey);
         mobs = levelSerialize.getMobs();
@@ -103,7 +103,7 @@ public class GameState implements State
         {
             stateManager.addAction(new PendingAction().withAction(StateAction.POP));
             stateManager.addAction(
-                    new PendingAction().withAction(StateAction.PUSH).withStatId(StateId.GAME_STATE).withStateConfig(level.getNextLevelId()));
+                    new PendingAction().withAction(StateAction.PUSH).withStatId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
         }
         // final Vector2 playerPos = player.getTilePosition();
         // final Tile tile = level.getTile((int) playerPos.x, (int)
