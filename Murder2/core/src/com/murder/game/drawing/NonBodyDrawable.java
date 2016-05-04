@@ -16,7 +16,7 @@ public abstract class NonBodyDrawable
 
     public NonBodyDrawable(final MyVector2 position, final float rotation)
     {
-        this.position = position;
+        this.position = position.cpy();
         this.rotation = rotation;
     }
 

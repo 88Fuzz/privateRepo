@@ -12,8 +12,8 @@ public class DesktopLauncher
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "Murder";
         config.useGL30 = false;
-//        config.width = 1920;
-//        config.height = 1080;
+        config.width = 1920;
+        config.height = 1080;
 
 //        config.width = 1600;
 //        config.height = 900;
@@ -21,8 +21,8 @@ public class DesktopLauncher
 //        config.width = 600;
 //        config.height = 400;
         
-        config.width = 480;
-        config.height = 320;
+//        config.width = 480;
+//        config.height = 320;
         
 //        config.width = 800;
 //        config.height = 480;

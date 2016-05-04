@@ -58,7 +58,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // stateStack.push(gameState);
 
         final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
-        textState.init(fontManager, "Text1");
+        textState.init(fontManager, "Text01");
         stateStack.push(textState);
 
         // final List<Text> drawableTexts = new LinkedList<Text>();

@@ -28,9 +28,9 @@ public class TextLevelGenerator
         
          throw new RuntimeException("Unknown textStateId " + textStateId);
 
-//        return generateTextLevel3("Text03");
-//         return generateTextLevel2("Text02");
-//         return generateTextLevel1(textStateId);
+//        generateTextLevel3("Text03");
+//         generateTextLevel2("Text02");
+//         return generateTextLevel1("Text01");
     }
 
     private static TextLevelSerialize generateTextLevel3(final String textStateId)
@@ -57,7 +57,7 @@ public class TextLevelGenerator
         final List<TextStateModifier> textStateModifiers = new LinkedList<TextStateModifier>();
         final List<Text> addedTexts = new LinkedList<Text>();
         addedTexts.add(new PercentageText(-.2f, -.34f, FontType.HAND_48, "Do I dare move?", 0));
-        addedTexts.add(new PercentageText(.32f, .58f, FontType.HAND_48, "I can't see past my nose.", 0));
+        addedTexts.add(new PercentageText(-.32f, .58f, FontType.HAND_48, "I can't see past my nose.", 0));
         addedTexts.add(new PercentageText(.0f, -.85f, FontType.HAND_48, "If only I had a flashlight.", 0));
         textStateModifiers.add(new TextStateAdder(addedTexts));
 

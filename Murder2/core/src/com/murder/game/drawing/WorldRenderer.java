@@ -60,11 +60,8 @@ public class WorldRenderer
         // screen can make a bit more sense
         final float cameraZoom = DEFAULT_SIZE / (Gdx.graphics.getWidth() * Gdx.graphics.getHeight());
         if(cameraZoom > 1)
-        {
             camera.zoom = 1 + cameraZoom * .1f;
-            System.out.println("ZOOM " + camera.zoom + " cameraZoom " + cameraZoom);
-        }
-        // camera.zoom = 2f;
+
         camera.update();
 
         cameraGUI.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
