@@ -210,4 +210,9 @@ public class Level extends Drawable
     {
         return nextStateId;
     }
+
+    public void dispose()
+    {
+        // Find something to dispose
+    }
 }

@@ -104,7 +104,7 @@ public class TextState implements State
     @Override
     public void dispose()
     {
-        // TODO Auto-generated method stub
+        // Find something to dispose
     }
 
     @Override

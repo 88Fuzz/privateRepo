@@ -24,7 +24,7 @@ import com.murder.game.state.TextState;
 
 public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 {
-    private static final float TIMEPERFRAME = 1.0f / 30.0f;
+    public static final float TIMEPERFRAME = 1.0f / 30.0f;
 
     private Stack<State> stateStack;
     private TextureManager textureManager;
@@ -131,7 +131,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         }
         worldRenderer.dispose();
         textureManager.dispose();
-        fontManager.dispose();
+        // fontManager.dispose();
     }
 
     @Override
@@ -246,7 +246,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
 
             for(final State state: stateStack)
             {
-                state.update(dt);
+                state.update(TIMEPERFRAME);
                 // state.render(worldRenderer);
             }
             // worldRenderer.renderGUI();

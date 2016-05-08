@@ -158,7 +158,7 @@ public class GameState implements State
     @Override
     public void dispose()
     {
-        // TODO Auto-generated method stub
+        level.dispose();
     }
 
     @Override

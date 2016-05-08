@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.state.TextState;
 
+/**
+ * Any changes to the TextState should go through this interface.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({ @Type(value = TextStateAdder.class, name = "TextStateAdder") })
 public interface TextStateModifier

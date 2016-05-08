@@ -2,7 +2,6 @@ package com.murder.game.level.generator;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import com.murder.game.constants.level.ItemType;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.Text;
+import com.murder.game.effects.text.TextEffect;
 import com.murder.game.level.Door;
 import com.murder.game.level.Item;
 import com.murder.game.level.Level;
@@ -32,21 +32,21 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-         final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-         if(loadedLevel != null)
-         return loadedLevel;
-        
-         throw new RuntimeException("File Not Found");
+        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+        if(loadedLevel != null)
+            return loadedLevel;
+
+        throw new RuntimeException("File Not Found");
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-//         generateLevel7();
-//         generateLevel6();
-//         generateLevel5();
-//         generateLevel4();
-//         generateLevel3();
-//         generateLevel2();
-//        return generateLevel1();
+        // generateLevel7();
+        // generateLevel6();
+        // generateLevel5();
+        // generateLevel4();
+        // generateLevel3();
+        // generateLevel2();
+        // return generateLevel1();
     }
 
     public static LevelSerialize generateLevel7()
@@ -394,7 +394,7 @@ public class LevelGenerator
 
         final List<Text> texts = new ArrayList<Text>();
         texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.AVOCADO_56,
-                "two fingers to rotate", 0));
+                "two fingers to rotate", 0, new LinkedList<TextEffect>()));
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02", "Level03", StateId.GAME_STATE), player, new LinkedList<Mob>()),
                 "Level02");
     }
@@ -459,7 +459,7 @@ public class LevelGenerator
 
         // addWalls(tiles);
         final List<Text> texts = new ArrayList<Text>();
-        texts.add(new Text(new MyVector2(400, 400), FontType.AVOCADO_56, "tap to move", 0));
+        texts.add(new Text(new MyVector2(400, 400), FontType.AVOCADO_56, "tap to move", 0, new LinkedList<TextEffect>()));
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01", "Level02", StateId.GAME_STATE), player, new LinkedList<Mob>()),
                 "Level01");
     }
@@ -506,7 +506,7 @@ public class LevelGenerator
 
     private static LevelSerialize loadLevelFromFile(final String levelId)
     {
-        //TODO remove logging
+        // TODO remove logging
         final String tag = "MURDER EXCEPTION";
         try
         {
