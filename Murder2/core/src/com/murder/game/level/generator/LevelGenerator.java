@@ -21,7 +21,7 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
-import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.management.StateId;
 
 public class LevelGenerator
 {

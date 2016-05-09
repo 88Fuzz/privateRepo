@@ -15,15 +15,14 @@ import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
-import com.murder.game.level.pathfinder.PathFinder;
 import com.murder.game.serialize.LevelSerialize;
-import com.murder.game.state.StateManager.PendingAction;
-import com.murder.game.state.StateManager.StateAction;
-import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.management.PendingAction;
+import com.murder.game.state.management.StateAction;
+import com.murder.game.state.management.StateManager;
 
 import box2dLight.RayHandler;
 
-public class GameState implements State
+public class GameState extends State
 {
     private static final boolean ALLOW_SLEEP = true;
 
@@ -33,15 +32,14 @@ public class GameState implements State
     private Actor player;
     private List<Mob> mobs;
     private Level level;
-    private StateManager stateManager;
     // TODO when the app is suspended and brought back, buttonsPressed should be
     // set back to 0
     private LinkedList<Integer> touches;
 
     public GameState(final StateManager stateManager)
     {
+        super(stateManager);
         this.touches = new LinkedList<Integer>();
-        this.stateManager = stateManager;
     }
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
@@ -103,7 +101,7 @@ public class GameState implements State
         {
             stateManager.addAction(new PendingAction().withAction(StateAction.POP));
             stateManager.addAction(
-                    new PendingAction().withAction(StateAction.PUSH).withStatId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
+                    new PendingAction().withAction(StateAction.PUSH).withStateId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
         }
         // final Vector2 playerPos = player.getTilePosition();
         // final Tile tile = level.getTile((int) playerPos.x, (int)

@@ -7,20 +7,20 @@ import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.level.generator.TextLevelGenerator;
 import com.murder.game.serialize.TextLevelSerialize;
-import com.murder.game.state.StateManager.PendingAction;
-import com.murder.game.state.StateManager.StateAction;
+import com.murder.game.state.management.PendingAction;
+import com.murder.game.state.management.StateManager;
 import com.murder.game.state.modifier.TextStateModifier;
 
-public class TextState implements State
+public class TextState extends State
 {
-    private final StateManager stateManager;
     private TextLevelSerialize textState;
     private List<Text> drawableTexts;
     private List<TextStateModifier> textStateModifiers;
+    private List<PendingAction> stateActions;
 
     public TextState(final StateManager stateManager)
     {
-        this.stateManager = stateManager;
+        super(stateManager);
     }
 
     public void init(final FontManager fontManager, final String levelKey)
@@ -28,6 +28,8 @@ public class TextState implements State
         textState = TextLevelGenerator.getTextState(levelKey);
         drawableTexts = textState.getDrawableTexts();
         textStateModifiers = textState.getTextStateModifiers();
+        stateActions = textState.getStateActions();
+
         for(final Text text: drawableTexts)
         {
             text.init(fontManager);
@@ -86,9 +88,12 @@ public class TextState implements State
 
         if(finished)
         {
-            stateManager.addAction(new PendingAction().withAction(StateAction.POP));
-            stateManager.addAction(new PendingAction().withAction(StateAction.PUSH).withStatId(textState.getStateId())
-                    .withStateConfig(textState.getNextStateName()));
+            stateManager.addActions(stateActions);
+            // stateManager.addAction(new
+            // PendingAction().withAction(StateAction.POP));
+            // stateManager.addAction(new
+            // PendingAction().withAction(StateAction.PUSH).withStatId(textState.getStateId())
+            // .withStateConfig(textState.getNextStateName()));
         }
     }
 

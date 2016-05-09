@@ -14,7 +14,9 @@ import com.murder.game.drawing.Text;
 import com.murder.game.effects.text.LinearTextColorChanger;
 import com.murder.game.effects.text.TextEffect;
 import com.murder.game.serialize.TextLevelSerialize;
-import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.management.PendingAction;
+import com.murder.game.state.management.StateAction;
+import com.murder.game.state.management.StateId;
 import com.murder.game.state.modifier.TextStateAdder;
 import com.murder.game.state.modifier.TextStateModifier;
 
@@ -32,9 +34,9 @@ public class TextLevelGenerator
 
         throw new RuntimeException("Unknown textStateId " + textStateId);
 
-//        generateTextLevel3("Text03");
-//        generateTextLevel2("Text02");
-//        return generateTextLevel1("Text01");
+//         generateTextLevel3("Text03");
+//         generateTextLevel2("Text02");
+//         return generateTextLevel1("Text01");
     }
 
     private static TextLevelSerialize generateTextLevel3(final String textStateId)
@@ -61,7 +63,11 @@ public class TextLevelGenerator
         addedTexts.add(new PercentageText(-.10f, -.35f, FontType.HAND_48, "Hope it has batteries.", 0, fastFadeIn));
         textStateModifiers.add(new TextStateAdder(addedTexts));
 
-        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, StateId.GAME_STATE, "Level01"), textStateId);
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level01"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.FADE_IN_STATE).withStateConfig("Level01"));
+        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 
     private static TextLevelSerialize generateTextLevel2(final String textStateId)
@@ -81,7 +87,10 @@ public class TextLevelGenerator
         addedTexts.add(new PercentageText(.0f, -.85f, FontType.HAND_48, "If only I had a flashlight.", 0, textEffects));
         textStateModifiers.add(new TextStateAdder(addedTexts));
 
-        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, StateId.TEXT_STATE, "Text03"), textStateId);
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig("Text03"));
+        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 
     private static TextLevelSerialize generateTextLevel1(final String textStateId)
@@ -108,7 +117,10 @@ public class TextLevelGenerator
         addedTexts.add(new PercentageText(-.80f, -.35f, FontType.HAND_48, "Goddamn it's dark.", 0, shortFadeIn));
         textStateModifiers.add(new TextStateAdder(addedTexts));
 
-        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, StateId.TEXT_STATE, "Text02"), textStateId);
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig("Text02"));
+        return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 
     private static TextLevelSerialize writeTextState(final TextLevelSerialize textState, final String textStateId)

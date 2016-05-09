@@ -16,7 +16,7 @@ import com.murder.game.drawing.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
-import com.murder.game.state.StateManager.StateId;
+import com.murder.game.state.management.StateId;
 
 public class Level extends Drawable
 {

@@ -1,18 +1,26 @@
 package com.murder.game.state;
 
 import com.murder.game.drawing.WorldRenderer;
+import com.murder.game.state.management.StateManager;
 
-public interface State
+public abstract class State
 {
+    protected final StateManager stateManager;
+
+    protected State(final StateManager stateManager)
+    {
+        this.stateManager = stateManager;
+    }
+
     /**
      * Called when the game is paused (on Android)
      */
-    public void pause();
+    public abstract void pause();
 
     /**
      * Called when the game is brought back to the front (on Android)
      */
-    public void resume();
+    public abstract void resume();
 
     /**
      * Called when the window gets resized (on desktop, maybe when rotated on
@@ -21,44 +29,48 @@ public interface State
      * @param width
      * @param height
      */
-    public void resize(final int width, final int height);
+    public abstract void resize(final int width, final int height);
 
     /**
      * Called right before render to update the state.
      * 
      * @param dt
      */
-    public void update(final float dt);
+    public abstract void update(final float dt);
 
     /**
      * Called to render anything the state needs to display on the screen.
      * 
      * @param worldRenderer
      */
-    public void render(final WorldRenderer worldRenderer);
+    public abstract void render(final WorldRenderer worldRenderer);
 
     /**
      * Called when the game is closed.
      */
-    public void dispose();
+    public abstract void dispose();
 
     /**
-     * Called when a key is pressed.
+     * Called when a key is pressed. Return true if no other states should be
+     * notified of the input.
      */
-    public boolean keyDown(final int keyCode);
+    public abstract boolean keyDown(final int keyCode);
 
     /**
-     * Called when a key is released.
+     * Called when a key is released. Return true if no other states should be
+     * notified of the input.
      */
-    public boolean keyUp(final int keyCode);
+    public abstract boolean keyUp(final int keyCode);
 
     /**
-     * Called when a unicode character is entered.
+     * Called when a unicode character is entered. Return true if no other
+     * states should be notified of the input.
      */
-    public boolean unicodeEntered(final char character);
+    public abstract boolean unicodeEntered(final char character);
 
     /**
-     * Called when the screen is touched or clicked.
+     * Called when the screen is touched or clicked. Return true if no other
+     * states should be notified of the input.
      * 
      * @param screenX
      * @param screenY
@@ -66,10 +78,11 @@ public interface State
      * @param button
      * @return
      */
-    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button);
+    public abstract boolean touchDown(final int screenX, final int screenY, final int pointer, final int button);
 
     /**
-     * Called when the screen is no longer touched or clicked.
+     * Called when the screen is no longer touched or clicked. Return true if no
+     * other states should be notified of the input.
      * 
      * @param screenX
      * @param screenY
@@ -77,32 +90,35 @@ public interface State
      * @param button
      * @return
      */
-    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button);
+    public abstract boolean touchUp(final int screenX, final int screenY, final int pointer, final int button);
 
     /**
-     * Called when the screen is touched or clicked and is moved around.
+     * Called when the screen is touched or clicked and is moved around. Return
+     * true if no other states should be notified of the input.
      * 
      * @param screenX
      * @param screenY
      * @param pointer
      * @return
      */
-    public boolean touchDragged(final int screenX, final int screenY, final int pointer);
+    public abstract boolean touchDragged(final int screenX, final int screenY, final int pointer);
 
     /**
-     * Called when the mouse is moved without a click (I think).
+     * Called when the mouse is moved without a click (I think). Return true if
+     * no other states should be notified of the input.
      * 
      * @param screenX
      * @param screenY
      * @return
      */
-    public boolean mouseMoved(final int screenX, final int screenY);
+    public abstract boolean mouseMoved(final int screenX, final int screenY);
 
     /**
-     * Called when the mouse wheel is scrolled.
+     * Called when the mouse wheel is scrolled. Return true if no other states
+     * should be notified of the input.
      * 
      * @param amount
      * @return
      */
-    public boolean mouseScrolled(final int amount);
+    public abstract boolean mouseScrolled(final int amount);
 }
