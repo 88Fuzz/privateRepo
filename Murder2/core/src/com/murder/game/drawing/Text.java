@@ -84,6 +84,11 @@ public class Text extends NonBodyDrawable
         font.setColor(color);
     }
 
+    public void setFontScale(final float scaleX, final float scaleY)
+    {
+        font.getData().setScale(scaleX, scaleY);
+    }
+
     public List<TextEffect> getTextEffects()
     {
         return textEffects;
