@@ -16,7 +16,6 @@ import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.MyVector2;
-import com.murder.game.state.FadeInState;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.TextState;
@@ -296,10 +295,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         else if(state instanceof TextState)
         {
             ((TextState) state).init(fontManager, stateConfig);
-        }
-        else if(state instanceof FadeInState)
-        {
-            ((FadeInState) state).init(textureManager, LevelGenerator.getLevel(stateConfig).getLevel().getLevelBounds());
         }
         else
         {

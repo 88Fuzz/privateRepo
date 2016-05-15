@@ -7,23 +7,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Mob;
 import com.murder.game.level.Level;
+import com.murder.game.state.management.PendingAction;
 
 public class LevelSerialize
 {
     private static final String LEVEL = "level";
     private static final String PLAYER = "player";
     private static final String MOBS = "mobs";
+    private static final String STATE_ACTIONS = "stateActions";
 
     private final Level level;
     private final Actor player;
     private final List<Mob> mobs;
+    private List<PendingAction> stateActions;
 
     @JsonCreator
-    public LevelSerialize(@JsonProperty(LEVEL) final Level level, @JsonProperty(PLAYER) final Actor player, @JsonProperty(MOBS) final List<Mob> mobs)
+    public LevelSerialize(@JsonProperty(LEVEL) final Level level, @JsonProperty(PLAYER) final Actor player, @JsonProperty(MOBS) final List<Mob> mobs,
+            @JsonProperty(STATE_ACTIONS) List<PendingAction> stateActions)
     {
         this.level = level;
         this.player = player;
         this.mobs = mobs;
+        this.stateActions = stateActions;
     }
 
     public Level getLevel()
@@ -39,5 +44,10 @@ public class LevelSerialize
     public List<Mob> getMobs()
     {
         return mobs;
+    }
+
+    public List<PendingAction> getStateActions()
+    {
+        return stateActions;
     }
 }

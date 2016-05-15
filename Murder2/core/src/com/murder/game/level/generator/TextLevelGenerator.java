@@ -34,9 +34,9 @@ public class TextLevelGenerator
 
         throw new RuntimeException("Unknown textStateId " + textStateId);
 
-        // generateTextLevel3("Text03");
-        // generateTextLevel2("Text02");
-        // return generateTextLevel1("Text01");
+//         generateTextLevel3("Text03");
+//         generateTextLevel2("Text02");
+//         return generateTextLevel1("Text01");
     }
 
     private static TextLevelSerialize generateTextLevel3(final String textStateId)
@@ -66,7 +66,6 @@ public class TextLevelGenerator
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
         actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level01"));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.FADE_IN_STATE).withStateConfig("Level01"));
         return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 

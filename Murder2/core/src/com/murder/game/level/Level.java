@@ -16,7 +16,6 @@ import com.murder.game.drawing.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
-import com.murder.game.state.management.StateId;
 
 public class Level extends Drawable
 {
@@ -24,30 +23,23 @@ public class Level extends Drawable
     private static final String TEXTS = "texts";
     private static final String ITEMS = "items";
     private static final String LEVEL_ID = "levelId";
-    private static final String NEXT_LEVEL_ID = "nextLevelId";
-    private static final String NEXT_STATE_ID = "nextStateId";
 
     @JsonIgnore
     private int numberOfTiles;
-    private String levelId;
-    private StateId nextStateId;
-    private String nextLevelId;
     private List<List<Tile>> tiles;
     private List<Text> texts;
     private List<Item> items;
+    private String levelId;
 
     @JsonCreator
     public Level(@JsonProperty(TILES) final List<List<Tile>> tiles, @JsonProperty(TEXTS) final List<Text> texts,
-            @JsonProperty(ITEMS) final List<Item> items, @JsonProperty(LEVEL_ID) final String levelId,
-            @JsonProperty(NEXT_LEVEL_ID) final String nextLevelId, @JsonProperty(NEXT_STATE_ID) final StateId nextStateId)
+            @JsonProperty(ITEMS) final List<Item> items, @JsonProperty(LEVEL_ID) final String levelId)
     {
         super(BodyType.NONE, new MyVector2(), 0);
         this.tiles = tiles;
         this.texts = texts;
         this.items = items;
         this.levelId = levelId;
-        this.nextLevelId = nextLevelId;
-        this.nextStateId = nextStateId;
     }
 
     public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager, final List<Mob> mobs)
@@ -199,16 +191,6 @@ public class Level extends Drawable
     public String getLevelId()
     {
         return levelId;
-    }
-
-    public String getNextLevelId()
-    {
-        return nextLevelId;
-    }
-
-    public StateId getNextStateId()
-    {
-        return nextStateId;
     }
 
     public void dispose()

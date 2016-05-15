@@ -16,14 +16,17 @@ import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.LevelSerialize;
+import com.murder.game.state.FadeEffect.FadeDirection;
 import com.murder.game.state.management.PendingAction;
-import com.murder.game.state.management.StateAction;
 import com.murder.game.state.management.StateManager;
 
 import box2dLight.RayHandler;
 
 public class GameState extends State
 {
+    private static final float FADE_IN_TIME = 1.41f;
+    private static final float FADE_OUT_TIME = 1.51f;
+
     private static final boolean ALLOW_SLEEP = true;
 
     private World physicsWorld;
@@ -35,6 +38,9 @@ public class GameState extends State
     // TODO when the app is suspended and brought back, buttonsPressed should be
     // set back to 0
     private LinkedList<Integer> touches;
+    private List<PendingAction> stateActions;
+    private FadeEffect fadeIn;
+    private FadeEffect fadeOut;
 
     public GameState(final StateManager stateManager)
     {
@@ -52,10 +58,12 @@ public class GameState extends State
         // rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(levelKey);
+        stateActions = levelSerialize.getStateActions();
         mobs = levelSerialize.getMobs();
         level = levelSerialize.getLevel();
-        level.init(physicsWorld, textureManager, fontManager, mobs);
         player = levelSerialize.getPlayer();
+
+        level.init(physicsWorld, textureManager, fontManager, mobs);
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
         player.init(physicsWorld, rayHandler, textureManager);
@@ -67,6 +75,11 @@ public class GameState extends State
         worldRenderer.init(player, level.getLevelBounds());
 
         touches.clear();
+
+        fadeIn = new FadeEffect();
+        fadeIn.init(textureManager, level.getLevelBounds(), FADE_IN_TIME, FadeDirection.FADE_IN);
+        fadeOut = new FadeEffect();
+        fadeOut.init(textureManager, level.getLevelBounds(), FADE_OUT_TIME, FadeDirection.FADE_OUT);
     }
 
     @Override
@@ -96,12 +109,18 @@ public class GameState extends State
         updateLevel(dt);
         updatePlayer(dt);
         updateMobs(dt);
+        fadeIn.update(dt);
 
         if(player.isOnExit())
         {
-            stateManager.addAction(new PendingAction().withAction(StateAction.POP));
-            stateManager.addAction(
-                    new PendingAction().withAction(StateAction.PUSH).withStateId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
+            fadeOut.update(dt);
+            if(fadeOut.isFinished())
+                stateManager.addActions(stateActions);
+            // stateManager.addAction(new
+            // PendingAction().withAction(StateAction.POP));
+            // stateManager.addAction(
+            // new
+            // PendingAction().withAction(StateAction.PUSH).withStateId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
         }
         // final Vector2 playerPos = player.getTilePosition();
         // final Tile tile = level.getTile((int) playerPos.x, (int)
@@ -142,6 +161,9 @@ public class GameState extends State
         worldRenderer.render(player);
         renderMobs(worldRenderer);
         worldRenderer.render(rayHandler);
+        worldRenderer.render(fadeIn);
+        if(player.isOnExit())
+            worldRenderer.render(fadeOut);
         worldRenderer.renderGUI();
     }
 

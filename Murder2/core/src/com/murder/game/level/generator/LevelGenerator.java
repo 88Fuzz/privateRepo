@@ -21,6 +21,8 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.state.management.PendingAction;
+import com.murder.game.state.management.StateAction;
 import com.murder.game.state.management.StateId;
 
 public class LevelGenerator
@@ -40,13 +42,13 @@ public class LevelGenerator
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-        // generateLevel7();
-        // generateLevel6();
-        // generateLevel5();
-        // generateLevel4();
-        // generateLevel3();
-        // generateLevel2();
-        // return generateLevel1();
+//         generateLevel7();
+//         generateLevel6();
+//         generateLevel5();
+//         generateLevel4();
+//         generateLevel3();
+//         generateLevel2();
+//         return generateLevel1();
     }
 
     public static LevelSerialize generateLevel7()
@@ -103,8 +105,12 @@ public class LevelGenerator
         final List<Mob> mobs = new LinkedList<Mob>();
         mobs.add(new Mob(BodyType.MOB, new MyVector2(1200, 200), 0));
         mobs.add(new Mob(BodyType.MOB, new MyVector2(1400, 200), 0));
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07", "Level08", StateId.GAME_STATE), player, mobs),
-                "Level01");
+
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level08"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07"), player, mobs, actions), "Level07");
     }
 
     public static LevelSerialize generateLevel6()
@@ -183,8 +189,12 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), playerStartRotation);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level06", "Level07", StateId.GAME_STATE), player,
-                new LinkedList<Mob>()), "Level06");
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level07"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level06"), player, new LinkedList<Mob>(), actions),
+                "Level06");
     }
 
     public static LevelSerialize generateLevel5()
@@ -246,8 +256,12 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), playerStartRotation);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level05", "Level06", StateId.GAME_STATE), player,
-                new LinkedList<Mob>()), "Level05");
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level06"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level05"), player, new LinkedList<Mob>(), actions),
+                "Level05");
     }
 
     public static LevelSerialize generateLevel4()
@@ -304,8 +318,12 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), 180);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level04", "Level05", StateId.GAME_STATE), player,
-                new LinkedList<Mob>()), "Level04");
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level05"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level04"), player, new LinkedList<Mob>(), actions),
+                "Level04");
     }
 
     public static LevelSerialize generateLevel3()
@@ -354,8 +372,12 @@ public class LevelGenerator
         }
         final Actor player = new Actor(BodyType.PLAYER, new MyVector2(xPlayerStart * TILE_SIZE, yPlayerStart * TILE_SIZE), -90);
 
-        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level03", "Level04", StateId.GAME_STATE), player,
-                new LinkedList<Mob>()), "Level03");
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level04"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level03"), player, new LinkedList<Mob>(), actions),
+                "Level03");
     }
 
     public static LevelSerialize generateLevel2()
@@ -395,8 +417,12 @@ public class LevelGenerator
         final List<Text> texts = new ArrayList<Text>();
         texts.add(new Text(new MyVector2((float) (xPlayerStart * TILE_SIZE + TILE_SIZE / 1.5), yPlayerStart * TILE_SIZE), FontType.AVOCADO_56,
                 "two fingers to rotate", 0, new LinkedList<TextEffect>()));
-        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02", "Level03", StateId.GAME_STATE), player, new LinkedList<Mob>()),
-                "Level02");
+
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level03"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02"), player, new LinkedList<Mob>(), actions), "Level02");
     }
 
     public static LevelSerialize generateLevel1()
@@ -460,8 +486,12 @@ public class LevelGenerator
         // addWalls(tiles);
         final List<Text> texts = new ArrayList<Text>();
         texts.add(new Text(new MyVector2(400, 400), FontType.AVOCADO_56, "tap to move", 0, new LinkedList<TextEffect>()));
-        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01", "Level02", StateId.GAME_STATE), player, new LinkedList<Mob>()),
-                "Level01");
+
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level02"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01"), player, new LinkedList<Mob>(), actions), "Level01");
     }
 
     // private void addWalls(final List<List<Tile>> tiles)

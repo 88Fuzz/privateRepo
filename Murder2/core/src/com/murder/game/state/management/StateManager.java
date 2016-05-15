@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.murder.game.drawing.manager.TextureManager;
-import com.murder.game.state.FadeInState;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.TextState;
@@ -23,7 +22,6 @@ public class StateManager
 
         STATE_MAP.put(StateId.GAME_STATE, new GameState(this));
         STATE_MAP.put(StateId.TEXT_STATE, new TextState(this));
-        STATE_MAP.put(StateId.FADE_IN_STATE, new FadeInState(this));
         // STATE_MAP.put(StateId.MENU_STATE, new MenuState(this));
     }
 
