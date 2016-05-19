@@ -34,15 +34,15 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-        if(loadedLevel != null)
-            return loadedLevel;
-
-        throw new RuntimeException("File Not Found");
+//        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+//        if(loadedLevel != null)
+//            return loadedLevel;
+//
+//        throw new RuntimeException("File Not Found");
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-//         generateLevel7();
+         return generateLevel7();
 //         generateLevel6();
 //         generateLevel5();
 //         generateLevel4();

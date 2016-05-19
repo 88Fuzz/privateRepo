@@ -49,6 +49,12 @@ public class BodyBuilder
 
     public static Body createBody(final World world, final BodyType bodyType, final Vector2 position, final float rotation)
     {
+        return createBody(world, bodyType, position, rotation, bodyType.getWidth(), bodyType.getHeight());
+    }
+
+    public static Body createBody(final World world, final BodyType bodyType, final Vector2 position, final float rotation, final float width,
+            final float height)
+    {
         final BodyDef bodyDef = new BodyDef();
         bodyDef.fixedRotation = true;
         bodyDef.position.set(position.x / DisplayConstants.PIXELS_PER_METER, position.y / DisplayConstants.PIXELS_PER_METER);
@@ -59,12 +65,11 @@ public class BodyBuilder
         {
         case CIRCLE:
             shape = new CircleShape();
-            shape.setRadius(bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER);
+            shape.setRadius(width / 2 / DisplayConstants.PIXELS_PER_METER);
             break;
         case SQUARE:
             shape = new PolygonShape();
-            ((PolygonShape) shape).setAsBox(bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER,
-                    bodyType.getHeight() / 2 / DisplayConstants.PIXELS_PER_METER);
+            ((PolygonShape) shape).setAsBox(width / 2 / DisplayConstants.PIXELS_PER_METER, height / 2 / DisplayConstants.PIXELS_PER_METER);
             break;
         default:
             throw new IllegalArgumentException("I don't know what shape to make. Yo.");

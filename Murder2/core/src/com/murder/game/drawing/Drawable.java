@@ -24,6 +24,10 @@ public abstract class Drawable extends NonBodyDrawable
     private static final float ROTATION_OFFSET = MathUtils.PI / 2;
 
     @JsonIgnore
+    protected float bodyWidth;
+    @JsonIgnore
+    protected float bodyHeight;
+    @JsonIgnore
     protected Body body;
     // protected MyVector2 tilePosition;
     protected BodyType bodyType;
@@ -33,6 +37,8 @@ public abstract class Drawable extends NonBodyDrawable
         super(position, rotation);
         // this.tilePosition = new MyVector2();
         this.bodyType = bodyType;
+        this.bodyWidth = bodyType.getWidth();
+        this.bodyHeight = bodyType.getHeight();
     }
 
     protected void init(final World physicsWorld, final TextureManager textureManager)
@@ -68,11 +74,19 @@ public abstract class Drawable extends NonBodyDrawable
         adjustSprite(body, sprite);
     }
 
-    private void adjustSprite(final Body body, final Sprite sprite)
+    // TODO change this back to private
+    protected void adjustSprite(final Body body, final Sprite sprite)
     {
-        sprite.setPosition(body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() * bodyType.getSizeMultiplier().x / 2,
-                body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyType.getHeight() * bodyType.getSizeMultiplier().y / 2);
-        sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+        // sprite.setSize(bodyWidth, bodyHeight);
+        // sprite.setPosition(body.getPosition().x *
+        // DisplayConstants.PIXELS_PER_METER - bodyType.getWidth() *
+        // bodyType.getSizeMultiplier().x / 2,
+        // body.getPosition().y * DisplayConstants.PIXELS_PER_METER -
+        // bodyType.getHeight() * bodyType.getSizeMultiplier().y / 2);
+        final float x = body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyWidth * bodyType.getSizeMultiplier().x / 2;
+        final float y = body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyHeight * bodyType.getSizeMultiplier().y / 2;
+        sprite.setBounds(x, y, bodyWidth, bodyHeight);
+        // sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         position.x = sprite.getX() + bodyType.getWidth() / 2;
         position.y = sprite.getY() + bodyType.getHeight() / 2;
     }
