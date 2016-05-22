@@ -27,31 +27,32 @@ import com.murder.game.state.management.StateId;
 
 public class LevelGenerator
 {
-    private static final int TILE_SIZE = 200;
+    public static final int TILE_SIZE = 200;
     private static final String DIRECTORY = "levels/";
     private static final String FILE_EXTENSION = ".json";
     private static final ObjectMapper SERIALIZER = new ObjectMapper();
 
     public static LevelSerialize getLevel(final String levelId)
     {
-//        final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-//        if(loadedLevel != null)
-//            return loadedLevel;
-//
-//        throw new RuntimeException("File Not Found");
+        // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+        // if(loadedLevel != null)
+        // return loadedLevel;
+        //
+        // throw new RuntimeException("File Not Found");
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-         return generateLevel7();
-//         generateLevel6();
-//         generateLevel5();
-//         generateLevel4();
-//         generateLevel3();
-//         generateLevel2();
-//         return generateLevel1();
+        // return generateTestLevel();
+        return generateLevel7();
+        // generateLevel6();
+        // generateLevel5();
+        // generateLevel4();
+        // generateLevel3();
+        // generateLevel2();
+        // return generateLevel1();
     }
 
-    public static LevelSerialize generateLevel7()
+    public static LevelSerialize generateTestLevel()
     {
         final int xLevelSize = 10;
         final int yLevelSize = 5;
@@ -111,6 +112,50 @@ public class LevelGenerator
         actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level08"));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07"), player, mobs, actions), "Level07");
+    }
+
+    public static LevelSerialize generateLevel7()
+    {
+        final int xLevelSize = 15;
+        final int yLevelSize = 5;
+
+        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+        final List<Item> items = new ArrayList<Item>();
+        for(int i = 0; i < xLevelSize; i++)
+        {
+            final List<Tile> innerList = new ArrayList<Tile>();
+
+            for(int j = 0; j < yLevelSize; j++)
+            {
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                {
+                    if(i == 0 && j == 2)
+                    {
+                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                    }
+                    else
+                    {
+                        innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    }
+                    continue;
+                }
+                innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+            }
+
+            tiles.add(innerList);
+        }
+
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(1400, 400), -90);
+        final List<Text> texts = new ArrayList<Text>();
+
+        final List<Mob> mobs = new LinkedList<Mob>();
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(2600, 400), 0));
+
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level08"));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level07"), player, mobs, actions), "Level07");
     }
 
     public static LevelSerialize generateLevel6()

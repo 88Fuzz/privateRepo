@@ -10,6 +10,9 @@ import com.murder.game.drawing.NonBodyDrawable;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 
+//TODO this FadeEffect should actually be on the camera and not the level. 
+//Because it creates issues when the player happens to be outside of the level. 
+//(but if the level is designed correctly, they shouldn't get out.)
 public class FadeEffect extends NonBodyDrawable
 {
     public static enum FadeDirection

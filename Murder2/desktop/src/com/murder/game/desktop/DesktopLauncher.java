@@ -18,8 +18,9 @@ public class DesktopLauncher
 //        config.width = 1920;
 //        config.height = 1080;
 
-//        config.width = 1600;
-//        config.height = 900;
+        //TODO text is still fucked up by showing up off screen
+        config.width = 1600;
+        config.height = 900;
 
 //        config.width = 1280;
 //        config.height = 800;
@@ -30,8 +31,8 @@ public class DesktopLauncher
 //        config.width = 600;
 //        config.height = 400;
         
-        config.width = 480;
-        config.height = 320;
+//        config.width = 480;
+//        config.height = 320;
         
         new LwjglApplication(new MurderMainMain(), config);
 //         new LwjglApplication(new MurderMain(), config);
