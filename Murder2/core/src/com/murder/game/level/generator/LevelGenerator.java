@@ -43,13 +43,13 @@ public class LevelGenerator
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
         // return generateTestLevel();
-        return generateLevel7();
+//        return generateLevel7();
         // generateLevel6();
         // generateLevel5();
         // generateLevel4();
         // generateLevel3();
         // generateLevel2();
-        // return generateLevel1();
+         return generateLevel1();
     }
 
     public static LevelSerialize generateTestLevel()
