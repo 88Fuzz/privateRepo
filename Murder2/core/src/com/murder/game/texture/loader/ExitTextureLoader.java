@@ -1,19 +1,19 @@
-package com.murder.game.constants.texture;
+package com.murder.game.texture.loader;
 
-public class ExitTexture extends MiscTexture
+public class ExitTextureLoader extends MiscTextureLoader
 {
-    private static final ExitTexture EXIT_TEXTURE_LOADER = new ExitTexture();
+    private static final ExitTextureLoader EXIT_TEXTURE_LOADER = new ExitTextureLoader();
 
     private static final String[] TEXTURE_NAMES = { "ExitTexture" };
 
     // Hid constructor so that getCircleTextureLoader is the only way to get
     // this class to enforce singleton
-    private ExitTexture()
+    private ExitTextureLoader()
     {
         super();
     }
 
-    public static BaseTexture getKeyTextureLoader()
+    public static BaseTextureLoader getKeyTextureLoader()
     {
         return EXIT_TEXTURE_LOADER;
     }

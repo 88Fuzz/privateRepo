@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -14,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
-import com.murder.game.constants.texture.FloorTexture;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.manager.TextureManager;
@@ -98,9 +96,9 @@ public class Tile extends Drawable
         super.init(physicsWorld, textureManager);
 
         // TODO FloorTexture should be a singleton. YO
-//        final FloorTexture floorTexture = new FloorTexture();
-//        sprite = new Sprite(floorTexture.getAtlasRegion());
-//        adjustSprite(body, sprite);
+        // final FloorTexture floorTexture = new FloorTexture();
+        // sprite = new Sprite(floorTexture.getAtlasRegion());
+        // adjustSprite(body, sprite);
 
         this.mobs = mobs;
         distanceToStart.clear();

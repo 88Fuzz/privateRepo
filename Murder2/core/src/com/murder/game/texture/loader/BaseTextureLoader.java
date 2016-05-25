@@ -1,4 +1,4 @@
-package com.murder.game.constants.texture;
+package com.murder.game.texture.loader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,12 +9,11 @@ import com.murder.game.utils.RandomUtils;
  * Base information for textures in a packed atlas. Each group of textures
  * should implement this class.
  */
-// TODO name these BaseTextureLoader
-public abstract class BaseTexture
+public abstract class BaseTextureLoader
 {
     private TextureAtlas atlas;
 
-    public BaseTexture()
+    public BaseTextureLoader()
     {
         atlas = new TextureAtlas(Gdx.files.internal(getTexturePackName()));
     }

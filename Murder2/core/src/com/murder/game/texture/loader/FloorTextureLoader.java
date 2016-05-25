@@ -1,11 +1,11 @@
-package com.murder.game.constants.texture;
+package com.murder.game.texture.loader;
 
 /**
  * Floor texture implementation of BaseTexture. Used to load in a floor tile.
  */
-public class FloorTexture extends BaseTexture
+public class FloorTextureLoader extends BaseTextureLoader
 {
-    private static final FloorTexture FLOOR_TEXTURE_LOADER = new FloorTexture();
+    private static final FloorTextureLoader FLOOR_TEXTURE_LOADER = new FloorTextureLoader();
 
     public static final String TEXTURE_SOURCE_FILES = "assets-raw/images/floorTiles";
     public static final String TEXTURE_PACK_NAME = "floorTiles.pack";
@@ -22,12 +22,12 @@ public class FloorTexture extends BaseTexture
 
     // Hid constructor so that getCircleTextureLoader is the only way to get
     // this class to enforce singleton
-    private FloorTexture()
+    private FloorTextureLoader()
     {
         super();
     }
 
-    public static BaseTexture getFloorTextureLoader()
+    public static BaseTextureLoader getFloorTextureLoader()
     {
         return FLOOR_TEXTURE_LOADER;
     }

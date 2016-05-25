@@ -1,22 +1,22 @@
-package com.murder.game.constants.texture;
+package com.murder.game.texture.loader;
 
 /**
  * Handles the loading of the key texture.
  */
-public class KeyTexture extends MiscTexture
+public class KeyTextureLoader extends MiscTextureLoader
 {
-    private static final KeyTexture KEY_TEXTURE_LOADER = new KeyTexture();
+    private static final KeyTextureLoader KEY_TEXTURE_LOADER = new KeyTextureLoader();
 
     private static final String[] TEXTURE_NAMES = { "KeyTexture" };
 
     // Hid constructor so that getCircleTextureLoader is the only way to get
     // this class to enforce singleton
-    private KeyTexture()
+    private KeyTextureLoader()
     {
         super();
     }
 
-    public static BaseTexture getKeyTextureLoader()
+    public static BaseTextureLoader getKeyTextureLoader()
     {
         return KEY_TEXTURE_LOADER;
     }

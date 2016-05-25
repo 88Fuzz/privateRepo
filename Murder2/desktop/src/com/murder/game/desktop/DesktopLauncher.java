@@ -6,9 +6,9 @@ import com.badlogic.gdx.tools.imagepacker.TexturePacker2;
 import com.badlogic.gdx.tools.imagepacker.TexturePacker2.Settings;
 import com.murder.game.MurderMain;
 import com.murder.game.MurderMainMain;
-import com.murder.game.constants.texture.CircleTexture;
-import com.murder.game.constants.texture.FloorTexture;
-import com.murder.game.constants.texture.MiscTexture;
+import com.murder.game.texture.loader.CircleTextureLoader;
+import com.murder.game.texture.loader.FloorTextureLoader;
+import com.murder.game.texture.loader.MiscTextureLoader;
 
 public class DesktopLauncher
 {
@@ -25,14 +25,14 @@ public class DesktopLauncher
             settings.maxHeight = 1024;
             settings.debug = drawDebugOutline;
 
-            TexturePacker2.process(settings, FloorTexture.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + FloorTexture.TEXTURE_PACK_LOCATION,
-                    FloorTexture.TEXTURE_PACK_NAME);
+            TexturePacker2.process(settings, FloorTextureLoader.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + FloorTextureLoader.TEXTURE_PACK_LOCATION,
+                    FloorTextureLoader.TEXTURE_PACK_NAME);
 
-            TexturePacker2.process(settings, CircleTexture.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + CircleTexture.TEXTURE_PACK_LOCATION,
-                    CircleTexture.TEXTURE_PACK_NAME);
+            TexturePacker2.process(settings, CircleTextureLoader.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + CircleTextureLoader.TEXTURE_PACK_LOCATION,
+                    CircleTextureLoader.TEXTURE_PACK_NAME);
 
-            TexturePacker2.process(settings, MiscTexture.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + MiscTexture.TEXTURE_PACK_LOCATION,
-                    MiscTexture.TEXTURE_PACK_NAME);
+            TexturePacker2.process(settings, MiscTextureLoader.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + MiscTextureLoader.TEXTURE_PACK_LOCATION,
+                    MiscTextureLoader.TEXTURE_PACK_NAME);
         }
 
         final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

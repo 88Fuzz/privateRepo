@@ -1,11 +1,11 @@
-package com.murder.game.constants.texture;
+package com.murder.game.texture.loader;
 
 /**
  * Class to load and select circle textures
  */
-public class CircleTexture extends BaseTexture
+public class CircleTextureLoader extends BaseTextureLoader
 {
-    private static final CircleTexture CIRCLE_TEXTURE_LOADER = new CircleTexture();
+    private static final CircleTextureLoader CIRCLE_TEXTURE_LOADER = new CircleTextureLoader();
 
     public static final String TEXTURE_SOURCE_FILES = "assets-raw/images/circleTiles";
     public static final String TEXTURE_PACK_NAME = "circleTiles.pack";
@@ -16,12 +16,12 @@ public class CircleTexture extends BaseTexture
 
     // Hid constructor so that getCircleTextureLoader is the only way to get
     // this class to enforce singleton
-    private CircleTexture()
+    private CircleTextureLoader()
     {
         super();
     }
 
-    public static BaseTexture getCircleTextureLoader()
+    public static BaseTextureLoader getCircleTextureLoader()
     {
         return CIRCLE_TEXTURE_LOADER;
     }
