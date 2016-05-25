@@ -36,8 +36,8 @@ public enum BodyType
             BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     YELLOW_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.YELLOW, 200f, 20f, 1f, (short) 0, (short) 0,
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 200f, 200f, 1f, CollisionType.EXIT.getCollisionValue(),
-            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
+    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
+            CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4), true),
     NONE(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false);
 

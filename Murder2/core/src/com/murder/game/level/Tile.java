@@ -98,9 +98,9 @@ public class Tile extends Drawable
         super.init(physicsWorld, textureManager);
 
         // TODO FloorTexture should be a singleton. YO
-        final FloorTexture floorTexture = new FloorTexture();
-        sprite = new Sprite(floorTexture.getAtlasRegion());
-        adjustSprite(body, sprite);
+//        final FloorTexture floorTexture = new FloorTexture();
+//        sprite = new Sprite(floorTexture.getAtlasRegion());
+//        adjustSprite(body, sprite);
 
         this.mobs = mobs;
         distanceToStart.clear();

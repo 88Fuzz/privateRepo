@@ -37,9 +37,10 @@ public abstract class Drawable extends NonBodyDrawable
         super(position, rotation);
         // this.tilePosition = new MyVector2();
         this.bodyType = bodyType;
-        //TODO the body width and height here should multiple bodyType.getSizeMultiplier()
-        this.bodyWidth = bodyType.getWidth();
-        this.bodyHeight = bodyType.getHeight();
+        // TODO the body width and height here should multiple
+        // bodyType.getSizeMultiplier()
+        this.bodyWidth = bodyType.getWidth() * bodyType.getSizeMultiplier().x;
+        this.bodyHeight = bodyType.getHeight() * bodyType.getSizeMultiplier().y;
     }
 
     protected void init(final World physicsWorld, final TextureManager textureManager)
@@ -75,11 +76,10 @@ public abstract class Drawable extends NonBodyDrawable
         adjustSprite(body, sprite);
     }
 
-    // TODO change this back to private
-    protected void adjustSprite(final Body body, final Sprite sprite)
+    private void adjustSprite(final Body body, final Sprite sprite)
     {
-        final float x = body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyWidth * bodyType.getSizeMultiplier().x / 2;
-        final float y = body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyHeight * bodyType.getSizeMultiplier().y / 2;
+        final float x = body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyWidth / 2;
+        final float y = body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyHeight / 2;
         sprite.setBounds(x, y, bodyWidth, bodyHeight);
         // sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         position.x = sprite.getX() + bodyType.getWidth() / 2;

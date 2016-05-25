@@ -85,7 +85,7 @@ public class Actor extends Drawable
         // TODO CircleTexture should be a singleton. YO
         sprite = new Sprite(floorTexture.getAtlasRegion());
 //        sprite.setColor(Color.ORANGE);
-        adjustSprite(body, sprite);
+//        adjustSprite(body, sprite);
         sprite.rotate(RandomUtils.getRandomInt(0, 359));
     }
 
