@@ -78,20 +78,15 @@ public class Actor extends Drawable
         // setTilePosition();
     }
 
-    final CircleTexture floorTexture = new CircleTexture();
-
     private void setSprite()
     {
-        // TODO CircleTexture should be a singleton. YO
-        sprite = new Sprite(floorTexture.getAtlasRegion());
-//        sprite.setColor(Color.ORANGE);
-//        adjustSprite(body, sprite);
+        sprite = new Sprite(bodyType.getTextureLoader().getAtlasRegion());
         sprite.rotate(RandomUtils.getRandomInt(0, 359));
     }
 
     protected void createLight(final RayHandler rayHandler)
     {
-        LightBuilder.createConeLight(rayHandler, body, new Color(1f,1f,1f,.84f), 30, body.getAngle());
+        LightBuilder.createConeLight(rayHandler, body, new Color(1f, 1f, 1f, .84f), 30, body.getAngle());
     }
 
     @Override

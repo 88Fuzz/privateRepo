@@ -3,46 +3,51 @@ package com.murder.game.constants.box2d;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.murder.game.constants.drawing.TextureType;
+import com.murder.game.constants.texture.BaseTexture;
+import com.murder.game.constants.texture.CircleTexture;
+import com.murder.game.constants.texture.ExitTexture;
+import com.murder.game.constants.texture.FloorTexture;
+import com.murder.game.constants.texture.KeyTexture;
+import com.murder.game.constants.texture.SinglePixelTexture;
 
 public enum BodyType
 {
     // TODO this shit needs to be reworked so that each color variant is not a
     // different body type, green door vs red door vs yellow door.
-    PLAYER(BodyShape.CIRCLE, TextureType.CIRCLE_TEXTURE, Color.WHITE, 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
+    PLAYER(BodyShape.CIRCLE, CircleTexture.getCircleTextureLoader(), Color.WHITE, 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue() | CollisionType.WALL.getCollisionValue()
                     | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), true),
-    MOB(BodyShape.CIRCLE, TextureType.MOB_TEXTURE, Color.FOREST, 180f, 180f, 1f, CollisionType.MONSTER.getCollisionValue(),
+    MOB(BodyShape.CIRCLE, CircleTexture.getCircleTextureLoader(), Color.FOREST, 150f, 150f, 1f, CollisionType.MONSTER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.PLAYER.getCollisionValue() | CollisionType.MONSTER.getCollisionValue()
                     | CollisionType.WALL.getCollisionValue()),
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.DynamicBody, false, new Vector2(1, 1), true),
-    WALL(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BROWN, 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
+    WALL(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.BROWN, 200f, 200f, 1f, CollisionType.WALL.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
-    FLOOR(BodyShape.SQUARE, TextureType.FLOOR_TEXTURE, Color.CLEAR, 200f, 200f, 1f, CollisionType.FLOOR.getCollisionValue(), (short) 0,
+    FLOOR(BodyShape.SQUARE, FloorTexture.getFloorTextureLoader(), Color.CLEAR, 200f, 200f, 1f, CollisionType.FLOOR.getCollisionValue(), (short) 0,
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), true),
-    GREEN_DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
+    GREEN_DOOR(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.GREEN, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
-    YELLOW_DOOR(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.YELLOW, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
+    YELLOW_DOOR(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.YELLOW, 200f, 200f, 1f, CollisionType.DOOR.getCollisionValue(),
             (short) (CollisionType.MONSTER.getCollisionValue() | CollisionType.PLAYER.getCollisionValue()), CollisionType.DEFAULT_GROUP_INDEX,
             BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false),
-    GREEN_KEY(BodyShape.SQUARE, TextureType.KEY_TEXTURE, Color.GREEN, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
+    GREEN_KEY(BodyShape.SQUARE, KeyTexture.getKeyTextureLoader(), Color.GREEN, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    YELLOW_KEY(BodyShape.SQUARE, TextureType.KEY_TEXTURE, Color.YELLOW, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
+    YELLOW_KEY(BodyShape.SQUARE, KeyTexture.getKeyTextureLoader(), Color.YELLOW, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    GREEN_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.GREEN, 200f, 20f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    YELLOW_MAT(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.YELLOW, 200f, 20f, 1f, (short) 0, (short) 0,
+    GREEN_MAT(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.GREEN, 200f, 20f, 1f, (short) 0, (short) 0,
             CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    EXIT(BodyShape.SQUARE, TextureType.EXIT_TEXTURE, Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
+    YELLOW_MAT(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.YELLOW, 200f, 20f, 1f, (short) 0, (short) 0,
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
+    EXIT(BodyShape.SQUARE, ExitTexture.getKeyTextureLoader(), Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4), true),
-    NONE(BodyShape.SQUARE, TextureType.SINGLE_PIXEL_TEXTURE, Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0, CollisionType.DEFAULT_GROUP_INDEX,
-            BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false);
+    NONE(BodyShape.SQUARE, SinglePixelTexture.getCircleTextureLoader(), Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0,
+            CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, false, new Vector2(1, 1), false);
 
     private final BodyShape bodyShape;
-    private final TextureType textureType;
+    private final BaseTexture textureLoader;
     private final Color color;
     private final float width; // In pixels
     private final float height; // In pixels
@@ -80,12 +85,12 @@ public enum BodyType
     private final Vector2 sizeMultiplier;
     private final boolean traversable;
 
-    private BodyType(final BodyShape bodyShape, final TextureType textureType, final Color color, final float width, final float height,
+    private BodyType(final BodyShape bodyShape, final BaseTexture textureLoader, final Color color, final float width, final float height,
             final float density, final short categoryBits, final short maskBits, final short groupIndex, final BodyDef.BodyType box2dBodyType,
             final boolean sensor, final Vector2 sizeMultiplier, final boolean traversable)
     {
         this.bodyShape = bodyShape;
-        this.textureType = textureType;
+        this.textureLoader = textureLoader;
         this.color = color;
         this.width = width;
         this.height = height;
@@ -144,9 +149,9 @@ public enum BodyType
         return box2dBodyType;
     }
 
-    public TextureType getTextureType()
+    public BaseTexture getTextureLoader()
     {
-        return textureType;
+        return textureLoader;
     }
 
     public boolean isSensor()

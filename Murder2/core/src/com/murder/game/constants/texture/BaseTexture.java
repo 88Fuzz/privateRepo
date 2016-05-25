@@ -9,6 +9,7 @@ import com.murder.game.utils.RandomUtils;
  * Base information for textures in a packed atlas. Each group of textures
  * should implement this class.
  */
+// TODO name these BaseTextureLoader
 public abstract class BaseTexture
 {
     private TextureAtlas atlas;

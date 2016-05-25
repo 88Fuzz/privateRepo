@@ -8,6 +8,7 @@ import com.murder.game.MurderMain;
 import com.murder.game.MurderMainMain;
 import com.murder.game.constants.texture.CircleTexture;
 import com.murder.game.constants.texture.FloorTexture;
+import com.murder.game.constants.texture.MiscTexture;
 
 public class DesktopLauncher
 {
@@ -29,6 +30,9 @@ public class DesktopLauncher
 
             TexturePacker2.process(settings, CircleTexture.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + CircleTexture.TEXTURE_PACK_LOCATION,
                     CircleTexture.TEXTURE_PACK_NAME);
+
+            TexturePacker2.process(settings, MiscTexture.TEXTURE_SOURCE_FILES, BASE_DIRECTORY + MiscTexture.TEXTURE_PACK_LOCATION,
+                    MiscTexture.TEXTURE_PACK_NAME);
         }
 
         final LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

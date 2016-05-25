@@ -49,10 +49,13 @@ public abstract class Drawable extends NonBodyDrawable
         this.body = generateBody(physicsWorld, bodyType, sprite);
     }
 
+    // TODO TextureManager is no longer needed?
     protected Sprite getSprite(final TextureManager textureManager, final BodyType bodyType)
     {
-        final Sprite sprite = new Sprite(textureManager.getTexture(bodyType.getTextureType()),
-                (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x), (int) (bodyType.getHeight() * bodyType.getSizeMultiplier().y));
+        final Sprite sprite = new Sprite(bodyType.getTextureLoader().getAtlasRegion());
+        sprite.setBounds(0, 0, (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x),
+                (int) (bodyType.getHeight() * bodyType.getSizeMultiplier().y));
+
         if(bodyType.getColor() != Color.CLEAR)
             sprite.setColor(bodyType.getColor());
         sprite.setOriginCenter();

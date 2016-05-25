@@ -5,6 +5,8 @@ package com.murder.game.constants.texture;
  */
 public class FloorTexture extends BaseTexture
 {
+    private static final FloorTexture FLOOR_TEXTURE_LOADER = new FloorTexture();
+
     public static final String TEXTURE_SOURCE_FILES = "assets-raw/images/floorTiles";
     public static final String TEXTURE_PACK_NAME = "floorTiles.pack";
     public static final String TEXTURE_PACK_LOCATION = "images/floorTiles/";
@@ -16,8 +18,19 @@ public class FloorTexture extends BaseTexture
         "FloorTexture3",
         "FloorTexture4",
         "FloorTexture5"
-//        "FloorTexture6"
     };
+
+    // Hid constructor so that getCircleTextureLoader is the only way to get
+    // this class to enforce singleton
+    private FloorTexture()
+    {
+        super();
+    }
+
+    public static BaseTexture getFloorTextureLoader()
+    {
+        return FLOOR_TEXTURE_LOADER;
+    }
 
     /**
      * {@inheritDoc}
