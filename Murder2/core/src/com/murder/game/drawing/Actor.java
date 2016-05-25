@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -11,9 +12,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
+import com.murder.game.constants.texture.CircleTexture;
 import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.LightBuilder;
+import com.murder.game.utils.RandomUtils;
 
 import box2dLight.RayHandler;
 
@@ -21,6 +24,7 @@ public class Actor extends Drawable
 {
     // private static final float MAX_VELOCITY = 460 / 20;
     private static final float MAX_VELOCITY = 1260;
+    private static final float MAX_SPRITE_UPDATE_TIMER = .2f;
 
     public enum MoveDirection
     {
@@ -40,6 +44,8 @@ public class Actor extends Drawable
     protected MyVector2 unitVelocityVector;
     @JsonIgnore
     private boolean onExit;
+    @JsonIgnore
+    private float spriteUpdateTimer;
 
     @JsonCreator
     public Actor(@JsonProperty(BODY_TYPE) BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
@@ -60,6 +66,9 @@ public class Actor extends Drawable
         super.init(physicsWorld, textureManager);
         createLight(rayHandler);
         inventory.clear();
+
+        setSprite();
+        spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         // sprite = new
@@ -69,9 +78,20 @@ public class Actor extends Drawable
         // setTilePosition();
     }
 
+    final CircleTexture floorTexture = new CircleTexture();
+
+    private void setSprite()
+    {
+        // TODO CircleTexture should be a singleton. YO
+        sprite = new Sprite(floorTexture.getAtlasRegion());
+//        sprite.setColor(Color.ORANGE);
+        adjustSprite(body, sprite);
+        sprite.rotate(RandomUtils.getRandomInt(0, 359));
+    }
+
     protected void createLight(final RayHandler rayHandler)
     {
-        LightBuilder.createConeLight(rayHandler, body, Color.WHITE, 30, body.getAngle());
+        LightBuilder.createConeLight(rayHandler, body, new Color(1f,1f,1f,.84f), 30, body.getAngle());
     }
 
     @Override
@@ -106,6 +126,13 @@ public class Actor extends Drawable
         yVelocity *= dt;
 
         body.setLinearVelocity(xVelocity, yVelocity);
+
+        spriteUpdateTimer -= dt;
+        if(spriteUpdateTimer <= 0)
+        {
+            setSprite();
+            spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
+        }
 
         // rotate(.3f);
 

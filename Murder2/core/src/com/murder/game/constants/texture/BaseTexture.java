@@ -1,7 +1,5 @@
 package com.murder.game.constants.texture;
 
-import java.util.Random;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -13,13 +11,11 @@ import com.murder.game.utils.RandomUtils;
  */
 public abstract class BaseTexture
 {
-    private Random randomNumber;
     private TextureAtlas atlas;
 
     public BaseTexture()
     {
         atlas = new TextureAtlas(Gdx.files.internal(getTexturePackName()));
-        randomNumber = new Random();
     }
 
     /**
@@ -30,7 +26,7 @@ public abstract class BaseTexture
     public AtlasRegion getAtlasRegion()
     {
         final String[] availableRegions = getAvailableRegions();
-        final String region = availableRegions[RandomUtils.getRandomInt(randomNumber, 0, availableRegions.length)];
+        final String region = availableRegions[RandomUtils.getRandomInt(0, availableRegions.length)];
 
         return atlas.findRegion(region);
     }

@@ -5,7 +5,11 @@ package com.murder.game.constants.texture;
  */
 public class FloorTexture extends BaseTexture
 {
-    private static final String TEXTURE_PACK_NAME = "images/floorTiles/floorTiles.pack";
+    public static final String TEXTURE_SOURCE_FILES = "assets-raw/images/floorTiles";
+    public static final String TEXTURE_PACK_NAME = "floorTiles.pack";
+    public static final String TEXTURE_PACK_LOCATION = "images/floorTiles/";
+
+    private static final String FULL_TEXTURE_PACK_NAME = TEXTURE_PACK_LOCATION + TEXTURE_PACK_NAME;
     private static final String[] TEXTURE_NAMES = { 
         "FloorTexture1",
         "FloorTexture2",
@@ -21,7 +25,7 @@ public class FloorTexture extends BaseTexture
     @Override
     protected String getTexturePackName()
     {
-        return TEXTURE_PACK_NAME;
+        return FULL_TEXTURE_PACK_NAME;
     }
 
     /**

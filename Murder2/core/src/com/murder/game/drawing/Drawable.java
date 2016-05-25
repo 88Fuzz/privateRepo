@@ -37,6 +37,7 @@ public abstract class Drawable extends NonBodyDrawable
         super(position, rotation);
         // this.tilePosition = new MyVector2();
         this.bodyType = bodyType;
+        //TODO the body width and height here should multiple bodyType.getSizeMultiplier()
         this.bodyWidth = bodyType.getWidth();
         this.bodyHeight = bodyType.getHeight();
     }
