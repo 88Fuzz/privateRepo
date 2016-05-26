@@ -14,7 +14,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
 import com.murder.game.drawing.Mob;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.BodyBuilder;
 
@@ -73,12 +72,12 @@ public class Door extends Tile
         shrinkingBodies = new DoorInfo[BODY_SHRINKING_SIZE];
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager, final List<Mob> mobs)
+    public void init(final World physicsWorld, final List<Mob> mobs)
     {
-        super.init(physicsWorld, textureManager, mobs);
+        super.init(physicsWorld, mobs);
         this.physicsWorld = physicsWorld;
 
-        floorSprite = getSprite(textureManager, UNLOCKED_BODY_TYPE);
+        floorSprite = getSprite(UNLOCKED_BODY_TYPE);
         floorBody = generateBody(physicsWorld, UNLOCKED_BODY_TYPE, floorSprite);
         generateShrinkingBodies(physicsWorld);
 

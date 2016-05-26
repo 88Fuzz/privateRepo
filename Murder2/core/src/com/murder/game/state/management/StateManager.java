@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.TextState;
@@ -16,7 +15,7 @@ public class StateManager
 
     private final List<PendingAction> pendingActions;
 
-    public StateManager(final TextureManager textureManager)
+    public StateManager()
     {
         pendingActions = new LinkedList<PendingAction>();
 

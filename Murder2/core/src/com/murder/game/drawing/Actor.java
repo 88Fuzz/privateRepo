@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.LightBuilder;
 import com.murder.game.utils.RandomUtils;
@@ -60,9 +59,9 @@ public class Actor extends Drawable
         this.onExit = false;
     }
 
-    public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager)
+    public void init(final World physicsWorld, final RayHandler rayHandler)
     {
-        super.init(physicsWorld, textureManager);
+        super.init(physicsWorld);
         createLight(rayHandler);
         inventory.clear();
 

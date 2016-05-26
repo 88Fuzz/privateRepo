@@ -14,7 +14,6 @@ import com.murder.game.drawing.Drawable;
 import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.Text;
 import com.murder.game.drawing.manager.FontManager;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 
 public class Level extends Drawable
@@ -42,7 +41,7 @@ public class Level extends Drawable
         this.levelId = levelId;
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager, final FontManager fontManager, final List<Mob> mobs)
+    public void init(final World physicsWorld, final FontManager fontManager, final List<Mob> mobs)
     {
         numberOfTiles = 0;
         for(final List<Tile> tileList: tiles)
@@ -50,7 +49,7 @@ public class Level extends Drawable
             numberOfTiles += tileList.size();
             for(final Tile tile: tileList)
             {
-                tile.init(physicsWorld, textureManager, mobs);
+                tile.init(physicsWorld, mobs);
             }
         }
 
@@ -61,7 +60,7 @@ public class Level extends Drawable
 
         for(final Item item: items)
         {
-            item.init(physicsWorld, textureManager);
+            item.init(physicsWorld);
         }
     }
 

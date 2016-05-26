@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Array;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.drawing.DisplayConstants;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.BodyBuilder;
 
@@ -43,14 +42,13 @@ public abstract class Drawable extends NonBodyDrawable
         this.bodyHeight = bodyType.getHeight() * bodyType.getSizeMultiplier().y;
     }
 
-    protected void init(final World physicsWorld, final TextureManager textureManager)
+    protected void init(final World physicsWorld)
     {
-        this.sprite = getSprite(textureManager, bodyType);
+        this.sprite = getSprite(bodyType);
         this.body = generateBody(physicsWorld, bodyType, sprite);
     }
 
-    // TODO TextureManager is no longer needed?
-    protected Sprite getSprite(final TextureManager textureManager, final BodyType bodyType)
+    protected Sprite getSprite(final BodyType bodyType)
     {
         final Sprite sprite = new Sprite(bodyType.getTextureLoader().getAtlasRegion());
         sprite.setBounds(0, 0, (int) (bodyType.getWidth() * bodyType.getSizeMultiplier().x),

@@ -13,7 +13,7 @@ public class SinglePixelTextureLoader extends MiscTextureLoader
         super();
     }
 
-    public static BaseTextureLoader getCircleTextureLoader()
+    public static BaseTextureLoader getSinglePixelTextureLoader()
     {
         return SINGLE_PIXEL_TEXTURE_LOADER;
     }

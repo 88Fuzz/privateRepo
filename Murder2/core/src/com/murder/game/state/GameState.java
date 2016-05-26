@@ -11,7 +11,6 @@ import com.murder.game.drawing.Actor;
 import com.murder.game.drawing.Actor.MoveDirection;
 import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.manager.FontManager;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
@@ -50,7 +49,7 @@ public class GameState extends State
 
     // public void init(final WorldRenderer worldRenderer, final LevelSerialize
     // levelSerialize, final TextureAtlas textureAtlas)
-    public void init(final WorldRenderer worldRenderer, final TextureManager textureManager, final FontManager fontManager, final String levelKey)
+    public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final String levelKey)
     {
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
@@ -63,13 +62,13 @@ public class GameState extends State
         level = levelSerialize.getLevel();
         player = levelSerialize.getPlayer();
 
-        level.init(physicsWorld, textureManager, fontManager, mobs);
+        level.init(physicsWorld, fontManager, mobs);
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
-        player.init(physicsWorld, rayHandler, textureManager);
+        player.init(physicsWorld, rayHandler);
         for(final Mob mob: mobs)
         {
-            mob.init(physicsWorld, rayHandler, textureManager, level, player);
+            mob.init(physicsWorld, rayHandler, level, player);
         }
         // worldRenderer.init(player, level.getLevelBounds());
         worldRenderer.init(player, level.getLevelBounds());
@@ -77,9 +76,9 @@ public class GameState extends State
         touches.clear();
 
         fadeIn = new FadeEffect();
-        fadeIn.init(textureManager, level.getLevelBounds(), FADE_IN_TIME, FadeDirection.FADE_IN);
+        fadeIn.init(level.getLevelBounds(), FADE_IN_TIME, FadeDirection.FADE_IN);
         fadeOut = new FadeEffect();
-        fadeOut.init(textureManager, level.getLevelBounds(), FADE_OUT_TIME, FadeDirection.FADE_OUT);
+        fadeOut.init(level.getLevelBounds(), FADE_OUT_TIME, FadeDirection.FADE_OUT);
     }
 
     @Override

@@ -13,7 +13,6 @@ import com.murder.game.constants.drawing.FontType;
 import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.manager.FontManager;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.state.GameState;
@@ -28,7 +27,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     public static final float TIMEPERFRAME = 1.0f / 30.0f;
 
     private Stack<State> stateStack;
-    private TextureManager textureManager;
     private FontManager fontManager;
     private WorldRenderer worldRenderer;
     private StateManager stateManager;
@@ -40,14 +38,13 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     public void create()
     {
         // final AssetManager assMan = new AssetManager();
-        textureManager = new TextureManager();
         fontManager = new FontManager();
         // assMan.load(TextureType.TILE_TEXTURES, TextureAtlas.class);
         // assMan.finishLoading();
         stateStack = new Stack<State>();
         worldRenderer = new WorldRenderer();
         // textureAtlas = assMan.get(TextureType.TILE_TEXTURES);
-        stateManager = new StateManager(textureManager);
+        stateManager = new StateManager();
         // fontGenerator = new FontGenerator();
         timeSinceLastUpdate = 0;
 
@@ -131,7 +128,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             state.dispose();
         }
         worldRenderer.dispose();
-        textureManager.dispose();
         // fontManager.dispose();
     }
 
@@ -290,7 +286,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             // ((GameState) state).init(worldRenderer,
             // levelGenerator.getLevel(stateConfig), textureAtlas);
-            ((GameState) state).init(worldRenderer, textureManager, fontManager, stateConfig);
+            ((GameState) state).init(worldRenderer, fontManager, stateConfig);
         }
         else if(state instanceof TextState)
         {

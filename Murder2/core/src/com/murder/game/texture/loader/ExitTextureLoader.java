@@ -13,7 +13,7 @@ public class ExitTextureLoader extends MiscTextureLoader
         super();
     }
 
-    public static BaseTextureLoader getKeyTextureLoader()
+    public static BaseTextureLoader getExitTextureLoader()
     {
         return EXIT_TEXTURE_LOADER;
     }

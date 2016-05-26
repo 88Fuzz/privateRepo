@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.drawing.Drawable;
 import com.murder.game.drawing.Mob;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.level.pathfinder.PathFinderState;
 import com.murder.game.serialize.MyVector2;
 
@@ -91,9 +90,9 @@ public class Tile extends Drawable
         // sprite.setPosition(position.x, position.y);
     }
 
-    public void init(final World physicsWorld, final TextureManager textureManager, final List<Mob> mobs)
+    public void init(final World physicsWorld, final List<Mob> mobs)
     {
-        super.init(physicsWorld, textureManager);
+        super.init(physicsWorld);
 
         // TODO FloorTexture should be a singleton. YO
         // final FloorTexture floorTexture = new FloorTexture();

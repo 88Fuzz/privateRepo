@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.murder.game.MurderMainMain;
-import com.murder.game.constants.drawing.TextureType;
 import com.murder.game.drawing.NonBodyDrawable;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.texture.loader.SinglePixelTextureLoader;
 
 //TODO this FadeEffect should actually be on the camera and not the level. 
 //Because it creates issues when the player happens to be outside of the level. 
@@ -58,11 +57,12 @@ public class FadeEffect extends NonBodyDrawable
         super(new MyVector2(), 0);
     }
 
-    public void init(final TextureManager textureManager, final Rectangle size, final float timeToFade, final FadeDirection fadeDirection)
+    public void init(final Rectangle size, final float timeToFade, final FadeDirection fadeDirection)
     {
         this.fadeDirection = fadeDirection;
         color = new Color(0, 0, 0, fadeDirection.getAlpha());
-        sprite = new Sprite(textureManager.getTexture(TextureType.SINGLE_PIXEL_TEXTURE), (int) size.width, (int) size.height);
+        sprite = new Sprite(SinglePixelTextureLoader.getSinglePixelTextureLoader().getAtlasRegion());
+        sprite.setBounds(0, 0, (int) size.width, (int) size.height);
         sprite.setColor(color);
         finished = false;
         incrementalFade = MurderMainMain.TIMEPERFRAME / timeToFade * fadeDirection.getFadeDirection();

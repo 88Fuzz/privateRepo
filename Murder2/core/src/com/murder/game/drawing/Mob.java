@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.drawing.DisplayConstants;
-import com.murder.game.drawing.manager.TextureManager;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.level.pathfinder.PathFinder;
@@ -78,10 +77,10 @@ public class Mob extends Actor
         lightTimer = 0;
     }
 
-    public void init(final World physicsWorld, final RayHandler rayHandler, final TextureManager textureManager, final Level level,
+    public void init(final World physicsWorld, final RayHandler rayHandler, final Level level,
             final Actor player)
     {
-        super.init(physicsWorld, rayHandler, textureManager);
+        super.init(physicsWorld, rayHandler);
         this.physicsWorld = physicsWorld;
         this.player = player;
         this.level = level;
