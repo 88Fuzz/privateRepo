@@ -19,12 +19,12 @@ import com.murder.game.level.pathfinder.PathFinderState;
 import com.murder.game.serialize.MyVector2;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ @Type(value = Tile.class, name = "Tile"), @Type(value = Door.class, name = "Door") })
+@JsonSubTypes({ @Type(value = Tile.class, name = "Tile"), @Type(value = Door.class, name = "Door"), @Type(value = Exit.class, name = "Exit") })
 public class Tile extends Drawable
 {
-    private static final String BODY_TYPE = "bodyType";
-    private static final String POSITION = "position";
-    private static final String ROTATION = "rotation";
+    protected static final String BODY_TYPE = "bodyType";
+    protected static final String POSITION = "position";
+    protected static final String ROTATION = "rotation";
 
     // public enum TileType
     // {
@@ -68,6 +68,8 @@ public class Tile extends Drawable
     // private TextureAtlas textureAtlas;
     // @JsonIgnore
     // private boolean locked;
+
+    // The following are variables for pathfinding
     private Map<String, Float> distanceToStart;
     private Map<String, Float> distanceToEnd;
     private Map<String, PathFinderState> pathFinderState;
@@ -93,11 +95,6 @@ public class Tile extends Drawable
     public void init(final World physicsWorld, final List<Mob> mobs)
     {
         super.init(physicsWorld);
-
-        // TODO FloorTexture should be a singleton. YO
-        // final FloorTexture floorTexture = new FloorTexture();
-        // sprite = new Sprite(floorTexture.getAtlasRegion());
-        // adjustSprite(body, sprite);
 
         this.mobs = mobs;
         distanceToStart.clear();

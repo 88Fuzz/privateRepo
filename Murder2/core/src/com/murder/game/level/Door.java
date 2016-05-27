@@ -22,11 +22,7 @@ public class Door extends Tile
     private static final int BODY_SHRINKING_SIZE = 10;
     private static final float MAX_SHRINKING_TIME = 0.02f;
 
-    private static final String BODY_TYPE = "bodyType";
-    private static final String POSITION = "position";
-    private static final String ROTATION = "rotation";
     private static final String ITEM_UNLOCK = "itemUnlock";
-
     private static final BodyType UNLOCKED_BODY_TYPE = BodyType.FLOOR;
     private static final Filter FLOOR_FILTER = new Filter();
 

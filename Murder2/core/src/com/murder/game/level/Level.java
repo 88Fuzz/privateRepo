@@ -16,6 +16,8 @@ import com.murder.game.drawing.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.serialize.MyVector2;
 
+import box2dLight.RayHandler;
+
 public class Level extends Drawable
 {
     private static final String TILES = "tiles";
@@ -41,7 +43,7 @@ public class Level extends Drawable
         this.levelId = levelId;
     }
 
-    public void init(final World physicsWorld, final FontManager fontManager, final List<Mob> mobs)
+    public void init(final World physicsWorld, final FontManager fontManager, final List<Mob> mobs, final RayHandler rayHandler)
     {
         numberOfTiles = 0;
         for(final List<Tile> tileList: tiles)
@@ -49,7 +51,10 @@ public class Level extends Drawable
             numberOfTiles += tileList.size();
             for(final Tile tile: tileList)
             {
-                tile.init(physicsWorld, mobs);
+                if(tile instanceof Exit)
+                    ((Exit) tile).init(physicsWorld, mobs, rayHandler);
+                else 
+                    tile.init(physicsWorld, mobs);
             }
         }
 

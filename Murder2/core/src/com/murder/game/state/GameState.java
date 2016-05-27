@@ -62,7 +62,7 @@ public class GameState extends State
         level = levelSerialize.getLevel();
         player = levelSerialize.getPlayer();
 
-        level.init(physicsWorld, fontManager, mobs);
+        level.init(physicsWorld, fontManager, mobs, rayHandler);
         // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
         // player.init(textureAtlas, level);
         player.init(physicsWorld, rayHandler);

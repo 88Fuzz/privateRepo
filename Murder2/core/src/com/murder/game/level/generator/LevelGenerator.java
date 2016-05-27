@@ -16,6 +16,7 @@ import com.murder.game.drawing.Mob;
 import com.murder.game.drawing.Text;
 import com.murder.game.effects.text.TextEffect;
 import com.murder.game.level.Door;
+import com.murder.game.level.Exit;
 import com.murder.game.level.Item;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
@@ -43,13 +44,13 @@ public class LevelGenerator
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
         // return generateTestLevel();
-//        return generateLevel7();
-        // generateLevel6();
-        // generateLevel5();
-        // generateLevel4();
-        // generateLevel3();
-        // generateLevel2();
-         return generateLevel1();
+        return generateLevel7();
+        // return generateLevel6();
+        // return generateLevel5();
+        // return generateLevel4();
+        // return generateLevel3();
+        // return generateLevel2();
+        // return generateLevel1();
     }
 
     public static LevelSerialize generateTestLevel()
@@ -69,7 +70,7 @@ public class LevelGenerator
                 {
                     if(i == xLevelSize - 1 && j == 2)
                     {
-                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                        innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                     }
                     else
                     {
@@ -116,7 +117,7 @@ public class LevelGenerator
 
     public static LevelSerialize generateLevel7()
     {
-        final int xLevelSize = 15;
+        final int xLevelSize = 16;
         final int yLevelSize = 5;
 
         final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
@@ -127,11 +128,11 @@ public class LevelGenerator
 
             for(int j = 0; j < yLevelSize; j++)
             {
-                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == 1 || i == xLevelSize - 1)
                 {
-                    if(i == 0 && j == 2)
+                    if(i == 1 && j == 2)
                     {
-                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                        innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                     }
                     else
                     {
@@ -145,11 +146,11 @@ public class LevelGenerator
             tiles.add(innerList);
         }
 
-        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(1400, 400), -90);
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(1600, 400), -90);
         final List<Text> texts = new ArrayList<Text>();
 
         final List<Mob> mobs = new LinkedList<Mob>();
-        mobs.add(new Mob(BodyType.MOB, new MyVector2(2600, 400), 0));
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(2800, 400), 0));
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
@@ -222,7 +223,7 @@ public class LevelGenerator
                 }
                 else if(j == 5 && i == 5)
                 {
-                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                    innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }
                 else
                 {
@@ -281,7 +282,7 @@ public class LevelGenerator
                 }
                 else if(j == 6 && i == 5)
                 {
-                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                    innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }
                 else if(j >= 3 && i == 5)
                 {
@@ -351,7 +352,7 @@ public class LevelGenerator
                 }
                 else if(i == 6 && j == 6)
                 {
-                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                    innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }
                 else
                 {
@@ -405,7 +406,7 @@ public class LevelGenerator
                 }
                 else if(j == 1 && i == 1)
                 {
-                    innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                    innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                 }
                 else
                 {
@@ -428,7 +429,7 @@ public class LevelGenerator
     public static LevelSerialize generateLevel2()
     {
         final int xLevelSize = 6;
-        final int yLevelSize = 10;
+        final int yLevelSize = 11;
         final int xPlayerStart = 1;
         final int yPlayerStart = yLevelSize - 2;
 
@@ -440,11 +441,11 @@ public class LevelGenerator
 
             for(int j = 0; j < yLevelSize; j++)
             {
-                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                if(j == 0 || j == 1 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
                 {
-                    if(i == xLevelSize - 2 && j == 0)
+                    if(i == xLevelSize - 2 && j == 1)
                     {
-                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                        innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
                     }
                     else
                     {
@@ -472,7 +473,7 @@ public class LevelGenerator
 
     public static LevelSerialize generateLevel1()
     {
-        final int xLevelSize = 10;
+        final int xLevelSize = 11;
         final int yLevelSize = 5;
 
         final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
@@ -483,11 +484,11 @@ public class LevelGenerator
 
             for(int j = 0; j < yLevelSize; j++)
             {
-                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1 || i == xLevelSize - 2)
                 {
-                    if(i == xLevelSize - 1 && j == 2)
+                    if(i == xLevelSize - 2 && j == 2)
                     {
-                        innerList.add(new Tile(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                        innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
                     }
                     else
                     {
