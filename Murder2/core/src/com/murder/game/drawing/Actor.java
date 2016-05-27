@@ -43,7 +43,7 @@ public class Actor extends Drawable
     @JsonIgnore
     private boolean onExit;
     @JsonIgnore
-    private float spriteUpdateTimer;
+    protected float spriteUpdateTimer;
 
     @JsonCreator
     public Actor(@JsonProperty(BODY_TYPE) BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
@@ -76,10 +76,10 @@ public class Actor extends Drawable
         // setTilePosition();
     }
 
-    private void setSprite()
+    protected void setSprite()
     {
         sprite = new Sprite(bodyType.getTextureLoader().getAtlasRegion());
-        sprite.rotate(RandomUtils.getRandomInt(0, 359));
+        spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
     }
 
     protected void createLight(final RayHandler rayHandler)
@@ -124,7 +124,6 @@ public class Actor extends Drawable
         if(spriteUpdateTimer <= 0)
         {
             setSprite();
-            spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
         }
 
         // rotate(.3f);

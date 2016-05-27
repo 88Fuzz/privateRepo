@@ -25,6 +25,7 @@ import box2dLight.RayHandler;
 public class Mob extends Actor
 {
     private static final float MAX_MOB_VELOCITY = 1060;
+    private static final float MAX_MOB_SPRITE_UPDATE_TIMER = .34f;
 
     private World physicsWorld;
     private String previousPathKey;
@@ -77,8 +78,7 @@ public class Mob extends Actor
         lightTimer = 0;
     }
 
-    public void init(final World physicsWorld, final RayHandler rayHandler, final Level level,
-            final Actor player)
+    public void init(final World physicsWorld, final RayHandler rayHandler, final Level level, final Actor player)
     {
         super.init(physicsWorld, rayHandler);
         this.physicsWorld = physicsWorld;
@@ -95,10 +95,17 @@ public class Mob extends Actor
         setPreviousPosition();
     }
 
+    public void setSprite()
+    {
+        super.setSprite();
+        sprite.setColor(Color.RED);
+        spriteUpdateTimer = MAX_MOB_SPRITE_UPDATE_TIMER;
+    }
+
     @Override
     protected void createLight(final RayHandler rayHandler)
     {
-        light = LightBuilder.createPointLight(rayHandler, body, Color.PINK, 15);
+        light = LightBuilder.createPointLight(rayHandler, body, new Color(1, .5f, 0, 1), 15);
         light.setActive(false);
     }
 
