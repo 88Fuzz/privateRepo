@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.MurderMainMain;
-import com.murder.game.drawing.Text;
+import com.murder.game.drawing.drawables.Text;
 import com.murder.game.serialize.MyVector2;
 
 /**

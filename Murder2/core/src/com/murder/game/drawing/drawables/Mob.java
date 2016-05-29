@@ -1,4 +1,4 @@
-package com.murder.game.drawing;
+package com.murder.game.drawing.drawables;
 
 import java.util.LinkedList;
 import java.util.List;

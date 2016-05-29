@@ -2,8 +2,8 @@ package com.murder.game.state;
 
 import java.util.List;
 
-import com.murder.game.drawing.Text;
 import com.murder.game.drawing.WorldRenderer;
+import com.murder.game.drawing.drawables.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.level.generator.TextLevelGenerator;
 import com.murder.game.serialize.TextLevelSerialize;

@@ -8,10 +8,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
-import com.murder.game.drawing.Drawable;
+import com.murder.game.drawing.drawables.Actor;
+import com.murder.game.drawing.drawables.Drawable;
 import com.murder.game.level.Door;
 import com.murder.game.level.Item;
-import com.murder.game.drawing.Actor;
 
 public class WorldContactListener implements ContactListener
 {

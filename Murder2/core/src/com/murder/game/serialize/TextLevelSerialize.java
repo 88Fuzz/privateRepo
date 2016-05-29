@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.murder.game.drawing.Text;
+import com.murder.game.drawing.drawables.Text;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.modifier.TextStateModifier;
 

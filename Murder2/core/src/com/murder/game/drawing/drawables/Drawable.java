@@ -1,4 +1,4 @@
-package com.murder.game.drawing;
+package com.murder.game.drawing.drawables;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;

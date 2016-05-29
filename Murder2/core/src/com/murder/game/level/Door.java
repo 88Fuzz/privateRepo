@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
-import com.murder.game.drawing.Mob;
+import com.murder.game.drawing.drawables.Mob;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.BodyBuilder;
 

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.murder.game.MurderMainMain;
-import com.murder.game.drawing.NonBodyDrawable;
+import com.murder.game.drawing.drawables.NonBodyDrawable;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.texture.loader.SinglePixelTextureLoader;
 

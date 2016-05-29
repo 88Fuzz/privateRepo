@@ -2,8 +2,8 @@ package com.murder.game.effects.text;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.murder.game.drawing.drawables.Text;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.murder.game.drawing.Text;
 
 /**
  * Any time a text needs to change, for example color, size, font, etc., should

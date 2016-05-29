@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.MurderMainMain;
-import com.murder.game.drawing.Text;
+import com.murder.game.drawing.drawables.Text;
 
 /**
  * Change the color of a text.

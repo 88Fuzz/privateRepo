@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.constants.drawing.DisplayConstants;
 import com.murder.game.constants.drawing.FontType;
+import com.murder.game.drawing.drawables.Actor;
+import com.murder.game.drawing.drawables.NonBodyDrawable;
 
 import box2dLight.RayHandler;
 

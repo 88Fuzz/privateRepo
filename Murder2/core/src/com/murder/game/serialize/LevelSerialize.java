@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.murder.game.drawing.Actor;
-import com.murder.game.drawing.Mob;
+import com.murder.game.drawing.drawables.Actor;
+import com.murder.game.drawing.drawables.Mob;
 import com.murder.game.level.Level;
 import com.murder.game.state.management.PendingAction;
 

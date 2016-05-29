@@ -10,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
-import com.murder.game.drawing.Drawable;
-import com.murder.game.drawing.Mob;
-import com.murder.game.drawing.Text;
+import com.murder.game.drawing.drawables.Drawable;
+import com.murder.game.drawing.drawables.Mob;
+import com.murder.game.drawing.drawables.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.serialize.MyVector2;
 
