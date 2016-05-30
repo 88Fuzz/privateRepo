@@ -240,7 +240,9 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         timeSinceLastUpdate += dt;
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {
-
+            // worldRenderer is independent of state, and should be updated
+            // outside of the state updates.
+            worldRenderer.update(dt);
             for(final State state: stateStack)
             {
                 state.update(TIMEPERFRAME);
@@ -250,7 +252,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             timeSinceLastUpdate -= TIMEPERFRAME;
         }
 
-        worldRenderer.clearScreen();
         for(final State state: stateStack)
         {
             state.render(worldRenderer);

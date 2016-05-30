@@ -71,7 +71,7 @@ public class GameState extends State
             mob.init(physicsWorld, rayHandler, level, player);
         }
         // worldRenderer.init(player, level.getLevelBounds());
-        worldRenderer.init(player, level.getLevelBounds());
+        worldRenderer.init(player);
 
         touches.clear();
 
@@ -115,22 +115,7 @@ public class GameState extends State
             fadeOut.update(dt);
             if(fadeOut.isFinished())
                 stateManager.addActions(stateActions);
-            // stateManager.addAction(new
-            // PendingAction().withAction(StateAction.POP));
-            // stateManager.addAction(
-            // new
-            // PendingAction().withAction(StateAction.PUSH).withStateId(level.getNextStateId()).withStateConfig(level.getNextLevelId()));
         }
-        // final Vector2 playerPos = player.getTilePosition();
-        // final Tile tile = level.getTile((int) playerPos.x, (int)
-        // playerPos.y);
-        //
-        // if(tile != null && TileType.EXIT == tile.getTileType())
-        // {
-        // stateManager.addAction(StateAction.POP);
-        // stateManager.addAction(StateAction.PUSH, level.getNextStateId(),
-        // level.getNextLevelId());
-        // }
     }
 
     private void updateLevel(final float dt)
@@ -154,13 +139,12 @@ public class GameState extends State
     @Override
     public void render(final WorldRenderer worldRenderer)
     {
-        worldRenderer.adjustCamera();
         worldRenderer.render(physicsWorld);
         worldRenderer.render(level);
         worldRenderer.render(player);
         renderMobs(worldRenderer);
         worldRenderer.render(rayHandler);
-        worldRenderer.render(fadeIn);
+//        worldRenderer.render(fadeIn);
         if(player.isOnExit())
             worldRenderer.render(fadeOut);
         worldRenderer.renderGUI();
