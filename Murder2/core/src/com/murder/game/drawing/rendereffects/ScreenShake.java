@@ -7,6 +7,7 @@ import com.murder.game.utils.RandomUtils;
 /**
  * Shakes the camera.
  */
+// TODO get rid of this, in favor of screen blurring.
 public class ScreenShake implements RenderEffect
 {
     private Vector2 minShake;

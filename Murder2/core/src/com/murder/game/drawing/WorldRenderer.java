@@ -22,6 +22,8 @@ import com.murder.game.constants.drawing.DisplayConstants;
 import com.murder.game.constants.drawing.FontType;
 import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.drawing.drawables.NonBodyDrawable;
+import com.murder.game.drawing.rendereffects.FadeIn;
+import com.murder.game.drawing.rendereffects.FadeOut;
 import com.murder.game.drawing.rendereffects.RenderEffect;
 import com.murder.game.drawing.rendereffects.ScreenShake;
 import com.murder.game.texture.loader.SinglePixelTextureLoader;
@@ -80,10 +82,10 @@ public class WorldRenderer
         renderEffects.clear();
         if(target != null)
         {
-            final ScreenShake screenShake = new ScreenShake();
-            screenShake.init(1, 2, 1, 2, .2f);
-
-            addRenderEffect(screenShake);
+            final FadeOut fadeIn = new FadeOut();
+            fadeIn.init(new Color(1,1,1,0), 2);
+//            fadeIn.init(Color.BLACK, 2);
+            addRenderEffect(fadeIn);
         }
         // camera.position.set(Gdx.graphics.getWidth() / 2,
         // Gdx.graphics.getHeight() / 2, 0);
@@ -193,6 +195,11 @@ public class WorldRenderer
         drawScreenSprite();
         drawFPSCounter();
         batch.end();
+    }
+
+    public void setScreenSpriteColor(final Color color)
+    {
+        screenSprite.setColor(color);
     }
 
     private void drawScreenSprite()
