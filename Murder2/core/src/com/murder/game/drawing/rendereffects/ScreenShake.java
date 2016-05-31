@@ -2,7 +2,6 @@ package com.murder.game.drawing.rendereffects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.murder.game.drawing.WorldRenderer;
-import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.utils.RandomUtils;
 
 /**
@@ -12,23 +11,39 @@ public class ScreenShake implements RenderEffect
 {
     private Vector2 minShake;
     private Vector2 maxShake;
-    //TODO remove Actor, this is temporary
-    private Actor actor;
+    private Vector2 cameraPosition;
+    private float maxWaitTime;
+    private float waitTime;
 
     public ScreenShake()
     {
         minShake = new Vector2();
         maxShake = new Vector2();
+        cameraPosition = new Vector2();
     }
 
-    public void init(final Actor actor, final float xMinShake, final float yMinShake, final float xMaxShake, final float yMaxShake)
+    /**
+     * Sets the min and max screen shake range. The min and max range should
+     * both be negative or positive such that minShake && maxShake =<0 ||
+     * minShake && maxShake >= 0. When the screen shakes, the values will be
+     * decided to be less than 0 or greater than 0 randomly.
+     *
+     * 
+     * @param xMinShake
+     * @param yMinShake
+     * @param xMaxShake
+     * @param yMaxShake
+     */
+    public void init(final float xMinShake, final float yMinShake, final float xMaxShake, final float yMaxShake, final float maxWaitTime)
     {
-        this.actor = actor;
         minShake.x = xMinShake;
         minShake.y = yMinShake;
 
         maxShake.x = xMaxShake;
         maxShake.y = yMaxShake;
+
+        waitTime = 0;
+        this.maxWaitTime = maxWaitTime;
     }
 
     /**
@@ -37,13 +52,29 @@ public class ScreenShake implements RenderEffect
     @Override
     public void update(final WorldRenderer worldRenderer, final float dt)
     {
+        final int xSign = getSign();
+        final int ySign = getSign();
+
         if(worldRenderer.isActorCenteredOnX() && worldRenderer.isActorCenteredOnY())
         {
-            final float x = actor.getPosition().x + RandomUtils.getRandomInt(minShake.x, maxShake.x);
-            final float y = actor.getPosition().y + RandomUtils.getRandomInt(minShake.y, maxShake.y);
+            waitTime -= dt;
+            if(waitTime <= 0)
+            {
+                waitTime = maxWaitTime;
+                cameraPosition = worldRenderer.getCameraPosition(cameraPosition);
+                final float x = cameraPosition.x + xSign * RandomUtils.getRandomFloat(minShake.x, maxShake.x);
+                final float y = cameraPosition.y + ySign * RandomUtils.getRandomFloat(minShake.y, maxShake.y);
 
-            worldRenderer.setTargetPosition(x,y);
+                worldRenderer.setTargetPosition(x, y);
+            }
         }
+    }
+
+    private int getSign()
+    {
+        if(RandomUtils.getRandomInt(0, 2) == 1)
+            return 1;
+        return -1;
     }
 
     /**

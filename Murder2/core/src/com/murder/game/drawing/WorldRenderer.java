@@ -81,11 +81,10 @@ public class WorldRenderer
         if(target != null)
         {
             final ScreenShake screenShake = new ScreenShake();
-            screenShake.init(target, -5, 5, -5, 5);
+            screenShake.init(1, 2, 1, 2, .2f);
 
             addRenderEffect(screenShake);
         }
-        // TODO figure out why the camera is set to -100, -100 position.
         // camera.position.set(Gdx.graphics.getWidth() / 2,
         // Gdx.graphics.getHeight() / 2, 0);
         if(target != null)
@@ -218,11 +217,17 @@ public class WorldRenderer
         return camera.zoom;
     }
 
-    public Vector2 getCameraPosition()
+    public Vector2 getCameraPosition(final Vector2 position)
     {
-        final Vector2 tmpVector = new Vector2(camera.position.x / camera.zoom - Gdx.graphics.getWidth() / 2,
-                camera.position.y / camera.zoom - Gdx.graphics.getHeight() / 2);
-        return tmpVector;
+        // position.x = camera.position.x / camera.zoom -
+        // Gdx.graphics.getWidth() / 2;
+        // position.y = camera.position.y / camera.zoom -
+        // Gdx.graphics.getHeight() / 2;
+
+        position.x = camera.position.x;
+        position.y = camera.position.y;
+
+        return position;
     }
 
     /**
@@ -332,7 +337,7 @@ public class WorldRenderer
 
         final float xCameraMove = getMovementDistance((xTarget - camera.position.x) * LINEAR_INTERP);
         final float yCameraMove = getMovementDistance((yTarget - camera.position.y) * LINEAR_INTERP);
-        
+
         if(xCameraMove == 0)
             camera.position.x = xTarget;
         else

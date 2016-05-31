@@ -27,7 +27,7 @@ public class RandomUtils
      * @param max
      * @return
      */
-    public static float getRandomInt(final float min, final float max)
+    public static float getRandomFloat(final float min, final float max)
     {
         return random.nextFloat() * (max - min) + min;
     }
