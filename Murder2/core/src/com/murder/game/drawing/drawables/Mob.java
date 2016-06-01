@@ -24,8 +24,13 @@ import box2dLight.RayHandler;
 
 public class Mob extends Actor
 {
+    // TODO slow down actor and mob movement speeds.
     private static final float MAX_MOB_VELOCITY = 1060;
     private static final float MAX_MOB_SPRITE_UPDATE_TIMER = .34f;
+    private static final float DIRECT_PATH_ALPHA = 0.93f;
+    private static final float NO_DIRECT_PATH_ALPHA = 0.68f;
+    private static final float NO_PATH_ALPHA = 0;
+    private static final float ALPHA_CHANGE = 0.05f;
 
     private World physicsWorld;
     private String previousPathKey;
@@ -39,7 +44,8 @@ public class Mob extends Actor
     private Vector2 edgeCheckPosition;
     private List<Vector2> edgeCheckPositions;
     private PointLight light;
-    private float lightTimer;
+    private Color lightColor;
+    private float desiredAlpha;
 
     final RayCastCallback rayCastCallback = new RayCastCallback()
     {
@@ -75,7 +81,8 @@ public class Mob extends Actor
         edgeCheckPositions.add(new Vector2(-1 * bodyType.getWidth() / 2 / DisplayConstants.PIXELS_PER_METER, 0));
 
         velocity = MAX_MOB_VELOCITY;
-        lightTimer = 0;
+        desiredAlpha = 0;
+        lightColor = new Color(1, .5f, 0, desiredAlpha);
     }
 
     public void init(final World physicsWorld, final RayHandler rayHandler, final Level level, final Actor player)
@@ -105,8 +112,8 @@ public class Mob extends Actor
     @Override
     protected void createLight(final RayHandler rayHandler)
     {
-        light = LightBuilder.createPointLight(rayHandler, body, new Color(1, .5f, 0, 1), 15);
-        light.setActive(false);
+        light = LightBuilder.createPointLight(rayHandler, body, lightColor, 15);
+        light.setActive(true);
     }
 
     @Override
@@ -129,6 +136,7 @@ public class Mob extends Actor
 
         if(directPath)
         {
+            desiredAlpha = DIRECT_PATH_ALPHA;
             setUnitVelocity(getPosition(), player.getPosition());
             super.updateCurrent(dt);
         }
@@ -143,11 +151,16 @@ public class Mob extends Actor
 
             if(playerFound)
             {
+                desiredAlpha = NO_DIRECT_PATH_ALPHA;
                 if(distanceToTravel <= 0)
                     calculateVelocity();
 
                 super.updateCurrent(dt);
                 modifyDistanceToTravel();
+            }
+            else
+            {
+                desiredAlpha = NO_PATH_ALPHA;
             }
 
             setPreviousPosition();
@@ -158,23 +171,9 @@ public class Mob extends Actor
 
     private void updateLight(final float dt)
     {
-        lightTimer += dt;
-        if(directPath)
-        {
-            if(lightTimer > 0.35)
-                flipLight();
-        }
-        else if(playerFound)
-        {
-            if(lightTimer > 0.8)
-                flipLight();
-        }
-    }
-
-    private void flipLight()
-    {
-        lightTimer = 0;
-        light.setActive(!light.isActive());
+        final float alpha = (desiredAlpha - lightColor.a) * ALPHA_CHANGE;
+        lightColor.a += alpha;
+        light.setColor(lightColor);
     }
 
     private void setPreviousPosition()
@@ -189,16 +188,6 @@ public class Mob extends Actor
         final Vector2 currentPosition = getPosition();
 
         distanceToTravel -= MathUtils.getDistance(currentPosition, previousPosition);
-        // final float mag = unitVelocityVector.len();
-        // if(mag != 0)
-        // {
-        // final float velocityX = velocity * unitVelocityVector.x * dt / mag;
-        // final float velocityY = velocity * unitVelocityVector.y * dt / mag;
-        // float distance = velocityX * velocityX + velocityY * velocityY;
-        // distance = (float) Math.sqrt(distance);
-        //
-        // distanceToTravel -= distance;
-        // }
     }
 
     private void calculateVelocity()
