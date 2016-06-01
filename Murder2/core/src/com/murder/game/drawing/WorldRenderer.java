@@ -81,15 +81,6 @@ public class WorldRenderer
     {
         renderEffects.clear();
         if(target != null)
-        {
-            final FadeOut fadeIn = new FadeOut();
-            fadeIn.init(new Color(1,1,1,0), 2);
-//            fadeIn.init(Color.BLACK, 2);
-            addRenderEffect(fadeIn);
-        }
-        // camera.position.set(Gdx.graphics.getWidth() / 2,
-        // Gdx.graphics.getHeight() / 2, 0);
-        if(target != null)
             camera.position.set(target.getPosition().x, target.getPosition().y, 0);
 
         // If the screen is smaller than the default size, zoom out so that the

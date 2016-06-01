@@ -4,10 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.murder.game.contact.WorldContactListener;
 import com.murder.game.drawing.manager.FontManager;
+import com.murder.game.drawing.rendereffects.FadeIn;
+import com.murder.game.drawing.rendereffects.FadeOut;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.drawing.drawables.Mob;
@@ -15,7 +18,6 @@ import com.murder.game.drawing.drawables.Actor.MoveDirection;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.LevelSerialize;
-import com.murder.game.state.FadeEffect.FadeDirection;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.management.StateManager;
 
@@ -38,19 +40,21 @@ public class GameState extends State
     // set back to 0
     private LinkedList<Integer> touches;
     private List<PendingAction> stateActions;
-    private FadeEffect fadeIn;
-    private FadeEffect fadeOut;
+    private WorldRenderer worldRenderer;
+    private FadeIn fadeIn;
+    private FadeOut fadeOut;
 
     public GameState(final StateManager stateManager)
     {
         super(stateManager);
         this.touches = new LinkedList<Integer>();
+        fadeIn = new FadeIn();
+        fadeOut = new FadeOut();
     }
 
-    // public void init(final WorldRenderer worldRenderer, final LevelSerialize
-    // levelSerialize, final TextureAtlas textureAtlas)
     public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final String levelKey)
     {
+        this.worldRenderer = worldRenderer;
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
@@ -63,40 +67,36 @@ public class GameState extends State
         player = levelSerialize.getPlayer();
 
         level.init(physicsWorld, fontManager, mobs, rayHandler);
-        // player = new Actor(BodyType.PLAYER, new MyVector2(), 0, false);
-        // player.init(textureAtlas, level);
         player.init(physicsWorld, rayHandler);
         for(final Mob mob: mobs)
         {
             mob.init(physicsWorld, rayHandler, level, player);
         }
-        // worldRenderer.init(player, level.getLevelBounds());
         worldRenderer.init(player);
 
         touches.clear();
 
-        fadeIn = new FadeEffect();
-        fadeIn.init(level.getLevelBounds(), FADE_IN_TIME, FadeDirection.FADE_IN);
-        fadeOut = new FadeEffect();
-        fadeOut.init(level.getLevelBounds(), FADE_OUT_TIME, FadeDirection.FADE_OUT);
+        fadeIn.init(Color.BLACK, FADE_IN_TIME);
+        fadeOut.init(new Color(1, 1, 1, 0), FADE_OUT_TIME);
+        worldRenderer.addRenderEffect(fadeIn);
     }
 
     @Override
     public void pause()
     {
-        // TODO Auto-generated method stub
+        touches.clear();
     }
 
     @Override
     public void resume()
     {
-        // TODO Auto-generated method stub
+        touches.clear();
     }
 
     @Override
     public void resize(final int width, final int height)
     {
-        // TODO Auto-generated method stub
+        touches.clear();
     }
 
     @Override
@@ -108,12 +108,11 @@ public class GameState extends State
         updateLevel(dt);
         updatePlayer(dt);
         updateMobs(dt);
-        fadeIn.update(dt);
 
         if(player.isOnExit())
         {
-            fadeOut.update(dt);
-            if(fadeOut.isFinished())
+            worldRenderer.addRenderEffect(fadeOut);
+            if(fadeOut.isFinished(worldRenderer))
                 stateManager.addActions(stateActions);
         }
     }
@@ -144,9 +143,6 @@ public class GameState extends State
         worldRenderer.render(player);
         renderMobs(worldRenderer);
         worldRenderer.render(rayHandler);
-//        worldRenderer.render(fadeIn);
-        if(player.isOnExit())
-            worldRenderer.render(fadeOut);
         worldRenderer.renderGUI();
     }
 
