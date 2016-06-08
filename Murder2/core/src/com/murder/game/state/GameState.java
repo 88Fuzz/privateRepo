@@ -42,14 +42,16 @@ public class GameState extends State
     private List<PendingAction> stateActions;
     private WorldRenderer worldRenderer;
     private FadeIn fadeIn;
-    private FadeOut fadeOut;
+    private FadeOut fadeOutWhite;
+    private FadeOut fadeOutBlack;
 
     public GameState(final StateManager stateManager)
     {
         super(stateManager);
         this.touches = new LinkedList<Integer>();
         fadeIn = new FadeIn();
-        fadeOut = new FadeOut();
+        fadeOutWhite = new FadeOut();
+        fadeOutBlack = new FadeOut();
     }
 
     public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final String levelKey)
@@ -77,7 +79,8 @@ public class GameState extends State
         touches.clear();
 
         fadeIn.init(Color.BLACK, FADE_IN_TIME);
-        fadeOut.init(new Color(1, 1, 1, 0), FADE_OUT_TIME);
+        fadeOutWhite.init(new Color(1, 1, 1, 0), FADE_OUT_TIME);
+        fadeOutBlack.init(new Color(0, 0, 0, 0), FADE_OUT_TIME);
         worldRenderer.addRenderEffect(fadeIn);
     }
 
@@ -109,10 +112,14 @@ public class GameState extends State
         updatePlayer(dt);
         updateMobs(dt);
 
-        if(player.isOnExit())
+        if(player.isMobTouched())
         {
-            worldRenderer.addRenderEffect(fadeOut);
-            if(fadeOut.isFinished(worldRenderer))
+            worldRenderer.addRenderEffect(fadeOutBlack);
+        }
+        else if(player.isOnExit())
+        {
+            worldRenderer.addRenderEffect(fadeOutWhite);
+            if(fadeOutWhite.isFinished(worldRenderer))
                 stateManager.addActions(stateActions);
         }
     }

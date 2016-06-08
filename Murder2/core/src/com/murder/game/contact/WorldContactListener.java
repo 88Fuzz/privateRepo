@@ -1,20 +1,34 @@
 package com.murder.game.contact;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.murder.game.constants.box2d.BodyType;
-import com.murder.game.constants.level.ItemType;
-import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.drawing.drawables.Drawable;
+import com.murder.game.drawing.drawables.Mob;
 import com.murder.game.level.Door;
+import com.murder.game.level.Exit;
 import com.murder.game.level.Item;
 
 public class WorldContactListener implements ContactListener
 {
+    private Map<Class, ContactChecker> checkerMap;
+
+    public WorldContactListener()
+    {
+        checkerMap = new HashMap<Class, ContactChecker>();
+        checkerMap.put(Door.class, new DoorContactChecker());
+        checkerMap.put(Item.class, new ItemContactChecker());
+        checkerMap.put(Mob.class, new MobActorContactChecker());
+        checkerMap.put(Drawable.class, new DrawableContactChecker());
+        checkerMap.put(Exit.class, new ExitContactChecker());
+    }
+
     @Override
     public void beginContact(final Contact contact)
     {
@@ -36,45 +50,25 @@ public class WorldContactListener implements ContactListener
         if(userDataA == null || userDataB == null)
             return;
 
-        // TODO This can be structured much better
-        if(userDataA instanceof Drawable && userDataB instanceof Item)
-        {
-            final Drawable drawable = (Drawable) userDataA;
-            final Item item = (Item) userDataB;
+        if(callContactChecker(userDataA, userDataB))
+            return;
 
-            // Player has picked up an item
-            if(drawable.getBodyType() == BodyType.PLAYER)
-                ((Actor) drawable).addItem(item.pickUpItem());
-        }
-        else if(userDataA instanceof Drawable && userDataB instanceof Door)
-        {
-            final Drawable drawable = (Drawable) userDataA;
-            final Door door = (Door) userDataB;
+        callContactChecker(userDataB, userDataA);
+    }
 
-            // Player is trying to unlock a door
-            if(drawable.getBodyType() == BodyType.PLAYER)
-            {
-                final Actor player = (Actor) drawable;
-                // TODO figure out if this will cause concurrent modification
-                // exception
-                for(final ItemType item: player.getItems())
-                {
-                    if(door.unlockDoor(item))
-                    {
-                        player.removeItem(item);
-                        break;
-                    }
-                }
-            }
-        }
-        else if(userDataA instanceof Drawable && userDataB instanceof Drawable)
-        {
-            final Drawable drawableA = (Drawable) userDataA;
-            final Drawable drawableB = (Drawable) userDataB;
+    private boolean callContactChecker(final Object objA, final Object objB)
+    {
+        final ContactChecker contactChecker = checkerMap.get(objA.getClass());
 
-            if(drawableA.getBodyType() == BodyType.PLAYER && drawableB.getBodyType() == BodyType.EXIT)
-                ((Actor) drawableA).setOnExit(true);
-        }
+        return callContactChecker(contactChecker, objA, objB);
+    }
+
+    private boolean callContactChecker(final ContactChecker contactChecker, final Object objA, final Object objB)
+    {
+        if(contactChecker == null)
+            return false;
+
+        return contactChecker.check(objA, objB);
     }
 
     @Override

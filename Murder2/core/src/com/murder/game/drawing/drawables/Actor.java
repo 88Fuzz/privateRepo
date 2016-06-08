@@ -14,7 +14,6 @@ import com.murder.game.constants.box2d.BodyType;
 import com.murder.game.constants.level.ItemType;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.LightBuilder;
-import com.murder.game.utils.RandomUtils;
 
 import box2dLight.RayHandler;
 
@@ -43,6 +42,8 @@ public class Actor extends Drawable
     @JsonIgnore
     private boolean onExit;
     @JsonIgnore
+    private boolean mobTouched;
+    @JsonIgnore
     protected float spriteUpdateTimer;
 
     @JsonCreator
@@ -56,7 +57,6 @@ public class Actor extends Drawable
         // tilePosition = new MyVector2();
         unitVelocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
-        this.onExit = false;
     }
 
     public void init(final World physicsWorld, final RayHandler rayHandler)
@@ -67,6 +67,8 @@ public class Actor extends Drawable
 
         setSprite();
         spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
+        onExit = false;
+        mobTouched = false;
         // sprite = new
         // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
         // sprite = new
@@ -256,7 +258,17 @@ public class Actor extends Drawable
 
     public void setOnExit(final boolean onExit)
     {
-        this.onExit = onExit;
+        this.onExit = onExit && !mobTouched;
+    }
+
+    public boolean isMobTouched()
+    {
+        return mobTouched;
+    }
+
+    public void setMobTouched(final boolean mobTouched)
+    {
+        this.mobTouched = mobTouched;
     }
 
     // public MyVector2 getTilePosition()
