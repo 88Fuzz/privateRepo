@@ -1,7 +1,5 @@
 package com.murder.game;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Stack;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -9,15 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
-import com.murder.game.constants.drawing.FontType;
 import com.murder.game.drawing.WorldRenderer;
-import com.murder.game.drawing.drawables.Text;
 import com.murder.game.drawing.manager.FontManager;
-import com.murder.game.level.generator.LevelGenerator;
-import com.murder.game.serialize.MyVector2;
 import com.murder.game.state.GameState;
 import com.murder.game.state.State;
 import com.murder.game.state.TextState;
+import com.murder.game.state.config.StateConfig;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.management.StateId;
 import com.murder.game.state.management.StateManager;
@@ -56,7 +51,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // stateStack.push(gameState);
 
         final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
-        textState.init(fontManager, "Text01");
+        textState.init(fontManager, new StateConfig("Text01"));
         stateStack.push(textState);
 
         // final List<Text> drawableTexts = new LinkedList<Text>();
@@ -276,12 +271,26 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
                 if(!stateStack.isEmpty())
                     stateStack.pop();
                 break;
+            case RESET:
+                if(!stateStack.isEmpty())
+                {
+                    restartState(stateStack.peek());
+                }
+                break;
             }
         }
         stateManager.getPendingActions().clear();
     }
 
-    private void initState(final State state, final String stateConfig)
+    private void restartState(final State state)
+    {
+        if(state instanceof GameState)
+        {
+            ((GameState) state).reset(worldRenderer, fontManager);
+        }
+    }
+
+    private void initState(final State state, final StateConfig stateConfig)
     {
         if(state instanceof GameState)
         {

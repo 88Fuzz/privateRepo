@@ -2,6 +2,7 @@ package com.murder.game.state.management;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.murder.game.state.config.StateConfig;
 
 public class PendingAction
 {
@@ -11,16 +12,16 @@ public class PendingAction
 
     private StateAction action;
     private StateId id;
-    private String stateConfig;
+    private StateConfig stateConfig;
 
     public PendingAction()
     {
-        this(StateAction.NONE, StateId.NONE, "");
+        this(StateAction.NONE, StateId.NONE, new StateConfig(""));
     }
 
     @JsonCreator
     public PendingAction(@JsonProperty(STATE_ACTION) final StateAction action, @JsonProperty(STATE_ID) final StateId id,
-            @JsonProperty(STATE_CONFIG) final String stateConfig)
+            @JsonProperty(STATE_CONFIG) final StateConfig stateConfig)
     {
         this.action = action;
         this.id = id;
@@ -39,7 +40,7 @@ public class PendingAction
         return this;
     }
 
-    public PendingAction withStateConfig(final String stateConfig)
+    public PendingAction withStateConfig(final StateConfig stateConfig)
     {
         this.stateConfig = stateConfig;
         return this;
@@ -55,7 +56,7 @@ public class PendingAction
         return id;
     }
 
-    public String getStateConfig()
+    public StateConfig getStateConfig()
     {
         return stateConfig;
     }

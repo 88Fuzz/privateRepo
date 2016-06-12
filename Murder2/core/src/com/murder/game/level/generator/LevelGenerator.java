@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.murder.game.constants.box2d.BodyType;
@@ -22,6 +23,8 @@ import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
+import com.murder.game.state.config.GameStateConfig;
+import com.murder.game.state.config.StateConfig;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.management.StateAction;
 import com.murder.game.state.management.StateId;
@@ -110,7 +113,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level08"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level08", Color.WHITE)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07"), player, mobs, actions), "Level07");
     }
@@ -154,7 +158,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level08"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level08", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level07"), player, mobs, actions), "Level07");
     }
@@ -237,7 +242,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level07"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level07", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level06"), player, new LinkedList<Mob>(), actions),
                 "Level06");
@@ -304,7 +310,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level06"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level06", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level05"), player, new LinkedList<Mob>(), actions),
                 "Level05");
@@ -366,7 +373,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level05"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level05", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level04"), player, new LinkedList<Mob>(), actions),
                 "Level04");
@@ -420,7 +428,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level04"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level04", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level03"), player, new LinkedList<Mob>(), actions),
                 "Level03");
@@ -466,7 +475,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level03"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level03", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level02"), player, new LinkedList<Mob>(), actions), "Level02");
     }
@@ -535,7 +545,8 @@ public class LevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level02"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level02", Color.BLACK)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level01"), player, new LinkedList<Mob>(), actions), "Level01");
     }
@@ -594,6 +605,11 @@ public class LevelGenerator
             Gdx.app.error(tag, getStackTrace(e));
             throw new RuntimeException(e);
         }
+    }
+
+    private static StateConfig getGameStateConfig(final String string, final Color color)
+    {
+        return new GameStateConfig(string, color.cpy());
     }
 
     // public List<Text> getTexts(final String levelId)

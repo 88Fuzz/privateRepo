@@ -18,7 +18,10 @@ import com.murder.game.drawing.drawables.Actor.MoveDirection;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.LevelSerialize;
+import com.murder.game.state.config.GameStateConfig;
+import com.murder.game.state.config.StateConfig;
 import com.murder.game.state.management.PendingAction;
+import com.murder.game.state.management.StateAction;
 import com.murder.game.state.management.StateManager;
 
 import box2dLight.RayHandler;
@@ -36,6 +39,7 @@ public class GameState extends State
     private Actor player;
     private List<Mob> mobs;
     private Level level;
+    private StateConfig stateConfig;
     // TODO when the app is suspended and brought back, buttonsPressed should be
     // set back to 0
     private LinkedList<Integer> touches;
@@ -54,15 +58,16 @@ public class GameState extends State
         fadeOutBlack = new FadeOut();
     }
 
-    public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final String levelKey)
+    public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final StateConfig stateConfig)
     {
         this.worldRenderer = worldRenderer;
+        this.stateConfig = stateConfig;
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
         // rayHandler.setAmbientLight(.5f);
 
-        final LevelSerialize levelSerialize = LevelGenerator.getLevel(levelKey);
+        final LevelSerialize levelSerialize = LevelGenerator.getLevel(stateConfig.getStringConfig());
         stateActions = levelSerialize.getStateActions();
         mobs = levelSerialize.getMobs();
         level = levelSerialize.getLevel();
@@ -78,10 +83,22 @@ public class GameState extends State
 
         touches.clear();
 
-        fadeIn.init(Color.BLACK, FADE_IN_TIME);
+        final Color color;
+        if(stateConfig instanceof GameStateConfig)
+            color = ((GameStateConfig) stateConfig).getColor();
+        else
+            color = Color.BLACK;
+
+        fadeIn.init(color.cpy(), FADE_IN_TIME);
+
         fadeOutWhite.init(new Color(1, 1, 1, 0), FADE_OUT_TIME);
         fadeOutBlack.init(new Color(0, 0, 0, 0), FADE_OUT_TIME);
         worldRenderer.addRenderEffect(fadeIn);
+    }
+
+    public void reset(final WorldRenderer worldRenderer, final FontManager fontManager)
+    {
+        init(worldRenderer, fontManager, new GameStateConfig(stateConfig.getStringConfig(), Color.BLACK));
     }
 
     @Override
@@ -115,6 +132,8 @@ public class GameState extends State
         if(player.isMobTouched())
         {
             worldRenderer.addRenderEffect(fadeOutBlack);
+            if(fadeOutBlack.isFinished(worldRenderer))
+                stateManager.addAction(new PendingAction().withAction(StateAction.RESET));
         }
         else if(player.isOnExit())
         {

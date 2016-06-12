@@ -14,6 +14,8 @@ import com.murder.game.drawing.drawables.Text;
 import com.murder.game.effects.text.LinearTextColorChanger;
 import com.murder.game.effects.text.TextEffect;
 import com.murder.game.serialize.TextLevelSerialize;
+import com.murder.game.state.config.GameStateConfig;
+import com.murder.game.state.config.StateConfig;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.management.StateAction;
 import com.murder.game.state.management.StateId;
@@ -28,15 +30,15 @@ public class TextLevelGenerator
 
     public static TextLevelSerialize getTextState(final String textStateId)
     {
-        final TextLevelSerialize textState = loadLevelFromFile(textStateId);
-        if(textState != null)
-            return textState;
+         final TextLevelSerialize textState = loadLevelFromFile(textStateId);
+         if(textState != null)
+         return textState;
+        
+         throw new RuntimeException("Unknown textStateId " + textStateId);
 
-        throw new RuntimeException("Unknown textStateId " + textStateId);
-
-//         generateTextLevel3("Text03");
-//         generateTextLevel2("Text02");
-//         return generateTextLevel1("Text01");
+//        generateTextLevel3("Text03");
+//        generateTextLevel2("Text02");
+//        return generateTextLevel1("Text01");
     }
 
     private static TextLevelSerialize generateTextLevel3(final String textStateId)
@@ -65,7 +67,7 @@ public class TextLevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig("Level01"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE).withStateConfig(new GameStateConfig("Level01", Color.BLACK)));
         return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 
@@ -88,7 +90,7 @@ public class TextLevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig("Text03"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig(new StateConfig("Text03")));
         return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 
@@ -118,7 +120,7 @@ public class TextLevelGenerator
 
         final List<PendingAction> actions = new LinkedList<PendingAction>();
         actions.add(new PendingAction().withAction(StateAction.POP));
-        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig("Text02"));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.TEXT_STATE).withStateConfig(new StateConfig("Text02")));
         return writeTextState(new TextLevelSerialize(texts, textStateModifiers, actions), textStateId);
     }
 

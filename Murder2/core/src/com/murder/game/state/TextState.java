@@ -7,6 +7,7 @@ import com.murder.game.drawing.drawables.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.level.generator.TextLevelGenerator;
 import com.murder.game.serialize.TextLevelSerialize;
+import com.murder.game.state.config.StateConfig;
 import com.murder.game.state.management.PendingAction;
 import com.murder.game.state.management.StateManager;
 import com.murder.game.state.modifier.TextStateModifier;
@@ -23,9 +24,9 @@ public class TextState extends State
         super(stateManager);
     }
 
-    public void init(final FontManager fontManager, final String levelKey)
+    public void init(final FontManager fontManager, final StateConfig stateConfig)
     {
-        textState = TextLevelGenerator.getTextState(levelKey);
+        textState = TextLevelGenerator.getTextState(stateConfig.getStringConfig());
         drawableTexts = textState.getDrawableTexts();
         textStateModifiers = textState.getTextStateModifiers();
         stateActions = textState.getStateActions();

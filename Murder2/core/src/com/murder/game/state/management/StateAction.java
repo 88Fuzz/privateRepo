@@ -4,5 +4,6 @@ public enum StateAction
 {
     PUSH,
     POP,
+    RESET,
     NONE;
 }
