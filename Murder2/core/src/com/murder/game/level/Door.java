@@ -45,8 +45,8 @@ public class Door extends Tile
     {
         UP(0, 1, 1.0f, DOOR_MAT_OFFSET, 1, 0),
         DOWN(0, -.1f, 1.0f, DOOR_MAT_OFFSET, 1, 0),
-        LEFT(1, 0, DOOR_MAT_OFFSET, 1.0f, 0, 1),
-        RIGHT(-1, 0, DOOR_MAT_OFFSET, 1.0f, 0, 1);
+        LEFT(-.1f, 0, DOOR_MAT_OFFSET, 1.0f, 0, 1),
+        RIGHT(1, 0, DOOR_MAT_OFFSET, 1.0f, 0, 1);
 
         private final float xOffset;
         private final float yOffset;

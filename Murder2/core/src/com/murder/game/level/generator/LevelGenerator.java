@@ -39,22 +39,24 @@ public class LevelGenerator
 
     public static LevelSerialize getLevel(final String levelId)
     {
-        // final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
-        // if(loadedLevel != null)
-        // return loadedLevel;
-        //
-        // throw new RuntimeException("File Not Found");
+//         final LevelSerialize loadedLevel = loadLevelFromFile(levelId);
+//         if(loadedLevel != null)
+//         return loadedLevel;
+//        
+//         throw new RuntimeException("File Not Found");
 
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
-        // return generateTestLevel();
-        // return generateLevel7();
-        return generateLevel6();
-        // return generateLevel5();
-        // return generateLevel4();
-        // return generateLevel3();
-        // return generateLevel2();
-        // return generateLevel1();
+//         return generateTestLevel();
+//        return generateLevel8();
+         generateLevel7();
+         generateLevel6();
+         generateLevel5();
+         generateLevel4();
+         generateLevel3();
+         generateLevel2();
+         generateLevel1();
+        return generateLevel8();
     }
 
     public static LevelSerialize generateTestLevel()
@@ -118,6 +120,68 @@ public class LevelGenerator
                 .withStateConfig(getGameStateConfig("Level08", Color.WHITE)));
 
         return writeLevel(new LevelSerialize(new Level(tiles, new LinkedList<Text>(), items, "Level07"), player, mobs, actions), "Level07");
+    }
+
+    public static LevelSerialize generateLevel8()
+    {
+        final int xLevelSize = 14;
+        final int yLevelSize = 13;
+
+        final List<List<Tile>> tiles = new ArrayList<List<Tile>>();
+        final List<Item> items = new ArrayList<Item>();
+        for(int i = 0; i < xLevelSize; i++)
+        {
+            final List<Tile> innerList = new ArrayList<Tile>();
+
+            for(int j = 0; j < yLevelSize; j++)
+            {
+                if(j == 0 || j == yLevelSize - 1 || i == 0 || i == xLevelSize - 1)
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if(j == 6 && i == 11)
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    items.add(new Item(ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else if(j == 6 && i == 4)
+                {
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0, DoorMat.LEFT));
+                }
+                else if(j == 6 && i == 9)
+                {
+                    innerList.add(new Exit(BodyType.EXIT, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), -90));
+                }
+                else if((j >= 3 && j <= 9) && (i == 4 || i == 9 || i == 10))
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else if((j == 3 || j == 9) && (i >= 5 && i <= 8))
+                {
+                    innerList.add(new Tile(BodyType.WALL, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+                else
+                {
+                    innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                }
+            }
+
+            tiles.add(innerList);
+        }
+
+        final Actor player = new Actor(BodyType.PLAYER, new MyVector2(200, 1200), -90);
+        final List<Text> texts = new ArrayList<Text>();
+
+        final List<Mob> mobs = new LinkedList<Mob>();
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(1400, 1400), 0));
+        mobs.add(new Mob(BodyType.MOB, new MyVector2(1600, 800), 0));
+
+        final List<PendingAction> actions = new LinkedList<PendingAction>();
+        actions.add(new PendingAction().withAction(StateAction.POP));
+        actions.add(new PendingAction().withAction(StateAction.PUSH).withStateId(StateId.GAME_STATE)
+                .withStateConfig(getGameStateConfig("Level09", Color.BLACK)));
+
+        return writeLevel(new LevelSerialize(new Level(tiles, texts, items, "Level08"), player, mobs, actions), "Level08");
     }
 
     public static LevelSerialize generateLevel7()
