@@ -77,7 +77,7 @@ public abstract class Drawable extends NonBodyDrawable
         adjustSprite(body, sprite);
     }
 
-    private void adjustSprite(final Body body, final Sprite sprite)
+    protected void adjustSprite(final Body body, final Sprite sprite)
     {
         final float x = body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyWidth / 2;
         final float y = body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyHeight / 2;

@@ -271,6 +271,12 @@ public class Actor extends Drawable
         this.mobTouched = mobTouched;
     }
 
+    @Override
+    public DrawPosition getDrawPosition()
+    {
+        return DrawPosition.ACTOR;
+    }
+
     // public MyVector2 getTilePosition()
     // {
     // return tilePosition.cpy();

@@ -21,6 +21,7 @@ import com.murder.game.level.Exit;
 import com.murder.game.level.Item;
 import com.murder.game.level.Level;
 import com.murder.game.level.Tile;
+import com.murder.game.level.Door.DoorMat;
 import com.murder.game.serialize.LevelSerialize;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.state.config.GameStateConfig;
@@ -47,8 +48,8 @@ public class LevelGenerator
         // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
         // return generateTestLevel();
-        return generateLevel7();
-        // return generateLevel6();
+        // return generateLevel7();
+        return generateLevel6();
         // return generateLevel5();
         // return generateLevel4();
         // return generateLevel3();
@@ -84,7 +85,7 @@ public class LevelGenerator
                 {
                     // innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i *
                     // TILE_SIZE, j * TILE_SIZE), 0));
-                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0, DoorMat.DOWN));
                     // innerList.add(new Tile(BodyType.FLOOR, new MyVector2(i *
                     // TILE_SIZE, j * TILE_SIZE), 0));
                 }
@@ -196,19 +197,21 @@ public class LevelGenerator
                 }
                 else if(j == 3 && i == 5)
                 {
-                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0, DoorMat.DOWN));
                     // +90 is a magic number that should be given value, like
                     // TILE_SIZE/2 - TILE_SIZE/10
-                    items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i * TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
+                    // items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i *
+                    // TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
                 }
                 else if(j == 9 && i == 5)
                 {
-                    innerList.add(new Door(BodyType.YELLOW_DOOR, ItemType.YELLOW_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.YELLOW_DOOR, ItemType.YELLOW_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0, DoorMat.UP));
                     // +90 is a magic number that should be given value, like
                     // TILE_SIZE/2 - TILE_SIZE/10
                     final Vector2 butts = new Vector2(0, 90);
                     butts.rotate(180);
-                    items.add(new Item(ItemType.YELLOW_MAT, new MyVector2(i * TILE_SIZE, (j + 1) * TILE_SIZE + butts.y), -90));
+                    // items.add(new Item(ItemType.YELLOW_MAT, new MyVector2(i *
+                    // TILE_SIZE, (j + 1) * TILE_SIZE + butts.y), -90));
                 }
                 else if(j <= 9 && j >= 3 && i == 3)
                 {
@@ -277,10 +280,11 @@ public class LevelGenerator
                 }
                 else if(j == 3 && i == 2)
                 {
-                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0));
+                    innerList.add(new Door(BodyType.GREEN_DOOR, ItemType.GREEN_KEY, new MyVector2(i * TILE_SIZE, j * TILE_SIZE), 0, DoorMat.DOWN));
                     // +90 is a magic number that should be given value, like
                     // TILE_SIZE/2 - TILE_SIZE/10
-                    items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i * TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
+                    // items.add(new Item(ItemType.GREEN_MAT, new MyVector2(i *
+                    // TILE_SIZE, (j - 1) * TILE_SIZE + 90), -90));
                 }
                 else if(j == 3 && i <= 4)
                 {

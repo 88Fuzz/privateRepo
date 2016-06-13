@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.murder.game.constants.box2d.BodyType;
+import com.murder.game.drawing.drawables.DrawPosition;
 import com.murder.game.drawing.drawables.Drawable;
 import com.murder.game.drawing.drawables.Mob;
 import com.murder.game.level.pathfinder.PathFinderState;
@@ -69,6 +70,7 @@ public class Tile extends Drawable
     // @JsonIgnore
     // private boolean locked;
 
+    private DrawPosition drawPosition;
     // The following are variables for pathfinding
     private Map<String, Float> distanceToStart;
     private Map<String, Float> distanceToEnd;
@@ -81,7 +83,14 @@ public class Tile extends Drawable
     public Tile(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
             @JsonProperty(ROTATION) final float rotation)
     {
+        this(bodyType, position, rotation, DrawPosition.FLOOR);
+    }
+
+    public Tile(final BodyType bodyType, final MyVector2 position, final float rotation, final DrawPosition drawPosition)
+    {
         super(bodyType, position, rotation);
+
+        this.drawPosition = drawPosition;
         distanceToStart = new HashMap<String, Float>();
         distanceToEnd = new HashMap<String, Float>();
         pathFinderState = new HashMap<String, PathFinderState>();
@@ -313,4 +322,10 @@ public class Tile extends Drawable
     // {
     // return tileType.isBlocking() || locked;
     // }
+
+    @Override
+    public DrawPosition getDrawPosition()
+    {
+        return drawPosition;
+    }
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
+import com.murder.game.drawing.drawables.DrawPosition;
 import com.murder.game.drawing.drawables.Mob;
 import com.murder.game.serialize.MyVector2;
 import com.murder.game.utils.LightBuilder;
@@ -21,7 +22,7 @@ public class Exit extends Tile
     public Exit(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
             @JsonProperty(ROTATION) final float rotation)
     {
-        super(bodyType, position, rotation);
+        super(bodyType, position, rotation, DrawPosition.FLOOR);
     }
 
     public void init(final World physicsWorld, final List<Mob> mobs, final RayHandler rayHandler)

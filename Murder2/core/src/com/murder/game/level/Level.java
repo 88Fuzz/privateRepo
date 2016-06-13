@@ -1,7 +1,10 @@
 package com.murder.game.level;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,8 +13,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.box2d.BodyType;
+import com.murder.game.drawing.drawables.DrawPosition;
 import com.murder.game.drawing.drawables.Drawable;
 import com.murder.game.drawing.drawables.Mob;
+import com.murder.game.drawing.drawables.NonBodyDrawable;
 import com.murder.game.drawing.drawables.Text;
 import com.murder.game.drawing.manager.FontManager;
 import com.murder.game.serialize.MyVector2;
@@ -28,6 +33,7 @@ public class Level extends Drawable
     @JsonIgnore
     private int numberOfTiles;
     private List<List<Tile>> tiles;
+    private Map<DrawPosition, List<NonBodyDrawable>> drawMap;
     private List<Text> texts;
     private List<Item> items;
     private String levelId;
@@ -41,10 +47,14 @@ public class Level extends Drawable
         this.texts = texts;
         this.items = items;
         this.levelId = levelId;
+        this.drawMap = new HashMap<DrawPosition, List<NonBodyDrawable>>();
     }
 
     public void init(final World physicsWorld, final FontManager fontManager, final List<Mob> mobs, final RayHandler rayHandler)
     {
+        drawMap.clear();
+        constructDrawMap();
+
         numberOfTiles = 0;
         for(final List<Tile> tileList: tiles)
         {
@@ -53,28 +63,54 @@ public class Level extends Drawable
             {
                 if(tile instanceof Exit)
                     ((Exit) tile).init(physicsWorld, mobs, rayHandler);
-                else 
+                else
                     tile.init(physicsWorld, mobs);
+
+                final DrawPosition drawPosition = tile.getDrawPosition();
+                addToDrawMap(drawPosition, tile);
             }
         }
 
         for(final Text text: texts)
         {
             text.init(fontManager);
+            addToDrawMap(text.getDrawPosition(), text);
         }
 
         for(final Item item: items)
         {
             item.init(physicsWorld);
+            addToDrawMap(item.getDrawPosition(), item);
         }
+    }
+
+    private void constructDrawMap()
+    {
+        for(final DrawPosition drawPosition: DrawPosition.values())
+        {
+            drawMap.put(drawPosition, new ArrayList<NonBodyDrawable>());
+        }
+    }
+
+    private void addToDrawMap(final DrawPosition drawPosition, final NonBodyDrawable drawable)
+    {
+        final List<NonBodyDrawable> drawList = drawMap.get(drawPosition);
+        drawList.add(drawable);
     }
 
     @Override
     public void draw(final SpriteBatch batch)
     {
-        drawTiles(batch);
-        drawTexts(batch);
-        drawItems(batch);
+        for(final DrawPosition drawPosition: DrawPosition.values())
+        {
+            for(final NonBodyDrawable drawable: drawMap.get(drawPosition))
+            {
+                drawable.draw(batch);
+            }
+        }
+        // drawTiles(batch);
+        // drawTexts(batch);
+        // drawItems(batch);
     }
 
     private void drawTiles(final SpriteBatch batch)
@@ -145,7 +181,10 @@ public class Level extends Drawable
             item.update(dt);
 
             if(item.isPickedUp())
+            {
                 it.remove();
+                drawMap.get(item.getDrawPosition()).remove(item);
+            }
         }
     }
 
@@ -200,5 +239,11 @@ public class Level extends Drawable
     public void dispose()
     {
         // Find something to dispose
+    }
+
+    @Override
+    public DrawPosition getDrawPosition()
+    {
+        return null;
     }
 }

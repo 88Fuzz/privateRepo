@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.murder.game.constants.level.ItemType;
+import com.murder.game.drawing.drawables.DrawPosition;
 import com.murder.game.drawing.drawables.Drawable;
 import com.murder.game.serialize.MyVector2;
 
@@ -60,5 +61,11 @@ public class Item extends Drawable
     public ItemType getItemType()
     {
         return itemType;
+    }
+
+    @Override
+    public DrawPosition getDrawPosition()
+    {
+        return DrawPosition.ITEMS;
     }
 }

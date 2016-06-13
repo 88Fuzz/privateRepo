@@ -65,7 +65,7 @@ public class GameState extends State
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
-        // rayHandler.setAmbientLight(.5f);
+         rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(stateConfig.getStringConfig());
         stateActions = levelSerialize.getStateActions();

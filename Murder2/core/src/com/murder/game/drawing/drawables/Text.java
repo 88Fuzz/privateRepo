@@ -93,4 +93,10 @@ public class Text extends NonBodyDrawable
     {
         return textEffects;
     }
+
+    @Override
+    public DrawPosition getDrawPosition()
+    {
+        return DrawPosition.TEXT;
+    }
 }

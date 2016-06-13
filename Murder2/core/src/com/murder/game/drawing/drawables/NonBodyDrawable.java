@@ -54,6 +54,11 @@ public abstract class NonBodyDrawable
      */
     protected abstract void updateCurrent(final float dt);
 
+    /**
+     * @return Returns the draw position for the Drawable object.
+     */
+    public abstract DrawPosition getDrawPosition();
+
     public void update(final float dt)
     {
         updateCurrent(dt);

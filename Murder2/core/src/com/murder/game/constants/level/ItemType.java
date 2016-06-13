@@ -5,9 +5,9 @@ import com.murder.game.constants.box2d.BodyType;
 public enum ItemType
 {
     GREEN_KEY(BodyType.GREEN_KEY),
-    YELLOW_KEY(BodyType.YELLOW_KEY),
-    GREEN_MAT(BodyType.GREEN_MAT),
-    YELLOW_MAT(BodyType.YELLOW_MAT);
+    YELLOW_KEY(BodyType.YELLOW_KEY);
+//    GREEN_MAT(BodyType.GREEN_MAT),
+//    YELLOW_MAT(BodyType.YELLOW_MAT);
 
     private final BodyType bodyType;
 
