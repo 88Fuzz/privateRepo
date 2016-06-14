@@ -126,6 +126,7 @@ public class Door extends Tile
     private DoorInfo[] shrinkingBodies;
     @JsonIgnore
     private Sprite doorMatSprite;
+    private MyVector2 overridePosition;
 
     @JsonCreator
     public Door(@JsonProperty(BODY_TYPE) final BodyType bodyType, @JsonProperty(ITEM_UNLOCK) ItemType itemUnlock,
@@ -135,6 +136,7 @@ public class Door extends Tile
         super(bodyType, position, rotation, DrawPosition.WALLS);
         this.itemUnlock = itemUnlock;
         this.doorMat = doorMat;
+        this.overridePosition = new MyVector2(position.x, position.y);
 
         shrinkingBodies = new DoorInfo[BODY_SHRINKING_SIZE];
     }
@@ -231,6 +233,11 @@ public class Door extends Tile
     {
         super.adjustSprite(body, sprite);
         adjustDoorMat();
+        // This is gross and dumb. But when the door has finished opening, the
+        // tile has a new position, this overrides the "new" incorrect position
+        // with the original.
+        position.x = overridePosition.x;
+        position.y = overridePosition.y;
     }
 
     private void adjustDoorMat()

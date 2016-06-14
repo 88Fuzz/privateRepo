@@ -135,16 +135,16 @@ public class Tile extends Drawable
      * @param pathKey
      * @param value
      */
-    public void setDistanceToStart(final String pathKey, final float value)
-    {
-        distanceToStart.put(pathKey, value);
-    }
-
-    public float getDistanceToStart(final String pathKey)
-    {
-        final Float value = distanceToStart.get(pathKey);
-        return (value == null) ? Float.MAX_VALUE : value;
-    }
+//    public void setDistanceToStart(final String pathKey, final float value)
+//    {
+//        distanceToStart.put(pathKey, value);
+//    }
+//
+//    public float getDistanceToStart(final String pathKey)
+//    {
+//        final Float value = distanceToStart.get(pathKey);
+//        return (value == null) ? Float.MAX_VALUE : value;
+//    }
 
     /**
      * Set the H value for a tile's key. The key allows for multiple paths to be
@@ -154,16 +154,16 @@ public class Tile extends Drawable
      * @param pathKey
      * @param value
      */
-    public void setDistanceToEnd(final String pathKey, final float value)
-    {
-        distanceToEnd.put(pathKey, value);
-    }
-
-    public float getDistanceToEnd(final String pathKey)
-    {
-        final Float value = distanceToEnd.get(pathKey);
-        return (value == null) ? Float.MAX_VALUE : value;
-    }
+//    public void setDistanceToEnd(final String pathKey, final float value)
+//    {
+//        distanceToEnd.put(pathKey, value);
+//    }
+//
+//    public float getDistanceToEnd(final String pathKey)
+//    {
+//        final Float value = distanceToEnd.get(pathKey);
+//        return (value == null) ? Float.MAX_VALUE : value;
+//    }
 
     /**
      * Set the F value (typically H + G) for a tile's key. The key allows for
@@ -173,19 +173,19 @@ public class Tile extends Drawable
      * @param pathKey
      * @return
      */
-    public float getFValue(final String pathKey)
-    {
-        // TODO, constantly creating floats bad??
-        final Float startValue = distanceToStart.get(pathKey);
-        if(startValue == null)
-            return Float.MAX_VALUE;
-
-        final Float endValue = distanceToEnd.get(pathKey);
-        if(endValue == null)
-            return Float.MAX_VALUE;
-
-        return startValue + endValue;
-    }
+//    public float getFValue(final String pathKey)
+//    {
+//        // TODO, constantly creating floats bad??
+//        final Float startValue = distanceToStart.get(pathKey);
+//        if(startValue == null)
+//            return Float.MAX_VALUE;
+//
+//        final Float endValue = distanceToEnd.get(pathKey);
+//        if(endValue == null)
+//            return Float.MAX_VALUE;
+//
+//        return startValue + endValue;
+//    }
 
     /**
      * Sets the state value for a tile for a given pathfinding key. The key
@@ -195,7 +195,7 @@ public class Tile extends Drawable
      * @param pathKey
      * @param state
      */
-    public void setPathFinderState(final String pathKey, final PathFinderState state)
+    public void setPathFinderState(final PathFinderState state)
     {
         if(state == PathFinderState.OPEN)
         {
@@ -210,15 +210,15 @@ public class Tile extends Drawable
             sprite.setColor(Color.VIOLET);
 
         }
-        pathFinderState.put(pathKey, state);
+//        pathFinderState.put(pathKey, state);
     }
-
-    public PathFinderState getPathFinderState(final String pathKey)
-    {
-        final PathFinderState value = pathFinderState.get(pathKey);
-
-        return (value == null) ? PathFinderState.NONE : value;
-    }
+//
+//    public PathFinderState getPathFinderState(final String pathKey)
+//    {
+//        final PathFinderState value = pathFinderState.get(pathKey);
+//
+//        return (value == null) ? PathFinderState.NONE : value;
+//    }
 
     /**
      * Sets the parent Tile for for a given pathfinding key. The key allows for
@@ -228,15 +228,15 @@ public class Tile extends Drawable
      * @param pathKey
      * @param tile
      */
-    public void setParentTile(final String pathKey, final Tile tile)
-    {
-        parentTile.put(pathKey, tile);
-    }
-
-    public Tile getParentTile(final String pathKey)
-    {
-        return parentTile.get(pathKey);
-    }
+//    public void setParentTile(final String pathKey, final Tile tile)
+//    {
+//        parentTile.put(pathKey, tile);
+//    }
+//
+//    public Tile getParentTile(final String pathKey)
+//    {
+//        return parentTile.get(pathKey);
+//    }
 
     /**
      * Sets the child Tile for for a given pathfinding key. The key allows for
@@ -246,15 +246,15 @@ public class Tile extends Drawable
      * @param pathKey
      * @param tile
      */
-    public void setChildTile(final String pathKey, final Tile tile)
-    {
-        childTile.put(pathKey, tile);
-    }
-
-    public Tile getChildTile(final String pathKey)
-    {
-        return childTile.get(pathKey);
-    }
+//    public void setChildTile(final String pathKey, final Tile tile)
+//    {
+//        childTile.put(pathKey, tile);
+//    }
+//
+//    public Tile getChildTile(final String pathKey)
+//    {
+//        return childTile.get(pathKey);
+//    }
 
     // TODO this is stupid and should be deleted.
     public void setColor()
@@ -262,15 +262,15 @@ public class Tile extends Drawable
         sprite.setColor(Color.CHARTREUSE);
     }
 
-    public void clearPathInformation(final String pathKey)
-    {
-        childTile.remove(pathKey);
-        parentTile.remove(pathKey);
-
-        distanceToStart.remove(pathKey);
-        distanceToEnd.remove(pathKey);
-        pathFinderState.remove(pathKey);
-    }
+//    public void clearPathInformation(final String pathKey)
+//    {
+//        childTile.remove(pathKey);
+//        parentTile.remove(pathKey);
+//
+//        distanceToStart.remove(pathKey);
+//        distanceToEnd.remove(pathKey);
+//        pathFinderState.remove(pathKey);
+//    }
 
     protected void updateMobs()
     {
