@@ -180,11 +180,11 @@ public class Level extends Drawable
             final Item item = it.next();
             item.update(dt);
 
-            if(item.isPickedUp())
-            {
-                it.remove();
-                drawMap.get(item.getDrawPosition()).remove(item);
-            }
+//            if(item.isPickedUp())
+//            {
+//                it.remove();
+//                drawMap.get(item.getDrawPosition()).remove(item);
+//            }
         }
     }
 

@@ -37,7 +37,8 @@ public class ItemContactChecker implements ContactChecker
 
         if(drawable.getBodyType() == BodyType.PLAYER)
         {
-            ((Actor) drawable).addItem(item.pickUpItem());
+            final Actor actor = (Actor) drawable;
+            actor.addItem(item.pickUpItem(actor));
             return true;
         }
 
