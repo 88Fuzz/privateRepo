@@ -137,7 +137,6 @@ public class Mob extends Actor
 
         if(directPath)
         {
-            System.out.println("DIRECT PATH");
             desiredAlpha = DIRECT_PATH_ALPHA;
             setUnitVelocity(getPosition(), player.getPosition());
             super.updateCurrent(dt);
@@ -148,13 +147,8 @@ public class Mob extends Actor
 
             if(!newPathKey.equals(previousPathKey))
             {
-                System.out.println("LOOKING FOR NEW PATH");
-                if(nextTile != null)
-                    System.out.println("WITH EXISTING TILE");
                 findPath();
             }
-
-            // System.out.println("PLAYER FOUND " + nextTile != null);
 
             if(nextTile != null)
             {
@@ -201,33 +195,11 @@ public class Mob extends Actor
     private void calculateVelocity()
     {
         final Tile currentTile = level.getTile(getTilePositionX(), getTilePositionY());
-        // if(currentTile == null)
-        // {
-        // unitVelocityVector.x = 0;
-        // unitVelocityVector.y = 0;
-        // return;
-        // }
-        //
-        // Tile nextTile = currentTile.getChildTile(previousPathKey);
-        // CurrentTile should never be null, this is just for safety.
         if(currentTile == null)
-            // {
             return;
 
         if(nextTile == null)
             nextTile = currentTile;
-        // nextTile = level.getTile(player.getTilePositionX(),
-        // player.getTilePositionY());
-        //
-        // // This is an error state, if there is no nextTile along the path,
-        // // the mob should be in the same tile as the player. yo
-        // if(nextTile != currentTile)
-        // {
-        // unitVelocityVector.x = 0;
-        // unitVelocityVector.y = 0;
-        // return;
-        // }
-        // }
 
         setUnitVelocity(currentTile);
     }
@@ -245,22 +217,6 @@ public class Mob extends Actor
         unitVelocityVector.set(nextPosition);
         unitVelocityVector.sub(currentPosition);
         unitVelocityVector.nor();
-        // float diff = nextPosition.x - currentPosition.x;
-        // if(diff < 0)
-        // unitVelocityVector.x = -1;
-        // else if(diff > 0)
-        // unitVelocityVector.x = 1;
-        // else
-        // unitVelocityVector.x = 0;
-        //
-        // diff = nextPosition.y - currentPosition.y;
-        // if(diff < 0)
-        // unitVelocityVector.y = -1;
-        // else if(diff > 0)
-        // unitVelocityVector.y = 1;
-        // else
-        // unitVelocityVector.y = 0;
-        //
     }
 
     private void calculateDistanceToTravel(final Vector2 currentTilePos, final Vector2 nextTilePos)
@@ -270,9 +226,8 @@ public class Mob extends Actor
 
     public void findPath()
     {
-        final String pathKey = getPathKey();
-        previousPathKey = pathKey;
-        nextTile = pathFinder.findPath(pathKey, getTilePositionX(), getTilePositionY(), player.getTilePositionX(), player.getTilePositionY());
+        previousPathKey = getPathKey();
+        nextTile = pathFinder.findPath(getTilePositionX(), getTilePositionY(), player.getTilePositionX(), player.getTilePositionY());
     }
 
     private String getPathKey()
