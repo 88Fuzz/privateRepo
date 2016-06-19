@@ -54,22 +54,13 @@ public class TextState extends State
     }
 
     @Override
-    public void pause()
-    {
-        // TODO Auto-generated method stub
-    }
+    public void pause() {}
 
     @Override
-    public void resume()
-    {
-        // TODO Auto-generated method stub
-    }
+    public void resume() {}
 
     @Override
-    public void resize(final int width, final int height)
-    {
-        // TODO Auto-generated method stub
-    }
+    public void resize(final int width, final int height) {}
 
     @Override
     public void update(final float dt)
@@ -90,11 +81,6 @@ public class TextState extends State
         if(finished)
         {
             stateManager.addActions(stateActions);
-            // stateManager.addAction(new
-            // PendingAction().withAction(StateAction.POP));
-            // stateManager.addAction(new
-            // PendingAction().withAction(StateAction.PUSH).withStatId(textState.getStateId())
-            // .withStateConfig(textState.getNextStateName()));
         }
     }
 
@@ -108,29 +94,23 @@ public class TextState extends State
     }
 
     @Override
-    public void dispose()
-    {
-        // Find something to dispose
-    }
+    public void dispose() {}
 
     @Override
     public boolean keyDown(final int keyCode)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean keyUp(final int keyCode)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean unicodeEntered(final char character)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -161,21 +141,18 @@ public class TextState extends State
     @Override
     public boolean touchDragged(final int screenX, final int screenY, final int pointer)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean mouseMoved(final int screenX, final int screenY)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean mouseScrolled(final int amount)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 

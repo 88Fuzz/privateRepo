@@ -28,16 +28,12 @@ public abstract class Drawable extends NonBodyDrawable
     protected float bodyHeight;
     @JsonIgnore
     protected Body body;
-    // protected MyVector2 tilePosition;
     protected BodyType bodyType;
 
     protected Drawable(final BodyType bodyType, final MyVector2 position, final float rotation)
     {
         super(position, rotation);
-        // this.tilePosition = new MyVector2();
         this.bodyType = bodyType;
-        // TODO the body width and height here should multiple
-        // bodyType.getSizeMultiplier()
         this.bodyWidth = bodyType.getWidth() * bodyType.getSizeMultiplier().x;
         this.bodyHeight = bodyType.getHeight() * bodyType.getSizeMultiplier().y;
     }
@@ -82,7 +78,6 @@ public abstract class Drawable extends NonBodyDrawable
         final float x = body.getPosition().x * DisplayConstants.PIXELS_PER_METER - bodyWidth / 2;
         final float y = body.getPosition().y * DisplayConstants.PIXELS_PER_METER - bodyHeight / 2;
         sprite.setBounds(x, y, bodyWidth, bodyHeight);
-        // sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
         position.x = sprite.getX() + bodyType.getWidth() / 2;
         position.y = sprite.getY() + bodyType.getHeight() / 2;
     }
@@ -129,25 +124,4 @@ public abstract class Drawable extends NonBodyDrawable
     {
         return body.getFixtureList();
     }
-    // protected void setTilePosition()
-    // {
-    // tilePosition.x = (int) (position.x / sprite.getWidth());
-    // tilePosition.y = (int) (position.y / sprite.getHeight());
-    // }
-    //
-    // protected void centerSpritePosition()
-    // {
-    // sprite.setPosition(position.x - sprite.getWidth() / 2, position.y -
-    // sprite.getHeight() / 2);
-    // }
-    //
-    // protected void setSpritePosition()
-    // {
-    // sprite.setPosition(position.x, position.y);
-    // }
-    //
-    // public MyVector2 getPosition()
-    // {
-    // return position.cpy();
-    // }
 }

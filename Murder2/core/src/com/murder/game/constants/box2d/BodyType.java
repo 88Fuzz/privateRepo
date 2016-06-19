@@ -12,8 +12,6 @@ import com.murder.game.texture.loader.SinglePixelTextureLoader;
 
 public enum BodyType
 {
-    // TODO this shit needs to be reworked so that each color variant is not a
-    // different body type, green door vs red door vs yellow door.
     PLAYER(BodyShape.CIRCLE, CircleTextureLoader.getCircleTextureLoader(), Color.WHITE, 100f, 100f, 1f, CollisionType.PLAYER.getCollisionValue(),
             (short) (CollisionType.DOOR.getCollisionValue() | CollisionType.MONSTER.getCollisionValue() | CollisionType.WALL.getCollisionValue()
                     | CollisionType.KEY.getCollisionValue() | CollisionType.EXIT.getCollisionValue()),
@@ -37,16 +35,6 @@ public enum BodyType
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
     YELLOW_KEY(BodyShape.SQUARE, KeyTextureLoader.getKeyTextureLoader(), Color.YELLOW, 200f, 100f, 1f, CollisionType.KEY.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(1, 1), true),
-    // GREEN_MAT(BodyShape.SQUARE,
-    // SinglePixelTextureLoader.getSinglePixelTextureLoader(), Color.GREEN,
-    // 200f, 20f, 1f, (short) 0, (short) 0,
-    // CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new
-    // Vector2(1, 1), true),
-    // YELLOW_MAT(BodyShape.SQUARE,
-    // SinglePixelTextureLoader.getSinglePixelTextureLoader(), Color.YELLOW,
-    // 200f, 20f, 1f, (short) 0, (short) 0,
-    // CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new
-    // Vector2(1, 1), true),
     EXIT(BodyShape.SQUARE, ExitTextureLoader.getExitTextureLoader(), Color.CLEAR, 50f, 50f, 1f, CollisionType.EXIT.getCollisionValue(),
             CollisionType.PLAYER.getCollisionValue(), CollisionType.DEFAULT_GROUP_INDEX, BodyDef.BodyType.StaticBody, true, new Vector2(4, 4), true),
     NONE(BodyShape.SQUARE, SinglePixelTextureLoader.getSinglePixelTextureLoader(), Color.BLACK, 0f, 0f, 1f, (short) 0, (short) 0,

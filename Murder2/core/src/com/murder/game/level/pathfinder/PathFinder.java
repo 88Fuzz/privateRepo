@@ -146,11 +146,6 @@ public class PathFinder
                      */
                     else if(getTotalStartDistance(currentTile, adjacentTile) < getStartDistance(adjacentTile))
                     {
-                        // TODO figure out if changing the adjacentTile F value
-                        // outside of the add method causes the queue to be out
-                        // of order. A month or so later comment: it absolutely
-                        // would mess things up, you should remove it from the
-                        // queue, change the value and put it back.
                         /*
                          * Remove the old reference to adjacent tile because the
                          * F value is being recalculated and should be

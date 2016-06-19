@@ -72,20 +72,11 @@ public class WorldContactListener implements ContactListener
     }
 
     @Override
-    public void endContact(final Contact contact)
-    {
-        // TODO Auto-generated method stub
-    }
+    public void endContact(final Contact contact) {}
 
     @Override
-    public void preSolve(final Contact contact, final Manifold oldManifold)
-    {
-        // TODO Auto-generated method stub
-    }
+    public void preSolve(final Contact contact, final Manifold oldManifold) {}
 
     @Override
-    public void postSolve(final Contact contact, final ContactImpulse impulse)
-    {
-        // TODO Auto-generated method stub
-    }
+    public void postSolve(final Contact contact, final ContactImpulse impulse) {}
 }

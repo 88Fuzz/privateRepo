@@ -9,11 +9,6 @@ public class MathUtils
         return getDistance(vector1.x, vector1.y, vector2.x, vector2.y);
     }
 
-    /*
-     * TODO it may be more performant for path finding to not take the sqrt all
-     * the time and just return 10 if tiles are vertical or horizontal and 14 if
-     * diagonal.
-     */
     public static float getDistance(float x1, float y1, float x2, float y2)
     {
         float xDist = x1 - x2;

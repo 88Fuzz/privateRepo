@@ -45,7 +45,6 @@ public class LevelGenerator
         //
         // throw new RuntimeException("File Not Found");
 
-        // TODO some levels don't have a wall behind the exit, causing the light
         // to shine past the space
         // return generateTestLevel();
         return generateLevel8();
@@ -660,7 +659,6 @@ public class LevelGenerator
 
     private static LevelSerialize loadLevelFromFile(final String levelId)
     {
-        // TODO remove logging
         final String tag = "MURDER EXCEPTION";
         try
         {

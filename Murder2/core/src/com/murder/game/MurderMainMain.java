@@ -26,29 +26,15 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     private WorldRenderer worldRenderer;
     private StateManager stateManager;
     private float timeSinceLastUpdate;
-    // private TextureAtlas textureAtlas;
-    // private FontGenerator fontGenerator;
 
     @Override
     public void create()
     {
-        // final AssetManager assMan = new AssetManager();
         fontManager = new FontManager();
-        // assMan.load(TextureType.TILE_TEXTURES, TextureAtlas.class);
-        // assMan.finishLoading();
         stateStack = new Stack<State>();
         worldRenderer = new WorldRenderer();
-        // textureAtlas = assMan.get(TextureType.TILE_TEXTURES);
         stateManager = new StateManager();
-        // fontGenerator = new FontGenerator();
         timeSinceLastUpdate = 0;
-
-        // final GameState gameState = (GameState)
-        // stateManager.getState(StateId.GAME_STATE);
-        //
-        // gameState.init(worldRenderer, textureManager, fontManager,
-        // "Level01");
-        // stateStack.push(gameState);
 
         final TextState textState = (TextState) stateManager.getState(StateId.TEXT_STATE);
         textState.init(fontManager, new StateConfig("Text01"));
@@ -76,7 +62,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         // textState.init(fontManager, drawableTexts);
         // stateStack.push(textState);
 
-        // assMan.dispose();
         Gdx.input.setInputProcessor(this);
     }
 
@@ -123,7 +108,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             state.dispose();
         }
         worldRenderer.dispose();
-        // fontManager.dispose();
     }
 
     @Override
@@ -229,9 +213,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     {
         float dt = Gdx.graphics.getDeltaTime();
 
-        // TODO this needs to be reworked. MASIVELY, Fix timestamp shouldn't be
-        // used, if the framerate drops below 60, then anything that moves is
-        // "jumped"
         timeSinceLastUpdate += dt;
         while(timeSinceLastUpdate > TIMEPERFRAME)
         {
@@ -241,9 +222,7 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
             for(final State state: stateStack)
             {
                 state.update(TIMEPERFRAME);
-                // state.render(worldRenderer);
             }
-            // worldRenderer.renderGUI();
             timeSinceLastUpdate -= TIMEPERFRAME;
         }
 
@@ -294,8 +273,6 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
     {
         if(state instanceof GameState)
         {
-            // ((GameState) state).init(worldRenderer,
-            // levelGenerator.getLevel(stateConfig), textureAtlas);
             ((GameState) state).init(worldRenderer, fontManager, stateConfig);
         }
         else if(state instanceof TextState)
@@ -306,10 +283,5 @@ public class MurderMainMain extends ApplicationAdapter implements InputProcessor
         {
             throw new RuntimeException("Unknown state to init " + state.getClass());
         }
-        // else if(state instanceof TextState)
-        // {
-        // ((TextState) state).init(fontGenerator,
-        // levelGenerator.getTexts(stateConfig));
-        // }
     }
 }

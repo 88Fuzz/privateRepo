@@ -3,7 +3,6 @@ package com.murder.game.state;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -14,7 +13,6 @@ import com.murder.game.drawing.rendereffects.FadeOut;
 import com.murder.game.drawing.WorldRenderer;
 import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.drawing.drawables.Mob;
-import com.murder.game.drawing.drawables.Actor.MoveDirection;
 import com.murder.game.level.Level;
 import com.murder.game.level.generator.LevelGenerator;
 import com.murder.game.serialize.LevelSerialize;
@@ -40,8 +38,6 @@ public class GameState extends State
     private List<Mob> mobs;
     private Level level;
     private StateConfig stateConfig;
-    // TODO when the app is suspended and brought back, buttonsPressed should be
-    // set back to 0
     private LinkedList<Integer> touches;
     private List<PendingAction> stateActions;
     private WorldRenderer worldRenderer;
@@ -65,7 +61,7 @@ public class GameState extends State
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
-         rayHandler.setAmbientLight(.5f);
+        rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(stateConfig.getStringConfig());
         stateActions = levelSerialize.getStateActions();
@@ -189,57 +185,18 @@ public class GameState extends State
     @Override
     public boolean keyDown(final int keyCode)
     {
-        // TODO remove these for release
-        switch(keyCode)
-        {
-        case Input.Keys.W:
-            player.moveDirection(MoveDirection.UP);
-            return true;
-        case Input.Keys.S:
-            player.moveDirection(MoveDirection.DOWN);
-            return true;
-        case Input.Keys.A:
-            player.moveDirection(MoveDirection.LEFT);
-            return true;
-        case Input.Keys.D:
-            player.moveDirection(MoveDirection.RIGHT);
-            return true;
-        case Input.Keys.LEFT:
-            player.rotate(-1);
-            return true;
-        case Input.Keys.RIGHT:
-            player.rotate(1);
-            return true;
-        }
         return false;
     }
 
     @Override
     public boolean keyUp(final int keyCode)
     {
-        // TODO remove these for release
-        switch(keyCode)
-        {
-        case Input.Keys.W:
-            player.stopMoveDirection(MoveDirection.UP);
-            return true;
-        case Input.Keys.S:
-            player.stopMoveDirection(MoveDirection.DOWN);
-            return true;
-        case Input.Keys.A:
-            player.stopMoveDirection(MoveDirection.LEFT);
-            return true;
-        case Input.Keys.D:
-            player.stopMoveDirection(MoveDirection.RIGHT);
-            return true;
-        }
         return false;
     }
 
     @Override
     public boolean unicodeEntered(final char character)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -248,7 +205,6 @@ public class GameState extends State
     {
         touches.addLast(new Integer(pointer));
 
-        // TODO Should this be controlled by the player?
         adjustPlayerRotation(screenX, screenY);
         adjustPlayerMove();
         return true;
@@ -277,14 +233,12 @@ public class GameState extends State
     @Override
     public boolean mouseMoved(final int screenX, final int screenY)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean mouseScrolled(final int amount)
     {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -294,8 +248,6 @@ public class GameState extends State
         final float deltaX = screenX - position.x;
         final float deltaY = screenY - position.y;
 
-        // player.setRotation((float) (-1*Math.toDegrees(Math.atan2(deltaX,
-        // deltaY))));
         player.setRotation((float) Math.atan2(deltaX, deltaY));
     }
 

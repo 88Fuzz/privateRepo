@@ -22,10 +22,7 @@ import com.murder.game.constants.drawing.DisplayConstants;
 import com.murder.game.constants.drawing.FontType;
 import com.murder.game.drawing.drawables.Actor;
 import com.murder.game.drawing.drawables.NonBodyDrawable;
-import com.murder.game.drawing.rendereffects.FadeIn;
-import com.murder.game.drawing.rendereffects.FadeOut;
 import com.murder.game.drawing.rendereffects.RenderEffect;
-import com.murder.game.drawing.rendereffects.ScreenShake;
 import com.murder.game.texture.loader.SinglePixelTextureLoader;
 
 import box2dLight.RayHandler;
@@ -133,7 +130,6 @@ public class WorldRenderer
     private void clearScreen()
     {
         Gdx.gl.glClearColor(clearColor.x, clearColor.y, clearColor.width, clearColor.height);
-        // Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
@@ -168,8 +164,6 @@ public class WorldRenderer
      */
     public <T extends NonBodyDrawable> void render(final T drawable)
     {
-        // TODO setting the projectionMatrix probably isn't necessary for every
-        // loop?
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawable.draw(batch);
@@ -237,7 +231,6 @@ public class WorldRenderer
     {
         if(targetActor != null)
         {
-            // TODO the may need to be targetActor.getPosition()
             if(camera.position.x == targetActor.getPosition().x)
                 return true;
         }
@@ -254,7 +247,6 @@ public class WorldRenderer
     {
         if(targetActor != null)
         {
-            // TODO the may need to be targetActor.getPosition()
             if(camera.position.y == targetActor.getPosition().y)
                 return true;
         }
