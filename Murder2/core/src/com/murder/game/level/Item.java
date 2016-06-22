@@ -82,14 +82,29 @@ public class Item extends Drawable
             xTarget -= sprite.getX();
             yTarget -= sprite.getY();
 
-            xTarget *= PERCENT_MOVEMENT_RATE;
-            yTarget *= PERCENT_MOVEMENT_RATE;
+            xTarget = getAdjustedValue(xTarget);
+            yTarget = getAdjustedValue(yTarget);
 
             sprite.setPosition(sprite.getX() + xTarget, sprite.getY() + yTarget);
         }
         else
             super.adjustSprite(body, sprite);
 
+    }
+
+    private float getAdjustedValue(final float value)
+    {
+        final float maxValue = 20;
+        float adjustedValue = value * PERCENT_MOVEMENT_RATE;
+        if(Math.abs(adjustedValue) > maxValue)
+        {
+            if(adjustedValue < 0)
+                return -1 * maxValue;
+
+            return maxValue;
+        }
+
+        return adjustedValue;
     }
 
     public ItemType pickUpItem(final Actor actor)

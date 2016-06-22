@@ -14,8 +14,8 @@ public class MobActorContactChecker implements ContactChecker
     @Override
     public boolean check(final Object objA, final Object objB)
     {
-
-        if(!((objA instanceof Mob && objB instanceof Actor) || (objA instanceof Actor && objB instanceof Mob)))
+        if(!((objA instanceof Mob && objB instanceof Actor && !(objB instanceof Mob))
+                || (objA instanceof Actor && objB instanceof Mob && !(objA instanceof Mob))))
             return false;
 
         final Actor actor;
@@ -29,7 +29,7 @@ public class MobActorContactChecker implements ContactChecker
             actor = (Actor) objA;
         }
 
-        actor.setMobTouched(true);
+        actor.setMobTouched();
         return false;
     }
 }

@@ -44,6 +44,7 @@ public class GameState extends State
     private FadeIn fadeIn;
     private FadeOut fadeOutWhite;
     private FadeOut fadeOutBlack;
+    private FadeIn fadeInRed;
 
     public GameState(final StateManager stateManager)
     {
@@ -52,6 +53,7 @@ public class GameState extends State
         fadeIn = new FadeIn();
         fadeOutWhite = new FadeOut();
         fadeOutBlack = new FadeOut();
+        fadeInRed = new FadeIn();
     }
 
     public void init(final WorldRenderer worldRenderer, final FontManager fontManager, final StateConfig stateConfig)
@@ -61,7 +63,7 @@ public class GameState extends State
         physicsWorld = new World(new Vector2(0, 0), ALLOW_SLEEP);
         physicsWorld.setContactListener(new WorldContactListener());
         rayHandler = new RayHandler(physicsWorld);
-        rayHandler.setAmbientLight(.5f);
+//        rayHandler.setAmbientLight(.5f);
 
         final LevelSerialize levelSerialize = LevelGenerator.getLevel(stateConfig.getStringConfig());
         stateActions = levelSerialize.getStateActions();
@@ -89,6 +91,7 @@ public class GameState extends State
 
         fadeOutWhite.init(new Color(1, 1, 1, 0), FADE_OUT_TIME);
         fadeOutBlack.init(new Color(0, 0, 0, 0), FADE_OUT_TIME);
+        fadeInRed.init(new Color(1, 0, 0, .8f), .3f);
         worldRenderer.addRenderEffect(fadeIn);
     }
 
@@ -127,7 +130,11 @@ public class GameState extends State
 
         if(player.isMobTouched())
         {
+            worldRenderer.addRenderEffect(fadeInRed);
             worldRenderer.addRenderEffect(fadeOutBlack);
+            if(fadeInRed.isFinished(worldRenderer))
+                worldRenderer.removeRenderEffect(fadeInRed);
+
             if(fadeOutBlack.isFinished(worldRenderer))
                 stateManager.addAction(new PendingAction().withAction(StateAction.RESET));
         }

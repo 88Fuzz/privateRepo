@@ -6,6 +6,7 @@ import java.util.Set;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,8 +20,8 @@ import box2dLight.RayHandler;
 
 public class Actor extends Drawable
 {
-    // private static final float MAX_VELOCITY = 460 / 20;
-    private static final float MAX_VELOCITY = 1260;
+    private static final float SHRINK_RATE = .5f;
+    private static final float MAX_VELOCITY = 660;
     private static final float MAX_SPRITE_UPDATE_TIMER = .2f;
 
     public enum MoveDirection
@@ -45,6 +46,7 @@ public class Actor extends Drawable
     private boolean mobTouched;
     @JsonIgnore
     protected float spriteUpdateTimer;
+    protected Vector2 scale;
 
     @JsonCreator
     public Actor(@JsonProperty(BODY_TYPE) BodyType bodyType, @JsonProperty(POSITION) final MyVector2 position,
@@ -54,9 +56,9 @@ public class Actor extends Drawable
         this.move = false;
         this.position = position;
         this.inventory = new HashSet<ItemType>();
-        // tilePosition = new MyVector2();
         unitVelocityVector = new MyVector2();
         velocity = MAX_VELOCITY;
+        scale = new Vector2();
     }
 
     public void init(final World physicsWorld, final RayHandler rayHandler)
@@ -69,19 +71,15 @@ public class Actor extends Drawable
         spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
         onExit = false;
         mobTouched = false;
-        // sprite = new
-        // Sprite(textureAtlas.findRegion(TextureConstants.CIRCLE_TEXTURE));
-        // sprite = new
-        // Sprite(textureAtlas.findRegion(TextureConstants.SINGLE_PIXEL_TEXTURE));
-        // sprite.setOriginCenter();
-        // centerSpritePosition();
-        // setTilePosition();
+        scale.x = 1;
+        scale.y = 1;
     }
 
     protected void setSprite()
     {
         sprite = new Sprite(bodyType.getTextureLoader().getAtlasRegion());
         spriteUpdateTimer = MAX_SPRITE_UPDATE_TIMER;
+        sprite.setScale(scale.x, scale.y);
     }
 
     protected void createLight(final RayHandler rayHandler)
@@ -98,75 +96,52 @@ public class Actor extends Drawable
     @Override
     public void updateCurrent(final float dt)
     {
-        // final MyVector2 directionalVelocity = new MyVector2();
-        // float distanceTraveled = 0;
-        float xVelocity = 0;
-        float yVelocity = 0;
-        if(move)
+        updateSpriteTimer(dt);
+
+        if(mobTouched)
         {
-            xVelocity = (float) (velocity * Math.sin(Math.toRadians(rotation)));
-            yVelocity = (float) (velocity * Math.cos(Math.toRadians(rotation)));
-            // distanceTraveled = velocity * dt;
+            scale.x -= (dt * SHRINK_RATE);
+            scale.y -= (dt * SHRINK_RATE);
+
+            if(scale.x <= 0)
+                scale.x = 0;
+
+            if(scale.y <= 0)
+                scale.y = 0;
+
+            sprite.setScale(scale.x, scale.y);
+            body.setLinearVelocity(0, 0);
         }
         else
         {
-            final float mag = unitVelocityVector.len();
-            if(mag != 0)
+            float xVelocity = 0;
+            float yVelocity = 0;
+            if(move)
             {
-                xVelocity = velocity * unitVelocityVector.x / mag;
-                yVelocity = velocity * unitVelocityVector.y / mag;
+                xVelocity = (float) (velocity * Math.sin(Math.toRadians(rotation)));
+                yVelocity = (float) (velocity * Math.cos(Math.toRadians(rotation)));
             }
+            else
+            {
+                final float mag = unitVelocityVector.len();
+                if(mag != 0)
+                {
+                    xVelocity = velocity * unitVelocityVector.x / mag;
+                    yVelocity = velocity * unitVelocityVector.y / mag;
+                }
+            }
+            xVelocity *= dt;
+            yVelocity *= dt;
+
+            body.setLinearVelocity(xVelocity, yVelocity);
         }
-        xVelocity *= dt;
-        yVelocity *= dt;
+    }
 
-        body.setLinearVelocity(xVelocity, yVelocity);
-
+    private void updateSpriteTimer(final float dt)
+    {
         spriteUpdateTimer -= dt;
         if(spriteUpdateTimer <= 0)
-        {
             setSprite();
-        }
-
-        // rotate(.3f);
-
-        // final MyVector2 newPos = position.cpy();
-        // // Check x and y independently in case player is moving up against a
-        // // wall and with a wall.
-        // if(directionalVelocity.x != 0)
-        // {
-        // newPos.x = position.x + directionalVelocity.x * dt;
-        // if(!checkNewPosition(newPos))
-        // {
-        // newPos.x = position.x;
-        // }
-        // }
-        //
-        // if(directionalVelocity.y != 0)
-        // {
-        // newPos.y = position.y + directionalVelocity.y * dt;
-        // if(!checkNewPosition(newPos))
-        // {
-        // newPos.y = position.y;
-        // }
-        // }
-        //
-        // position.x = newPos.x;
-        // position.y = newPos.y;
-        //
-        // setTilePosition();
-        // centerSpritePosition();
-        //
-        // final Tile tile = level.getTile((int) tilePosition.x, (int)
-        // tilePosition.y);
-        // if(tile != null)
-        // {
-        // final Item item = tile.getItem(true);
-        // if(item != null)
-        // {
-        // inventory.add(item.getInventoryItem());
-        // }
-        // }
     }
 
     public void moveDirection(final MoveDirection direction)
@@ -211,26 +186,6 @@ public class Actor extends Drawable
         }
     }
 
-    // private boolean checkNewPosition(final MyVector2 newPosition)
-    // {
-    // final MyVector2 testPos = new MyVector2();
-    // final MyVector2 testTilePos = new MyVector2();
-    // for(final MyVector2 edge: TESTING_EDGES)
-    // {
-    // testPos.x = newPosition.x + edge.x;
-    // testPos.y = newPosition.y + edge.y;
-    //
-    // testTilePos.x = testPos.x / (SPRITE_SIZE);
-    // testTilePos.y = testPos.y / (SPRITE_SIZE);
-    //
-    // if(!isTileValid(testTilePos))
-    // {
-    // return false;
-    // }
-    // }
-    // return true;
-    // }
-
     public void addItem(final ItemType item)
     {
         inventory.add(item);
@@ -256,9 +211,9 @@ public class Actor extends Drawable
         return onExit;
     }
 
-    public void setOnExit(final boolean onExit)
+    public void onExit()
     {
-        this.onExit = onExit && !mobTouched;
+        this.onExit = !isMobTouched();
     }
 
     public boolean isMobTouched()
@@ -266,9 +221,9 @@ public class Actor extends Drawable
         return mobTouched;
     }
 
-    public void setMobTouched(final boolean mobTouched)
+    public void setMobTouched()
     {
-        this.mobTouched = mobTouched;
+        mobTouched = !isOnExit();
     }
 
     @Override
@@ -276,45 +231,4 @@ public class Actor extends Drawable
     {
         return DrawPosition.ACTOR;
     }
-
-    // public MyVector2 getTilePosition()
-    // {
-    // return tilePosition.cpy();
-    // }
-
-    // public MyVector2 getPosition()
-    // {
-    // return new MyVector2(position.x + sprite.getWidth() / 2, position.y +
-    // sprite.getHeight() / 2);
-    // }
-    //
-    // @JsonIgnore
-    // public MyVector2 getCenterPosition()
-    // {
-    // return position;
-    // }
-
-    // private boolean isTileValid(final MyVector2 tilePos)
-    // {
-    // final Tile tile = level.getTile((int) tilePos.x, (int) tilePos.y);
-    // return isValidMove(tile);
-    // }
-    //
-    // private boolean isValidMove(final Tile tile)
-    // {
-    // if(tile == null || tile.isLocked())
-    // {
-    // if(tile != null && tile.getTileType() == TileType.DOOR)
-    // {
-    // if(inventory.contains(tile.getUnlockingItem()))
-    // {
-    // tile.setLock(false);
-    // return true;
-    // }
-    // }
-    //
-    // return false;
-    // }
-    // return true;
-    // }
 }

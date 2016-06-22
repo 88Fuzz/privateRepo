@@ -24,8 +24,8 @@ import box2dLight.RayHandler;
 
 public class Mob extends Actor
 {
-    // TODO slow down actor and mob movement speeds.
-    private static final float MAX_MOB_VELOCITY = 1060;
+    private static final float SHRINK_RATE = .1f;
+    private static final float MAX_MOB_VELOCITY = 560;
     private static final float MAX_MOB_SPRITE_UPDATE_TIMER = .34f;
     private static final float DIRECT_PATH_ALPHA = 0.93f;
     private static final float NO_DIRECT_PATH_ALPHA = 0.68f;
@@ -139,7 +139,7 @@ public class Mob extends Actor
         {
             desiredAlpha = DIRECT_PATH_ALPHA;
             setUnitVelocity(getPosition(), player.getPosition());
-            super.updateCurrent(dt);
+            updateSuper(dt);
         }
         else
         {
@@ -156,7 +156,7 @@ public class Mob extends Actor
                 if(distanceToTravel <= 0)
                     calculateVelocity();
 
-                super.updateCurrent(dt);
+                updateSuper(dt);
                 modifyDistanceToTravel();
             }
             else
@@ -169,6 +169,17 @@ public class Mob extends Actor
         }
 
         updateLight(dt);
+        updateSize(dt);
+    }
+
+    private void updateSuper(final float dt)
+    {
+        if(player.isMobTouched())
+        {
+            unitVelocityVector.x = 0;
+            unitVelocityVector.y = 0;
+        }
+        super.updateCurrent(dt);
     }
 
     private void updateLight(final float dt)
@@ -176,6 +187,17 @@ public class Mob extends Actor
         final float alpha = (desiredAlpha - lightColor.a) * ALPHA_CHANGE;
         lightColor.a += alpha;
         light.setColor(lightColor);
+    }
+
+    private void updateSize(final float dt)
+    {
+        if(player.isMobTouched())
+        {
+            scale.x += (dt * SHRINK_RATE);
+            scale.y += (dt * SHRINK_RATE);
+
+            sprite.setScale(scale.x, scale.y);
+        }
     }
 
     private void setPreviousPosition()

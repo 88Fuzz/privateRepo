@@ -29,7 +29,7 @@ public class ExitContactChecker implements ContactChecker
         else
             return false;
 
-        actor.setOnExit(true);
+        actor.onExit();
         return true;
     }
 }
